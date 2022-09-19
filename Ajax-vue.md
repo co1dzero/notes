@@ -1423,7 +1423,64 @@ git commit -m
 
 ![Snipaste_2022-09-16_17-26-10](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-16_17-26-10.png)
 
+### 7.9 从本地分支推送到远程仓库
 
+如果是<font color='red'>**第一次**</font>将分支推送到远程仓库，需要：
+
+```
+# -u 表示把本地分支和远程分支进行关联，旨在第一次推送是需要带 -u 参数
+git push -u 远程仓库的别名（默认是origin）  本地分支名称：想要命名为的远程分支名称
+
+# 实际案例
+git push -u origin payment:pay
+
+# 如果希望远程分支的名称和本地分支一致，可以简化：
+git push -u origin payment
+```
+
+**`注意：只有第一次需要-u`**
+
+### 8.0 查看远程仓库中所有的分支
+
+```
+git remote show 远程仓库名
+例如：
+git remote show origin
+```
+
+### 8.1 跟踪分支(远程分支下载到本地仓库中
+
+从远程仓库中，把远程分支下载到本地仓库中。需要：
+
+```
+# 从远程仓库中，把对应的远程南横分支下载到本地仓库，保持本地分支和远程分支名称相同
+git checkout 远程分支的名称
+# 示例：
+git checkout pay
+
+# 从远程仓库中，把对应的远程分支下载到本地仓库中，并把下载的本地分支进行重命名
+git checkout -b 本地本质名称 远程分支名称/远程分支名称
+#示例:
+git checkout -b payment/pay
+```
+
+### 8.2 拉取远程分支的最新代码
+
+```
+# 从远程仓库，拉取当前分支最新的代码，保持当前分支的代码和远程分支代码一致
+git pull
+```
+
+**`注意：在哪给分支操作就会拉哪个分支的最新`**
+
+### 8.3 删除远程
+
+```
+# 删除远程仓库中，指定名称的远程分支
+git push 远程仓库名称 --delete 远程分支名称
+# 示例：
+git push origin --delete pay
+```
 
 
 
@@ -1442,7 +1499,7 @@ git commit -m
 
 ![img](https://img-blog.csdnimg.cn/7b65b10acda3492187be4a664378e824.png)
 
-### **第二次更新只需要git push就行了**
+### **第二次更新只需要git push就行了，拉取用给git pull**
 
 ## 3 SSH key
 
@@ -1497,6 +1554,213 @@ git clone 远程仓库的地址
 ![Snipaste_2022-09-16_15-53-49](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-16_15-53-49.png)
 
 ### 
+
+### 3.6 从本地分支推送到远程仓库
+
+如果是<font color='red'>**第一次**</font>将分支推送到远程仓库，需要：
+
+```
+# -u 表示把本地分支和远程分支进行关联，旨在第一次推送是需要带 -u 参数
+git push -u 远程仓库的别名（默认是origin）  本地分支名称：想要命名为的远程分支名称
+
+# 实际案例
+git push -u origin payment:pay
+
+# 如果希望远程分支的名称和本地分支一致，可以简化：
+git push -u origin payment
+```
+
+**`注意：只有第一次需要-u`**
+
+### 3.7 查看远程仓库中所有的分支
+
+```
+git remote show 远程仓库名
+例如：
+git remote show origin
+```
+
+
+
+
+
+# webpack
+
+![webpack](https://bkimg.cdn.bcebos.com/pic/e824b899a9014c086e0684f2663415087bf40ad15e1e?x-bce-process=image/resize,m_lfit,w_536,limit_1/format,f_jpg)
+
+## 1.前端工程化
+
+小白眼中前端：
+
+- 会写html+CSS+javasScript
+- 需要美化页面，拽一个bookstrap
+- 需要DOM或Ajax，就拽一个JQuery
+- 需要快速页面布局，就拽一个Layui过来
+
+实际：
+
+- 模块化（js、css、资源的模块化）
+- 组件化（复用ui）
+- 规范化（目录规范、编码规范、接口规范、文档规范、Git规范）
+- 自动化（自动部署）
+
+## 2.什么是webpack
+
+>webpack 是代码编译工具，有入口、出口、loader 和插件。webpack 是一个用于现代[ JavaScript ](https://baike.baidu.com/item/ JavaScript /321142?fromModule=lemma_inlink)应用程序的静态模块打包工具。当 webpack 处理应用程序时，它会在内部构建一个依赖图(dependency graph)，此依赖图对应映射到项目所需的每个模块，并生成一个或多个 *bundle*。 
+
+web是前端项目工程化的具体解决方案
+
+## 案例
+
+1. **在文件夹下初始化包管理配置文件 package.json：cmd打开然后输入npm init -y命令**
+
+   
+
+   ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-19_14-51-43.png)
+
+2. 在文件夹内新建src源代码目录
+
+3. 新建src -> index.html和脚本js文件
+
+4. 运行 npm install jquery -S 命令 安装jQuery（--save缩写-S）
+
+   ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-19_15-42-39.png)
+
+5. 通过ES6模块化导入jQuery，实现列表隔行变色效果
+
+
+
+
+
+
+
+
+
+
+
+## 3.在项目中安装webpack
+
+>安装Webpack前的准备工作：
+>\1. 由于 webpack 执行打包压缩时依赖 nodeJS，先确保你的系统安装了nodeJS *`5.0.0`* 及以上的版本。
+>\2. 因为 npm 是 nodeJS 平台默认的包管理工具，这里用 npm 安装 webpack。
+
+[Webpack](https://so.csdn.net/so/search?q=Webpack&spm=1001.2101.3001.7020)有两种安装方式： **全局安装**：安装Webpack到全局后，可以在任何地方共用一个Webpack[可执行文件](https://so.csdn.net/so/search?q=可执行文件&spm=1001.2101.3001.7020)，而不用各个项目重复安装。**局部安装**：（推荐）安装到某个项目中，可防止不同项目依赖不同版本的 Webpack 而导致冲突。
+
+### 全局安装 Webpack
+
+安装Webpack：
+
+```coffeescript
+# --install：安装 | 简写：i
+# --global: 全局 | 简写：-g
+# 安装最新版本
+npm i -g webpack
+# 安装指定版本
+npm i -g webpack@<version>
+```
+
+如果你使用 webpack 4+ 版本，还需要安装 webpack-cli（webpack）：
+
+```coffeescript
+npm i -g webpack-cli
+```
+
+查看版本，验证安装成功：
+
+```
+webpack -v
+```
+
+### 局部安装 Webpack 到项目（推荐）
+
+#### **1.** 首先，用 npm 在项目的根目录创建一个`package.json`文件：
+
+```coffeescript
+# 从当前目录中提取的信息生成默认的package.json
+npm init -y
+# 或
+npm init --yes
+```
+
+出现一串文本表示执行成功：
+
+![d70f3fb35e35808f875552f9a1e09673.png](https://img-blog.csdnimg.cn/img_convert/d70f3fb35e35808f875552f9a1e09673.png)
+
+`注意：dependencies和devDependencies均为包，但Dependencies在开发和上线后均使用，devDependencies包仅在开发时使用`
+
+#### **2.** 在项目中安装 webpack：
+
+```coffeescript
+# --save-dev: 安装到项目的依赖中 | 简写：-D
+# 安装最新版本
+npm i -D webpack
+# 安装指定版本
+npm i -D webpack@<version> 
+```
+
+#### **3.** 安装成功后，打开`package.json`文件查看 webpack 是否已经安装，并且查看 webpack 安装的版本。
+
+![e10797e5c83f07b529de83bdb149b79f.png](https://img-blog.csdnimg.cn/img_convert/e10797e5c83f07b529de83bdb149b79f.png)
+
+由于 webpack 4.x 以上将命令相关的内容都放到了 webpack-cli，所以还需要安装 webpack-cli。
+
+#### **4. 安装 webpack-cli。**
+
+```coffeescript
+npm i -D webpack-cli
+```
+
+在`package.json`文件中，`devDependencies`中能够看到`webpack-cli`的版本信息。
+
+#### **5.** 验证成功 我们可以进入项目的`node_modules/.bin/webpack`访问webpack的bin版本。
+
+```
+# 查看webpack版本
+node_modules/.bin/webpack -v
+# 查看webpack-cli版本
+node_modules/.bin/webpack-cli -v
+```
+
+因为是局部安装，要进入依赖包执行webpack的命令才有效，否则会被认为命令无效。 或者，使用 npm 包执行器 `npx` 可以自动找到对应的包执行命令（一般安装了npm会自动安装npx），有了这个工具，执行局部的webpack命令就没有那么冗长了。
+
+```coffeescript
+npx webpack -v
+```
+
+
+
+## 4.在项目中配置webpage
+
+1 在项目根目录中，创建名为 webpack.config.js的webpack配置文件，并初始化如下基本配置
+
+```c
+// 使用node导出语法，向外导出一个 webpack 的配置对象
+module.exports = {
+	mode: 'development'  
+        // mode 用来指定构建模式，可选值有 development 和 production（开发模式和生产模式/上线模式)
+}
+```
+
+2 在 package.json 的 script 节点下，新增 dev 脚本如下：
+
+```c
+"scripts": {
+	"dev": "webpack"  
+        //script 节点下的脚本，脚本名dev可以自定，可以通过 npm run 名称 执行，例如 npm run dev 
+}
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-19_17-26-44.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-19_17-27-41.png)
+
+3 在终端运行 **npm run dev 命令**，启动webpack进行项目的打包构建
+
+
+
+
+
+
 
 
 
