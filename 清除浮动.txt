@@ -1,0 +1,51 @@
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+方法2：
+
+        /* 清除浮动 */
+        .clearfix:before,
+        .clearfix:after {
+            content: "";
+            display: table;
+        }
+
+        .clearfix:after {
+            clear: both;
+        }
+
+        /* IE兼容 */
+        .clearfix {
+            *zoom: 1;
+        }
+
+
+方法1：
+
+        /* 清除浮动 */
+        .clearfix:after {
+            content: "";
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+
+        /* IE兼容 */
+        .clearfix {
+            *zoom: 1;
+        }
+
+取消表单轮廓和文本域缩放
+
+        input {
+            outline: none;
+        }
+
+        textarea {
+            outline: none;
+            resize: none;
+        }
