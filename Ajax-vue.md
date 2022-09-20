@@ -1610,34 +1610,6 @@ git remote show origin
 
 web是前端项目工程化的具体解决方案
 
-## 案例
-
-1. **在文件夹下初始化包管理配置文件 package.json：cmd打开然后输入npm init -y命令**
-
-   
-
-   ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-19_14-51-43.png)
-
-2. 在文件夹内新建src源代码目录
-
-3. 新建src -> index.html和脚本js文件
-
-4. 运行 npm install jquery -S 命令 安装jQuery（--save缩写-S）
-
-   ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-19_15-42-39.png)
-
-5. 通过ES6模块化导入jQuery，实现列表隔行变色效果
-
-
-
-
-
-
-
-
-
-
-
 ## 3.在项目中安装webpack
 
 >安装Webpack前的准备工作：
@@ -1729,7 +1701,7 @@ npx webpack -v
 
 
 
-## 4.在项目中配置webpage
+## 4.在项目中配置webpage（webpack.config.js）
 
 1 在项目根目录中，创建名为 webpack.config.js的webpack配置文件，并初始化如下基本配置
 
@@ -1738,8 +1710,11 @@ npx webpack -v
 module.exports = {
 	mode: 'development'  
         // mode 用来指定构建模式，可选值有 development 和 production（开发模式和生产模式/上线模式)
+        //两者在run打包中development速度快，但文件大，production速度慢但压缩文件文件小。
 }
 ```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-20_11-14-16.png)
 
 2 在 package.json 的 script 节点下，新增 dev 脚本如下：
 
@@ -1754,15 +1729,406 @@ module.exports = {
 
 ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-19_17-27-41.png)
 
-3 在终端运行 **npm run dev 命令**，启动webpack进行项目的打包构建
+3 在终端运行 **npm run dev 命令**，启动webpack进行项目的打包构建<font color='red'>**（压缩需要改参数mode、合并、解决兼容问题）**</font>
+
+会自动新建一个文件夹，打包出一个新的main.js，**npm run dev 命令**真正执行的是webpack两个包
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-20_10-08-19.png)
+
+引用打包出的main.js来解决兼容性的问题，每次更新代码都需要重新运行npm run dev命令生成新的main.js
+
+## 5.webpack中的默认约定
+
+在webpack 4.x和5.x的版本中，有如下默认：
+
+1. 默认的打包入口文件为src -> index.js
+2. 默认的输出文件路径为dist -> main.js
+
+`注意：可以在webpack.config.js中修改打包的默认约定`
+
+## 6.自定义打包的入口与出口
+
+在webpack.config.js配置文件中，通过<font color='red'>**entry节点**</font>指定打包的入口，通过<font color='red'>**output节点**</font>指定打包的出口。
+
+```javascript
+//导入 node.js 中专门操作路径的模块
+const path = require('path')
+
+// 使用node导出语法，向外导出一个 webpack 的配置对象
+module.exports = {
+    // mode 用来指定构建模式，可选值有 development 和 production（开发模式和生产模式/上线模式)
+    //两者在run打包中development速度快，但文件大，production速度慢但压缩文件文件小。
+    mode: 'development',
+
+    //entry:'自定义指定要处理的那个文件'
+    entry: path.join(__dirname, './src/index1.js'),
+    //自定义指定生成的文件要存放在哪里
+    output: {
+        //path 存放的目录，这里的前面的path是属性名，后面和上面的path是node模块
+        path: path.join(__dirname, 'dist'),
+        //自定义生成的文件名
+        filename: 'bundle.js'
+    }
+}
+```
+
+ 
+
+## 7.webpack 插件
+
+### (1)  webpack-dev-server
+
+- 类似于node中的nodemon工具
+- 他会监听代码，每当修改了源代码，webpack都会自动进行项目的打包和构建存放在内存内，而不是硬盘
+
+#### (1.1) 安装webpack-dev-server
+
+```
+npm install webpack-dev-server -D
+```
+
+安装完如下：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-20_14-50-50.png)
+
+#### (1.2) 配置 webpack-dev-server
+
+1. 修改package.json  —> scripts 中的dev命令如下：
+
+```
+"scripts": {
+	"dev": "webpack serve"  // script 节点下的脚本，可以通过npm run执行 serve是个参数
+}
+```
+
+2. 再次运行npm run dev打包命令，重新打包（光标一直闪烁，说明在监听源代码）
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-20_14-58-32.png)
+
+3. 因为webpack都会自动进行项目的打包和构建存放在内存内，而不是硬盘，所以引用不是dist的main.js，二是内存里的main.js
+
+   ```html
+   //在index.html中引用
+       <script src="/main.js"></script>
+   ```
+
+   
+
+4. 打开http://localhost:8080/的src文件夹即可实时效果，
+
+`若error无法访问，在webback.config.js配置文件中添加：`
+
+```
+devServer: {
+        static: {
+            directory: path.join(__dirname, '/')
+        }
+    }
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-20_15-35-08.png)
+
+刷新页面即可
+
+`也可以添加如下：`
+
+```
+devServer: {
+	open: true,//初次打包完成后,自动打开浏览器
+	host: '127.0.0.1',// 实时打包所使用的主机地址
+	port: 8080,// 实时打包所使用的端口号
+	static:'./' //静态资源，能够在http协议上打开相当于是app.use(express.static('./'))
+}
+```
+
+
+
+### (2)  html-webpack-plugin
+
+- webpack 中的HTML插件（类似于一个模块引擎插件）
+- 可以通过这个插件自定制 index.html页面的内容
+
+#### (2.1) 安装 html-webpack-plugin
+
+```
+npm install html-webpack-plugin -D
+```
+
+#### (2.2) 配置 html-webpack-plugin
+
+```
+// 1. 导入 HTML 插件，得到一个构造函数
+const HtmlPlugin = require('html-webpack-plugin')
+
+// 2. 创建 HTML 插件的实例对象
+const htmlPlugin = new HtmlPlugin({
+	template: './src/index.html', //指定源文件的存放地址
+	filename: './index.html'
+})
+
+module.exports = {
+	mode: 'development',
+	plugins: [htmlPlugin], //3. 通过plugins 节点，使 htmlPlugin插件生效
+}
+```
+
+**`html-webpack-plugin会自动将index.html引用内存内的main.js，就算不引用/main.js，webpack-dev-server插件也能正常使用`**
+
+(2.3)  html-webpack-plugin 功能
+
+- 通过HTML插件复制到项目根目录中的index.html页面,也被放到了内存里
+- HTML插件在圣宠的index.html页面，自动注入了打包的main.js文件
+
+(3) devServer节点
+
+```
+devServer: {
+	open: true,//初次打包完成后,自动打开浏览器
+	host: '127.0.0.1',// 实时打包所使用的主机地址，本机
+	port: 8080,// 实时打包所使用的端口号
+	static:'./' //静态资源，能够在http协议上打开相当于是app.use(express.static('./'))
+}
+```
 
 
 
 
 
+## 8.webpack中的loader（加载器）
+
+### 8.1 loader简述
+
+>我们使用[webpack](https://so.csdn.net/so/search?q=webpack&spm=1001.2101.3001.7020) 来处理我们写的js代码，并且webpack 会自动处理js之间的相关依赖。在实际项目中，不仅有js文件，还有css、图片、[ES6](https://so.csdn.net/so/search?q=ES6&spm=1001.2101.3001.7020)转ES5、tpyescript转ES5，将less，scss转化css，将jsx、vue文件转换js文件。
+
+非 .js 的文件，webpack默认处理不了，**loader加载器协助webpack打包处理特定的文件模块**
+
+### 8.2 打包处理css文件
+
+```
+//导入样式（在webpack中，一切皆模块，都可以通过ES6 导入模块与大进行导入和使用）
+import './css/index.css'
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-20_16-40-45.png)
+
+#### 1 运行npm i style-loader -D，npm css-loader -D 命令，安装处理css文件的loader
+
+```
+npm i style-loader -D
+npm i css-loader -D
+```
+
+#### 2 在webpaack.config.js的 module ->数组中，添加loader：
+
+```
+module: {  // 所有第三方文件模块的匹配规则
+        rules: [  //文件后缀名的匹配机制
+            { test: /\.css$/, use: ['style-loader', 'css-loader'] }
+        ]
+    }
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-20_16-51-45.png)
+
+#### 3 重新npm run dev一下
 
 
 
+### 8.3 打包处理less文件
+
+```
+import './css/index.less'
+```
+
+#### 1 运行npm i less-loader -D，npm less -D 命令，安装处理css文件的loader
+
+```
+npm i less-loader -D
+npm i less -D
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-20_17-05-22.png)
+
+#### 2 在webpaack.config.js的 module ->rules数组中，添加loader：
+
+```
+module: {  // 所有第三方文件模块的匹配规则
+        rules: [  //文件后缀名的匹配机制
+            { test: /\.less$/, use: ['style-loader', 'css-loader','less-loader'] }
+        ]
+    }
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-20_17-07-34.png)
+
+#### 3 重新npm run dev一下
+
+
+
+### 8.4 演示图片loader
+
+```
+import logo from './images/logo.jpg'
+```
+
+#### 1 运行npm i url-loader -D，npm file-loader -D 命令，安装处理css文件的loader
+
+```
+npm i url-loader -D
+npm i file-loader -D
+```
+
+#### 2 在webpaack.config.js的 module ->rules数组中，添加loader：
+
+```
+module: {  // 所有第三方文件模块的匹配规则
+        rules: [  //文件后缀名的匹配机制
+        	//?后面limit指定图片大小，单位为字节（byte）
+        	//只有 <= limit大小的图片，才会被转成base64格式
+            { test: /\.jpg|png|gif$/, use: 'url-loader?limit=22229' }
+        ]
+    }
+```
+
+>?后面limit指定图片大小，单位为字节（byte）
+>只有 <= limit大小的图片，才会被转成base64格式
+
+#### 3 重新npm run dev一下
+
+
+
+### 8.5 打包处理js文件中的高级语法
+
+```
+import logo from './images/logo.jpg'
+```
+
+#### 1 安装处理css文件的loader
+
+```
+npm i babel-loader -D
+npm i babel/core -D
+npm i babel/plugin-proposal-decorators -D  //装饰器js的loader
+```
+
+#### 2 在webpaack.config.js的 module ->rules数组中，添加loader：
+
+```
+module: {  // 所有第三方文件模块的匹配规则
+        rules: [  //文件后缀名的匹配机制
+        	//?后面limit指定图片大小，单位为字节（byte）
+        	//只有 <= limit大小的图片，才会被转成base64格式
+            { test: /\.js$/, use: 'babel-loader', exclude: /node_modules/ }
+        ]
+    }
+```
+
+#### 3 配置 babel-loader
+
+在项目根目录下，创建名为 babel.config.js的哦欸之文件，定义Babel的配置项如下：
+
+
+
+#### 4 重新npm run dev一下
+
+
+
+
+
+## 案例
+
+1. **在文件夹下初始化包管理配置文件 package.json：cmd打开然后输入npm init -y命令**
+
+   
+
+   ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-19_14-51-43.png)
+
+2. 在文件夹内新建src源代码目录
+
+3. 新建src -> index.html和脚本js文件
+
+4. 运行 npm install jquery -S 命令 安装jQuery（--save缩写-S）
+
+   （npm uninstall jQuery -S卸载）
+
+   ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-19_15-42-39.png)
+
+5. 在index.js中通过ES6模块化导入jQuery，实现列表隔行变色效果
+
+```
+//1. 使用 ES6 导入语法， 导入jQuery
+import $ from 'jQuery'
+
+//2. 定义 jQuery 的入口函数
+$(function () {
+    //3. 实现奇数行变色
+    $('li:odd').css('background-color', 'red')
+    $('li:even').css('background-color', 'black')
+
+})
+```
+
+6. 在项目中安装webpack
+
+```coffeescript
+# --save-dev: 安装到项目的依赖中 | 简写：-D
+# 安装最新版本
+npm i -D webpack
+# 安装指定版本
+npm i -D webpack@<version> 
+```
+
+7. 安装成功后，打开`package.json`文件查看 webpack 是否已经安装，并且查看 webpack 安装的版本。
+
+![e10797e5c83f07b529de83bdb149b79f.png](https://img-blog.csdnimg.cn/img_convert/e10797e5c83f07b529de83bdb149b79f.png)
+
+由于 webpack 4.x 以上将命令相关的内容都放到了 webpack-cli，所以还需要安装 webpack-cli。
+
+8. 安装 webpack-cli。
+
+```coffeescript
+npm i -D webpack-cli
+```
+
+在`package.json`文件中，`devDependencies`中能够看到`webpack-cli`的版本信息。
+
+9. 在项目中配置webpage（webpack.config.js）
+
+10. 在项目根目录中，创建名为 webpack.config.js的webpack配置文件，并初始化如下基本配置
+
+```c
+// 使用node导出语法，向外导出一个 webpack 的配置对象
+module.exports = {
+	mode: 'development'  
+        // mode 用来指定构建模式，可选值有 development 和 production（开发模式和生产模式/上线模式)
+        //两者在run打包中development速度快，但文件大，production速度慢但压缩文件文件小。
+}
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-20_11-14-16.png)
+
+11. 在 package.json 的 script 节点下，新增 dev 脚本如下：
+
+```c
+"scripts": {
+	"dev": "webpack"  
+        //script 节点下的脚本，脚本名dev可以自定，可以通过 npm run 名称 执行，例如 npm run dev 
+}
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-19_17-26-44.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-19_17-27-41.png)
+
+12. 在终端运行 **npm run dev 命令**，启动webpack进行项目的打包构建<font color='red'>**（压缩需要改参数mode、合并、解决兼容问题）**</font>
+
+会自动新建一个文件夹，打包出一个新的main.js，**npm run dev 命令**真正执行的是webpack两个包
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-20_10-08-19.png)
+
+引用打包出的main.js来解决兼容性的问题，每次更新代码都需要重新运行npm run dev命令生成新的main.js
+
+13. 在index.html中引用打包生成的main.js查看效果
 
 
 
