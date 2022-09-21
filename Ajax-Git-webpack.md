@@ -1103,7 +1103,7 @@ HTTP 请求方法，属于 HTTP 协议中的一部分，其作用是：**表明�
 
 本地版本控制系统、集中化版本控制系统、**分布式版本控制系统（Git）**
 
-## 1 什么是Git
+## 一. 什么是Git
 
 Git（读音为/gɪt/）是一个开源的分布式版本控制系统，可以有效、高速地处理从很小到非常大的项目版本管理。
 
@@ -1119,21 +1119,21 @@ Git（读音为/gɪt/）是一个开源的分布式版本控制系统，可以�
 
 Git操作绝大多数操作在本地完成，都**只需访问本地文件和资源**
 
-## 3 Git的三个区域
+## 三. Git的三个区域
 
 **工作区、暂存区、Git仓库**
 
-## 4 Git中的三种状态
+## 四. Git中的三种状态
 
 **已修改、已暂存、已提交**
 
-## 5 Git基本的工作流程
+## 五. Git基本的工作流程
 
 1. 在工作区修改文件
 2. 将你想要下次提交的更改进行暂存
 3. 提交更新，找到暂存区的文件，将1快照永久性存储在Git仓库中
 
-## 6 Git使用
+## 六. Git使用
 
 ```
 # 用户名和邮箱
@@ -1329,7 +1329,7 @@ git reset --hard <CommitID>
 
 
 
-## 7 本地分支操作
+## 七. 本地分支操作
 
 ### 7.1 master分支
 
@@ -1440,7 +1440,7 @@ git push -u origin payment
 
 **`注意：只有第一次需要-u`**
 
-### 8.0 查看远程仓库中所有的分支
+### 7.10 查看远程仓库中所有的分支
 
 ```
 git remote show 远程仓库名
@@ -1448,7 +1448,7 @@ git remote show 远程仓库名
 git remote show origin
 ```
 
-### 8.1 跟踪分支(远程分支下载到本地仓库中
+### 7.11 跟踪分支(远程分支下载到本地仓库中
 
 从远程仓库中，把远程分支下载到本地仓库中。需要：
 
@@ -1464,7 +1464,7 @@ git checkout -b 本地本质名称 远程分支名称/远程分支名称
 git checkout -b payment/pay
 ```
 
-### 8.2 拉取远程分支的最新代码
+### 7.12 拉取远程分支的最新代码
 
 ```
 # 从远程仓库，拉取当前分支最新的代码，保持当前分支的代码和远程分支代码一致
@@ -1473,7 +1473,7 @@ git pull
 
 **`注意：在哪给分支操作就会拉哪个分支的最新`**
 
-### 8.3 删除远程
+### 7.13 删除远程
 
 ```
 # 删除远程仓库中，指定名称的远程分支
@@ -1490,18 +1490,18 @@ git push origin --delete pay
 
 开源项目托管平台
 
-## 1 访问方法
+## 一. 访问方法
 
 1. HTTPS：零配置，每次访问仓库都要输入Github的账号和密码
 2. SSH：需要进行额外的配置   （git@开头）
 
-## 2 HTTPS
+## 二. HTTPS
 
 ![img](https://img-blog.csdnimg.cn/7b65b10acda3492187be4a664378e824.png)
 
 ### **第二次更新只需要git push就行了，拉取用给git pull**
 
-## 3 SSH key
+## 三. SSH key
 
 ### 3.1 生成SSH Key
 
@@ -1588,7 +1588,7 @@ git remote show origin
 
 ![webpack](https://bkimg.cdn.bcebos.com/pic/e824b899a9014c086e0684f2663415087bf40ad15e1e?x-bce-process=image/resize,m_lfit,w_536,limit_1/format,f_jpg)
 
-## 1.前端工程化
+## 一.前端工程化
 
 小白眼中前端：
 
@@ -1604,13 +1604,13 @@ git remote show origin
 - 规范化（目录规范、编码规范、接口规范、文档规范、Git规范）
 - 自动化（自动部署）
 
-## 2.什么是webpack
+## 二.什么是webpack
 
 >webpack 是代码编译工具，有入口、出口、loader 和插件。webpack 是一个用于现代[ JavaScript ](https://baike.baidu.com/item/ JavaScript /321142?fromModule=lemma_inlink)应用程序的静态模块打包工具。当 webpack 处理应用程序时，它会在内部构建一个依赖图(dependency graph)，此依赖图对应映射到项目所需的每个模块，并生成一个或多个 *bundle*。 
 
 web是前端项目工程化的具体解决方案
 
-## 3.在项目中安装webpack
+## 三.在项目中安装webpack
 
 >安装Webpack前的准备工作：
 >\1. 由于 webpack 执行打包压缩时依赖 nodeJS，先确保你的系统安装了nodeJS *`5.0.0`* 及以上的版本。
@@ -1701,7 +1701,7 @@ npx webpack -v
 
 
 
-## 4.在项目中配置webpage（webpack.config.js）
+## 四.在项目中配置webpage（webpack.config.js）
 
 1 在项目根目录中，创建名为 webpack.config.js的webpack配置文件，并初始化如下基本配置
 
@@ -1737,7 +1737,7 @@ module.exports = {
 
 引用打包出的main.js来解决兼容性的问题，每次更新代码都需要重新运行npm run dev命令生成新的main.js
 
-## 5.webpack中的默认约定
+## 五.webpack中的默认约定
 
 在webpack 4.x和5.x的版本中，有如下默认：
 
@@ -1746,7 +1746,7 @@ module.exports = {
 
 `注意：可以在webpack.config.js中修改打包的默认约定`
 
-## 6.自定义打包的入口与出口
+## 六.自定义打包的入口与出口
 
 在webpack.config.js配置文件中，通过<font color='red'>**entry节点**</font>指定打包的入口，通过<font color='red'>**output节点**</font>指定打包的出口。
 
@@ -1774,7 +1774,7 @@ module.exports = {
 
  
 
-## 7.webpack 插件
+## 七.webpack 插件
 
 ### (1)  webpack-dev-server
 
@@ -1872,7 +1872,13 @@ module.exports = {
 }
 ```
 
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-21_10-58-02.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-21_10-58-43.png)
+
 **`html-webpack-plugin会自动将index.html引用内存内的main.js，就算不引用/main.js，webpack-dev-server插件也能正常使用`**
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-21_10-59-12.png)
 
 (2.3)  html-webpack-plugin 功能
 
@@ -1894,7 +1900,7 @@ devServer: {
 
 
 
-## 8.webpack中的loader（加载器）
+## 八.webpack中的loader（加载器）
 
 ### 8.1 loader简述
 
@@ -1918,7 +1924,7 @@ npm i style-loader -D
 npm i css-loader -D
 ```
 
-#### 2 在webpaack.config.js的 module ->数组中，添加loader：
+#### 2 在webpack.config.js的 module ->数组中，添加loader：
 
 ```
 module: {  // 所有第三方文件模块的匹配规则
@@ -1949,7 +1955,7 @@ npm i less -D
 
 ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-20_17-05-22.png)
 
-#### 2 在webpaack.config.js的 module ->rules数组中，添加loader：
+#### 2 在webpack.config.js的 module ->rules数组中，添加loader：
 
 ```
 module: {  // 所有第三方文件模块的匹配规则
@@ -1969,6 +1975,7 @@ module: {  // 所有第三方文件模块的匹配规则
 
 ```
 import logo from './images/logo.jpg'
+$('.box').attr('src', logo)
 ```
 
 #### 1 运行npm i url-loader -D，npm file-loader -D 命令，安装处理css文件的loader
@@ -1978,7 +1985,7 @@ npm i url-loader -D
 npm i file-loader -D
 ```
 
-#### 2 在webpaack.config.js的 module ->rules数组中，添加loader：
+#### 2 在webpack.config.js的 module ->rules数组中，添加loader：
 
 ```
 module: {  // 所有第三方文件模块的匹配规则
@@ -2000,36 +2007,231 @@ module: {  // 所有第三方文件模块的匹配规则
 ### 8.5 打包处理js文件中的高级语法
 
 ```
-import logo from './images/logo.jpg'
+//定义装饰器函数
+function info(target){
+	target.info = 'Person info.'
+}
+
+//定义一个普通的类
+@info
+class Person{
+	console.log(Person.info)
+}
 ```
 
-#### 1 安装处理css文件的loader
+#### 1 安装处理js高级文件的loader
 
 ```
 npm i babel-loader -D
-npm i babel/core -D
-npm i babel/plugin-proposal-decorators -D  //装饰器js的loader
+npm i @babel/core -D
+npm i @babel/plugin-proposal-decorators -D  //装饰器js的loader(插件)
 ```
 
-#### 2 在webpaack.config.js的 module ->rules数组中，添加loader：
+#### 2 在webpack.config.js的 module ->rules数组中，添加loader：
 
 ```
 module: {  // 所有第三方文件模块的匹配规则
         rules: [  //文件后缀名的匹配机制
         	//?后面limit指定图片大小，单位为字节（byte）
         	//只有 <= limit大小的图片，才会被转成base64格式
+        	//exclude排除项,在配置babel-loader的时候，程序员只需要把自己的代码进行转换即可，一定要排除node_modules目录中的js文件，因为第三方包里的兼容性，不需要你关心
             { test: /\.js$/, use: 'babel-loader', exclude: /node_modules/ }
+            
         ]
     }
 ```
 
 #### 3 配置 babel-loader
 
-在项目根目录下，创建名为 babel.config.js的哦欸之文件，定义Babel的配置项如下：
+babel-loader时webpack的插件，babel/plugin-proposal-decorators时babel-loader的插件，插件的插件
+
+在项目根目录下，创建名为 babel.config.js的配置文件，定义Babel的配置项如下：
+
+```
+module.exports = {
+	//声明 babel 可用的插件，在babel时利用这个插件
+	//将来， webpack在调用babel-loader的时候，会先加载 plugins插件来使用
+	plugins: [['@babel/plugin-proposal-decorators', { legacy: true }]]
+}
+```
 
 
 
 #### 4 重新npm run dev一下
+
+
+
+
+
+## 九.打包发布
+
+### 9.1 项目开发完后，需要webpack对项目进行打包发布，主要是：
+
+- 开发环境下，打包生成的文件<font color='red'>**存放在内存中**</font>，无法获取到最终打包生成的文件
+- 开发环境下，打包生成的文件<font color='red'>**不会进行代码压缩和性能优化**</font>
+
+所以需要打包处理
+
+### 9.2 配置 webpack 的打包发布
+
+在 package.json 文件的 scripts 节点下，新增 builde命令 ：
+
+```
+  "scripts": {
+    "dev": "webpack server",  //开发环境中，运行dev命令
+    "build": "webpack --mode production"  //项目发布时，运行build命令
+  }
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-21_10-08-54.png)
+
+> package.json不允许加注释
+
+**--mode 是一个参数项，用来指定 webpack的运行模式。优先级比内置的mode高**
+
+### 9.3 把JavaScript 文件统一生成到js目录中
+
+在 webpack.config.js 配置文件的 output 节点中，进行如下的配置：
+
+```
+output: {
+	//path 存放的目录，这里的前面的path是属性名，后面和上面的path是node模块
+    path: path.join(__dirname, 'dist'),
+    //自定义生成的文件名,明确告诉webpack把生成的bundle.js 文件存放到 dist 目录下的 js 子目录下
+    filename: 'js/bundle.js'
+}
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-21_10-12-52.png)
+
+### 9.4 把图片文件统一生成到image目录中
+
+修改webpack.config.js中的url-loader 配置项，新增outputPath选项即可指定图片输出路径：
+
+```
+module: {  // 所有第三方文件模块的匹配规则
+            //在配置 url-loader的时候，多个参数，使用&进行分隔
+            { test: /\.jpg|png|gif$/, use: 'url-loader?limit=470&outputPath=images' }
+        ]
+```
+
+也可以写成：
+
+```
+{
+	test: /\.jpg|png|gif$/,
+	use: {
+		loader: 'url-loader',
+		options: {
+			limit=470,
+			outputPath: 'images',
+			},
+	},
+}
+```
+
+
+
+### 9.5 自动清理 dist 目录下的旧文件
+
+为了在每次打包时自动清理掉dist目录中的旧文件，可以安装并配置 clean-webpack-plugin插件：
+
+```
+// 1. 安装清理dist目录的webpack插件
+npm install clean-webpack-plugin -D
+
+// 2. 按需导入插件，得到插件的构造函数之后，创建插件的实例对象插入到webpack的配置文件webpack.config.js中的plugins项
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+
+module.exports = {
+    plugins: [
+        new CleanWebpackPlugin(),
+    ],
+}
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-21_14-37-18.png)
+
+
+
+
+
+## 十. Source Map
+
+>Sourcemap 本质上是一个信息文件，里面储存着代码转换前后的对应位置信息。它记录了转换压缩后的代码所对应的转换前的源代码位置，是源代码和生产代码的映射。
+>
+>默认环境生成的Source MAp，记录的是生成后的代码的位置不是源代码的
+>
+>**Sourcemap 解决了在打包过程中，代码经过压缩，去空格以及 babel 编译转化后，由于代码之间差异性过大，造成无法debug的问题。**
+
+> 有了他，出错时，就可以直接显示源代码的错误行数
+>
+> Sourcemap的用法
+> Sourcemap 的种类有很多， 在生产环境下可以用process.env判断一下。 webpack中可以在devtool中设置, 在开发环境中可以配置devtool为cheap-module-source-map，方便调试。生产环境下建议采用none的方式，这样做不暴露源代码。或者是nosources-source-map 的方式，既可以定位源代码位置，又不暴露源代码。
+
+### 10.1 解决默认Source Map的问题
+
+推荐在webpack.config.js中添加如下配置，即可保证运行时报错的行数与源代码一致
+
+<font color='red'>**只在"开发模式"run dev使用**</font>
+
+```
+module.exports = {
+	mode: 'development',
+	// cheap-module-source-map 仅限在‘开发模式’下使用，不建议在‘生产模式’使用
+	// 此选项生成的 Source Map 能够保证‘运行时报错的行数’与‘源代码的行数’保持一致
+	devtool: 'cheap-module-source-map',
+	//省略其他配置项...
+}
+```
+
+
+
+### 10.2 只定位行数，不爆露源码
+
+可以将devtool设置为 nosources-source-map
+
+<font color='red'>**只在"发布模式"run build使用，打开dist内的index.html**</font>
+
+```
+//在实际发布时，选择这个设置，或者干脆关闭devtool
+devtool: 'nosources-source-map',
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-21_15-08-05.png)
+
+### 10.3 结论
+
+1. 开发阶段：
+   - 建议把devtool: 'cheap-module-source-map'
+   - 好处：可以精准定位
+2. 生产环境：
+   - 建议直接关闭，或devtool: 'nosources-source-map',
+   - 好处：防止代码泄露
+
+
+
+## 扩展：
+
+### 1. @用法
+
+在需要表示路径的时候，使用@表示src，通过@/xxx从外到内的方法代替../../繁琐的从内到位方法
+
+需要配置：
+
+```
+module.exports = {
+	mode: 'development',
+	resole: {
+		alias: {
+			'@': path.join(__dirname, './src/')
+		}
+	}
+}
+
+```
+
+
 
 
 
@@ -2131,75 +2333,6 @@ module.exports = {
 13. 在index.html中引用打包生成的main.js查看效果
 
 
-
-# Vue
-
-## 1.什么是vue
-
-用于构建用**户见界面**的**框架**
-
-1 构建用户界面
-
-- 用Vue往html页面中填充数据
-
-2 框架
-
-- 框架是一套现成的解决方案，程序员只能遵守框架的规则，去编写的自己的
-- 要学习vue，就是在学习vue的框架的用法
-- vue的指令、组件（是对ui结构的复用cv工程师）、路由Vuex、Vue组件库
-
-## 2.vue的两个特性
-
-1 数据驱动视图
-
-- 数据的变化会驱动视图自动更新
-- 单向的：页面依赖的数据变化→vue监听数据的变化→（自动渲染）→页面结构
-
-2 双向数据绑定
-
-> 在页面中，form表单负责采集数据，Ajax负责提交数据
-
-- js数据的变化，会被自动渲染到页面上
-- 页面上表单的数据发生变化时会被vue自动获取到，并更新到js数据中
-
-> 双向影响
->
-> 数据驱动视图和双向数据绑定的底层原理是MVVM（Mode 数据源、View 视图、ViewModel就是Vue示例）
-
-# vue的基本使用
-
-## 1.基本步骤
-
-new Vue（）
-
-① 导入vue.js的script脚本文件
-
-```
-<script src="./vue.js"></script>
-```
-
-②在页面中声明一个将要被vue所控制的DOM区域
-
-③创建vm实例对象（vue实例对象）
-
-```
-	<!-- Vue控制的div -->
-    <div id="app">{{ username }}</div> //输出uername的值 zhangsan
-
-    <!-- 导入Vue库文件，在window全局就有了Vue这个构造函数 -->
-    <script src="./vue.js"></script>
-    <!-- 创建Vue实例对象 -->
-    <script>
-    // 创建Vue实例对象，属性固定写法el，表示当前vm实例要控制页面上的哪个区域，接受的值是一个选择器，data对象就是要渲染到页面上的值
-        constvm = new Vue({	
-            el: '#app',
-            data: {
-                username: 'zhangsan'
-            }
-        })
-
-    </script>
-```
 
 
 
