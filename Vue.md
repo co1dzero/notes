@@ -1,3 +1,9 @@
+`preventDefault() 阻止默认`
+
+
+
+------
+
 # Vue
 
 # 一. 简介
@@ -42,6 +48,10 @@ MVVM是Model-View-ViewModel的简写，实现数据驱动试图和双向数据�
 
 > 作者：尤雨溪
 
+
+
+------
+
 # 二. vue的基本使用
 
 ## 1.基本步骤
@@ -55,6 +65,8 @@ new Vue（）
 ```
 
 ②在页面中声明一个将要被vue所控制的DOM区域
+
+`若el指定了多个标签，只会控制第一个`
 
 ```
  el: '#app'
@@ -90,6 +102,8 @@ new Vue（）
 
 
 
+
+------
 
 # 三. Vue的调试工具
 
@@ -232,6 +246,8 @@ vue提供的`{{}}`语法，是用来解决`v-text`会覆盖默认文本内容的
 
 `v-text`和`{{}}`只能渲染纯文本内容，如果要把包含`html`标签的字符串渲染为页面的`html`元素，需要使用`v-html`。
 
+**包含`html`标签的字符串渲染为页面的`html`元素**
+
 用法示例：
 
 ```html
@@ -260,6 +276,234 @@ vue提供的`{{}}`语法，是用来解决`v-text`会覆盖默认文本内容的
 
 
 ```
+
+
+
+## 4.3 属性绑定指令（v-bind）
+
+**`插值表达式 {{}} 只能用在内容节点中，不能用在属性节点中`**
+
+### 4.3.1 v-bind
+
+如果需要为元素的属性动态绑定**属性值**，则需要 v-bind 属性绑定指令。
+
+```html
+<!-- <标签名 v-bind:属性名='动态数据名'> -->
+<input type="text" v-bind:placeholder="tips">
+
+<script src="./vue.js"></script>
+    <script>
+        // 构建Vue的实例对象
+        const vm = new Vue({
+            //el 属性是固定的手法，表示当前 vm 实例要控制页面上的哪个区域，接受值是一个选择器
+            el: '#app',
+            // data 对象就是要渲染到页面上的数据
+            data: {
+                tips: '请输入用户名',
+
+            }
+        })
+</script>
+```
+
+在Vue中 v-bind绑定可以简写成:
+
+```html
+<!-- 在Vue中 v-bind绑定可以简写成: -->
+<input type="text" :placeholder="tips">
+```
+
+
+
+## 4.4 支持JavaScript表达式
+
+```html
+{{ number + 1 }}
+
+{{ ok ? 'YES' : 'NO' }}
+
+//对字符串进行取反，split拆分成数组，reverse()反转数组，join('')数组转字符串
+{{ message.split('').reverse().join('') }}
+
+//id是数据名，’‘字符串 ， + 拼接
+<div v_bind:id=" 'list' + id " ></div>
+```
+
+
+
+## 4.5 事件绑定指令（v-on）（$）
+
+### 4.5.1 v-on（重要）
+
+Vue提供了 v-on 事件绑定指令，来辅助为DOM元素绑定事件监听
+
+```html
+<body>
+    <!-- 被控制的div -->
+    <div id="app">
+
+        <div>count的值：{{count}}</div>
+
+        <!-- 语法格式为 v-on:事件名称="事件处理函数的名称" -->
+        <button v-on:click="add">+1</button>
+        <!-- 绑定事件可以通过（）来传递参数 -->
+        <!-- 绑定事件可以省略 v-on: 为 @ -->
+        <button @click="sub(1)">-1</button>
+
+    </div>
+
+    <!-- 导入vue的库文件，在window全局九有了Vue这个构造函数 -->
+    <script src="./vue.js"></script>
+    <script>
+        // 构建Vue的实例对象
+        const vm = new Vue({
+            //el 属性是固定的手法，表示当前 vm 实例要控制页面上的哪个区域，接受值是一个选择器
+            el: '#app',
+            // data 对象就是要渲染到页面上的数据
+            data: {
+                count: 0
+            },
+
+            // methods 方法内，就是定义事件的处理函数
+            methods: {
+                add: function () {
+                    vm.count += 1
+                },
+                // 简写可以省略一部分
+                sub(n) {
+                    //this指向vm实例
+                    this.count -= n
+                }
+            }
+        })
+    </script>
+</body>
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-22_15-58-36.png)
+
+> **注意：原生DOM对象有 `onclick`、`oninput`、`onkeyup`等原生事件，替换为vue的事件绑定形式后,**
+>
+> **分别为： `v-on:click` 、`v-on:input`、`v-on:keyup`**
+>
+> **即： `@click` 、`@input` 、`@keyup` `**
+
+
+
+### 4.5.2 事件对象 $event
+
+当事件函数未传参数时，会有一个默认事件对象
+
+
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-22_16-18-18.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-22_16-19-13.png)
+
+但当有实参时会传回实参，Vue内置了变量，交 `$event`  ，他就是原生DOM的事件对象`e`
+
+```html
+<!-- 事件对象必须写为$event，形参不必 -->
+<button @click="add($event,1)">+N</button>
+```
+
+```html
+	<div id="app">
+        <div>count的值：{{count}}</div>
+        <!-- 让按钮偶数是黄色，奇数无颜色 -->
+        <!-- Vue内置了变量，交 $event  ，他就是原生DOM的事件对象e -->
+        <!-- 事件对象必须写为$event，形参不必 -->
+        <button @click="add($event,1)">+N</button>
+    </div>
+
+
+
+    <!-- 导入vue的库文件，在window全局九有了Vue这个构造函数 -->
+    <script src="./vue.js"></script>
+    <script>
+        // 构建Vue的实例对象
+        const vm = new Vue({
+            //el 属性是固定的手法，表示当前 vm 实例要控制页面上的哪个区域，接受值是一个选择器
+            el: '#app',
+            // data 对象就是要渲染到页面上的数据
+            data: {
+                count: 0
+            },
+
+            // methods 方法内，就是定义事件的处理函数
+            methods: {
+                add(e, n) {
+                    vm.count += n
+                    console.log(e);
+
+                    // 判断是否为偶数
+                    if (this.count % 2 === 0) {
+                        //偶数 原生DOM语法
+                        e.target.style.background = 'yellow'
+                    } else {
+                        //奇数
+                        e.target.style.background = ''
+                    }
+                }
+            }
+        })
+    </script>
+```
+
+### 4.5.3 事件修饰符
+
+在事件处理函数中调用`event.preventDefault()`或`event.stopPropagation()`是非常常见的需求，
+
+Vue提供了时间修饰符，来更方便的<font color='red'>**对事件的触发进行控制**</font>
+
+常见的**事件修饰符**：
+
+|              事件修饰符               | 说明                                                      |
+| :-----------------------------------: | :-------------------------------------------------------- |
+| <font color='red'>**.prevent**</font> | **阻止默认行为（例如：阻止a链接的跳转、阻止表单的提交）** |
+|  <font color='red'>**.stop**</font>   | **阻止事件冒泡**                                          |
+|              .capture**               | 以捕获模式触发当前的事件处理函数                          |
+|                 .once                 | 绑定的事件只能触发一次                                    |
+|                 .self                 | 只有在event.target是当前元素自身时触发事件处理函数        |
+
+示例:
+
+```html
+        <a href="http://www.baidu.com" @click.prevent="show">跳转</a>
+```
+
+
+
+### 4.5.4 按键修饰符
+
+在监听**键盘事件**时。我们需要**判断详细的按键**，为键盘相关的事件添加**按键修饰符**，
+
+```html
+        <!-- 只有在key是 'enter' 的时候调用 vm.submit()  -->
+        <input @keyup.enter="submit">
+
+        <!-- 只有在key是 'Esc' 的时候调用 vm.clearInput() -->
+        <input @keyup.esc="clearInput">
+
+		<input @keyup.esc="clearInput" @keyup.enter="submit">
+```
+
+```
+                submit(e) {
+                    e.target.value = ''
+                },
+                clearInput(e) {
+                    e.target.value = ''
+                }
+```
+
+
+
+## 4.6 双向绑定指令（v-model）
+
+让程序员在不操作DOM的情况下，<font color='red'>**快速获取表单数据**</font>。
+
+
 
 
 
