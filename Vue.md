@@ -125,7 +125,7 @@ new Vue（）
 
 
 
-# 四. Vue的指令和过滤器
+# 四. Vue的指令
 
 ## 4.1 指令的概念
 
@@ -331,7 +331,7 @@ vue提供的`{{}}`语法，是用来解决`v-text`会覆盖默认文本内容的
 
 
 
-## 4.5 事件绑定指令（v-on）（$）
+## 4.5 事件绑定指令（v-on）（@）
 
 ### 4.5.1 v-on（重要）
 
@@ -503,6 +503,308 @@ Vue提供了时间修饰符，来更方便的<font color='red'>**对事件的触
 
 让程序员在不操作DOM的情况下，<font color='red'>**快速获取表单数据**</font>。
 
+`v-mode`l是双向绑定，表单数据和所绑定的后台数据互相影响。
+
+`v-bind`单向的，后台数据影响表单，但表单数据不会影响数据源
+
+v-model` 本质是监听标签的 `value 属性`
+
+```html
+	<div id="app">
+        <div>count的值：{{username}}</div>
+        <input type="text" v-model="username">
+		<!-- 底层逻辑里，v-model封装了监听value -->
+        <input type="text" :value="username">
+
+
+    </div>
+
+	<!-- 导入vue的库文件，在window全局九有了Vue这个构造函数 -->
+    <script src="./vue.js"></script>
+    <script>
+        // 构建Vue的实例对象
+        const vm = new Vue({
+            //el 属性是固定的手法，表示当前 vm 实例要控制页面上的哪个区域，接受值是一个选择器
+            el: '#app',
+            // data 对象就是要渲染到页面上的数据
+            data: {
+                tips: '请输入用户名',
+                username: 'zhangsan',
+                gender: '女',
+                info: '<p  style="color: #fff000; font-weight: bold;" >你好世界</p>',
+                count: 0
+            }
+        })
+    </script>
+```
+
+
+
+### 4.6.1 v-model 的使用场景
+
+1. `input` 输入框 `v-mode`会自动判读type类型然后
+   - `type = "redio"`
+   - `type = "checkbox"`
+   - `type = "xxx..."`
+2. `extarea`
+3. `select`
+
+`select`的控制问题,city跟value互相影响而不是
+
+```html
+<select v-model="city">
+	<option value="">请选择城市</option>
+	<option value="1">北京</option>
+	<option value="2">天津</option>
+	<option value="3">廊坊</option>
+</select>
+```
+
+
+
+### 4.6.2 v-model 指令的修饰符
+
+| 修饰符  | 作用                                | 示例                            |
+| :-----: | ----------------------------------- | ------------------------------- |
+| .number | 自动将用户的输入值转为数值类型      | `<input v-model.number="age"/>` |
+|  .trim  | 自动过滤用户输入的首尾空白字符      | `<input v-model.trim="msg"/>`   |
+|  .lazy  | 在 “change” 时，而非 “input” 时更新 | `<input v-model.lazy="msg"/>`   |
+
+```html
+		<div id="app">
+
+        <!-- 默认虽然一开始显示是数据源格式，但input提交会提交字符串，从而改变n1和n2为字符串，添加.number后提交则为数值格式 -->
+        <input type="text" v-model.number="n1">+ <input type="text" v-model.number="n2">= <span>{{n1+n2}}</span>
+        
+        <!-- 每次失去焦点后，会去除值的前后空格，然后再提交到数据源 -->
+        <input type="text" v-model.trim="username">
+        <button @click="showClick">hhh</button>
+    </div>
+
+    <!-- 导入vue的库文件，在window全局九有了Vue这个构造函数 -->
+    <script src="./vue.js"></script>
+    <script>
+        // 构建Vue的实例对象
+        const vm = new Vue({
+            //el 属性是固定的手法，表示当前 vm 实例要控制页面上的哪个区域，接受值是一个选择器
+            el: '#app',
+            // data 对象就是要渲染到页面上的数据
+            data: {
+                username: 'zhangsan',
+                n1: 1,
+                n2: 2,
+            },
+
+            // methods 方法内，就是定义事件的处理函数
+            methods: {
+                add(e, n) {
+                    vm.count += n
+                    console.log(e);
+
+                    // 判断是否为偶数
+                    if (this.count % 2 === 0) {
+                        //偶数 原生DOM语法
+                        e.target.style.background = 'yellow'
+                    } else {
+                        //奇数
+                        e.target.style.background = ''
+                    }
+
+                },
+                showClick() {
+                    console.log(`用户名是：${this.username}`);
+                }
+            }
+        })
+    </script>
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-23_11-16-18.png)
+
+
+
+## 4.7 条件渲染指令
+
+条件渲染指令辅助开发者，<font color='red'>**按需控制DOM的显示和隐藏**</font>，有两个分别是：
+
+- v-if  （更常用）
+  - 隐藏会删除代码
+- v-show
+  - 隐藏会添加样式display none
+
+```html
+ 	<div id="app">
+        <!-- 这是被 v-if控制的模块 隐藏会删除代码-->
+        <p v-if="flag">这是被 v-if控制的模块</p>
+        <!-- 这是被v-show 控制的磨块 隐藏会添加样式display none-->
+        <p v-show="flag">这是被v-show 控制的磨块</p>
+    </div>
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-23_15-12-56.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-23_15-13-21.png)
+
+> 在.vue文件中，整个页面是先编译完再渲染，所以不会出现由上至下先v-if 初始值是false时先生成又删除的情况。
+
+
+
+### 4.7.1 v-else
+
+`v-if`可以单独使用，也可以配合`v-else`指令一起使用
+
+`v-else`必须和`v-if`一起使用
+
+```
+<div v-if='Math.random() >0.5'>
+	随机数大于0.5	
+</div>
+<div v-else>
+	随机数小于或等于0.5	
+</div>
+```
+
+
+
+### 4.7.2 v-else-if
+
+`v-else-if`充当`v-if`的else-if块，可以连续使用
+
+`v-else-if`必须和`v-if`一起使用
+
+```html
+        <div v-if="type==='A'">优秀</div>
+        <div v-else-if="type==='B'">良好</div>
+        <div v-else-if="type==='C'">一般</div>
+        <div v-else>差</div>
+```
+
+
+
+## 4.8 列表渲染指令
+
+`Vue`提供了`v-for`，<font color='red'>**基于一个数组来循环渲染一个列表结构**</font>
+
+`v-for`需要使用 item in items 形式的特殊语法
+
+- items 是<font color='red'>**待循环的数组**</font>
+- item 是<font color='red'>**被循环的每一项**</font>
+
+```html
+data：{
+	list: [  //列表数据
+		{ id: 1, name: 'zs' },
+		{ id: 2, name: 'ls' }
+	]
+}
+// ---------------------------------------
+<ul>
+	<li v-for="item in list">姓名是:{{ item.name }}</li>
+</ul>
+```
+
+
+
+### 4.8.1 v-for 中的索引
+
+`v-for`指令还支持一个<font color='red'>**可选的第二个参数**</font>，即<font color='red'>**当前项的索引**</font>。语法格式为 `(item, index) in items`，
+
+```html
+data：{
+	list: [  //列表数据
+		{ id: 1, name: 'zs' },
+		{ id: 2, name: 'ls' }
+	]
+}
+// ---------------------------------------
+<ul>
+	<li v-for="(item, index) in list">索引是：{{ index }}，姓名是:{{ item.name }}</li>
+</ul>
+```
+
+注意：`v-for`指令中的 <font color='red'>**item 项**</font>和<font color='red'>**index 索引**</font>都是形参，可以进行重命名，例如：(user,i) in userlist
+
+
+
+### 4.8.2 v-for 中的key值
+
+注意事项：
+
+1. **官方建议，只要用到了 `v-for`指令，那么一定要绑定一个`:key`值**
+
+2. 而且，**通常把`id`作为`key`的值 **
+
+3. 官方对`key`的值的类型有要求，必须为**字符串或数字类型**
+
+4. 同时`key`的值**必须具有唯一性**，是不能重复的，所以通常都是选择`id`作为`key`
+5. 使用 `index` 的值当作key的值没有任何意义，(`index`与数据没有对应关系，非常容易变动)
+
+```html
+<ul>
+    <!-- 官方建议，只要用到了 v-for指令，那么一定要绑定一个:key值 -->
+    <!-- 而且，尽量把id作为key的值，官方对key的值的类型有要求，必须为字符串或数字类型 -->
+    <!-- 同时`key`的值是不能重复的，所以通常都是选择`id`作为`key` -->
+	<li v-for="(item, index) in list" :key='item.id'>索引是：{{ index }}，姓名是:{{ item.name }}</li>
+</ul>
+```
+
+
+
+
+
+
+
+# 五. Vue的过滤器（Vue 2）
+
+**vue 3已经删掉了过滤器功能**
+
+过滤器（`Filters`）是`vue`提供的功能，常用于<font color='red'>**文本的格式化**</font>。过滤器可以用在两个地方：**插值表达式**{{}}和 **`v-bind`属性绑定**。
+
+过滤器应该被添加在`JavaScript`表达式的<font color='red'>**尾部**</font>，由<font color='red'>**”管道符“**</font>进行调用
+
+过滤器本质就是**函数**`function`
+
+**过滤器函数必须被定义在 `filters` 节点之下，与`el`同级。过滤器一定要有一个返回值**
+
+```html
+<!-- 在{{}}中通过‘管道符’调用 capitalize 过滤器 ，对 message的值进行格式化 -->				
+<p>{{ message | capitalize }}</p>
+
+<!-- 在 v-bind 中通过‘管道符’调用 formatId 过滤器，对 rawId 的值进行格式化 -->
+<div v-bind:id="rawId | formatId"></div>
+```
+
+管道符前的数据作为参数传入过滤器函数中被格式化操作，返回值最后输出
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-23_17-10-15.png)
+
+```html
+	<script src="./vue.js"></script>
+    <script>
+        // 构建Vue的实例对象
+        const vm = new Vue({
+            //el 属性是固定的手法，表示当前 vm 实例要控制页面上的哪个区域，接受值是一个选择器
+            el: '#app',
+            // data 对象就是要渲染到页面上的数据
+            data: {
+                message: 'hello world',
+            },
+            // 过滤器函数必须被定义在 filters 节点之下
+            filters: {
+                capitalize(a) {
+                    //过滤器一定要有一个返回值
+                    return a
+                }
+            }
+        })
+    </script>
+```
+
+
+
+## 5.1 私有过滤器和全局过滤器
+
+在`filters` 节点之下定义的过滤器，成为”私有过滤器“，因为它只能在
 
 
 
@@ -513,11 +815,14 @@ Vue提供了时间修饰符，来更方便的<font color='red'>**对事件的触
 
 
 
-# 五. 品牌列表案例
 
 
 
 
+
+# 啊啊啊
+
+<font color='red'>****</font>
 
 
 
