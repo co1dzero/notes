@@ -764,7 +764,7 @@ data：{
 
 过滤器本质就是**函数**`function`
 
-**过滤器函数必须被定义在 `filters` 节点之下，与`el`同级。过滤器一定要有一个返回值**
+**过滤器函数必须被定义在 `filters` 节点之下，与`el`同级。<font color='red'>过滤器一定要有一个返回值</font>**
 
 ```html
 <!-- 在{{}}中通过‘管道符’调用 capitalize 过滤器 ，对 message的值进行格式化 -->				
@@ -804,11 +804,309 @@ data：{
 
 ## 5.1 私有过滤器和全局过滤器
 
-在`filters` 节点之下定义的过滤器，成为”私有过滤器“，因为它只能在
+在`filters` 节点之下定义的过滤器，成为**”私有过滤器“**，因为它只能在他所在的vue所控制的区域内
+
+**全局过滤器** 独立于每个 vm 之外 ,**基本都是定义全局过滤器**
+
+```coffeescript
+// 全局过滤器 独立于每个 vm 之外
+// Vue.filiter() 方法接受两个参数：
+//  第 1 个参数，是全局过滤器的‘ 名字 ’
+//  第 2 个参数，是全局过滤器的‘ 处理函数 ’
+Vue.filter('capitalize', (str) => {
+	return str.charAt(0).toUpperCase + str.slice(1)
+})
+```
+
+> 如果全局过滤器和私有过滤器名字一致，此时按照''就近原则''，调用的是 私有过滤器
+
+
+
+## 5.2 连续调用多个过滤器
+
+可以 串联
+
+```html
+<!-- 把 message 的值，交给 filterA 进行处理 -->
+<!-- 把 filierA 的值，交给 filterB 进行处理 -->
+<!-- 把 filterB 的值，作为最终值渲染到页面上 -->
+{{ message | filterA | filterB }}
+```
+
+
+
+## 5.3 过滤器传参
+
+过滤器本质是JavaScript函数，因此可以接受参数，
+
+```html
+<!-- arg1 和 arg2 是传递给 filterA 的参数 -->
+<p>{{ message | filter(arg1,arg2) }}</p>
+
+// 过滤器处理函数的形参列表中：
+//  第一个参数：永远都是”管道符“前面待处理得值
+//  第二给参数开始，才是调用过滤器传递归来的 arg1 和 arg2 参数
+Vue.filter('filterA', (message, arg1, arg2) => {
+	//过滤器代码
+
+})
+```
 
 
 
 
+
+# Vue 基础入门
+
+# 一.监听器
+
+## 1.1 什么是 watch 侦听器
+
+用于[监听](https://so.csdn.net/so/search?q=监听&spm=1001.2101.3001.7020)数据变化，从而针对特定的数据做出特定的操作
+
+
+
+## 1.2 侦听器的格式
+
+### 优缺点
+
+1. 方法格式的侦听器
+   - 缺点1：无法再刚既然你页面的时候，自动触发
+   - 缺点2：如果监听一个对象，对象内的属性发生变化，不会触发监听器
+2. 对象格式的侦听器
+   - 优点1：可以通过 **immediate**选项，让侦听器自动触发
+   - 优点2：可以通过**deep**选项，让侦听器深度监听对象中每个属性的变化
+
+## 1.3 方法格式的侦听器（简单）
+
+```
+watch: {
+	username(newVal, oldVal) {
+    //监听 username 值的变化，侦听谁的值就以谁的名字明明函数名
+    //newVal是“变化后的新值”，oldVal是“变化前的久值”
+    console.log(newVal, oldVal);
+    }
+}
+```
+
+```html
+    <script src="./vue.js"></script>
+    <script>
+        // 构建Vue的实例对象
+        const vm = new Vue({
+            //el 属性是固定的手法，表示当前 vm 实例要控制页面上的哪个区域，接受值是一个选择器
+            el: '#app',
+            // data 对象就是要渲染到页面上的数据
+            data: {
+                username: 'zhangsan',
+            },
+
+            watch: {
+                username(newVal, oldVal) {
+                    //监听 username 值的变化，监听谁的值就以谁的名字明明函数名
+                    //newVal是“变化后的新值”，oldVal是“变化前的久值”
+                    console.log(newVal, oldVal);
+                }
+            }
+    </script>
+```
+
+
+
+## 1.4 对象格式的侦听器（含复杂的）
+
+### `immediate` 的作用：控制侦听器是否自动触发一次
+
+```html
+watch: {
+	// 定义对象格式的侦听器
+	username: {
+		handler(newVal, oldeVal) {
+			console.log(newVal, oldeVal);
+		},
+		// immediate 选项的默认值是 false
+		// immediate 的作用：控制侦听器是否自动触发一次
+		immediate: true
+	}
+},
+```
+
+```html
+<script src="./vue.js"></script>
+    <script>
+        // 构建Vue的实例对象
+        const vm = new Vue({
+            //el 属性是固定的手法，表示当前 vm 实例要控制页面上的哪个区域，接受值是一个选择器
+            el: '#app',
+            // data 对象就是要渲染到页面上的数据
+            data: {
+                username: 'zhangsan',
+            },
+            // watch: {
+            //     // 对象格式的
+            //     // username(newVal, oldVal) {
+            //     //     //监听 username 值的变化，监听谁的值就以谁的名字明明函数名
+            //     //     //newVal是“变化后的新值”，oldVal是“变化前的久值”
+            //     //     console.log(newVal, oldVal);
+
+            //     }
+            // },
+
+            watch: {
+                // 定义对象格式的侦听器
+                username: {
+                    handler(newVal, oldeVal) {
+                        console.log(newVal, oldeVal);
+                    },
+                    // immediate 选项的默认值是 false
+                    // immediate 的作用：控制侦听器是否自动触发一次
+                    immediate: true
+                }
+            },
+    </script>
+```
+
+
+
+## 1.5 深度侦听
+
+### `deep`
+
+如果<font color='red'>**watch侦听的是一个对象**</font>
+
+在<font color='red'>**方法格式的侦听器**</font>，如果监听一个对象，对象内的属性发生变化，<font color='red'>**不会触发监听器**</font>
+
+通过对象侦听器的<font color='red'>**deep选项**</font>来让侦听器深度监听对象中每个属性的变化
+
+```
+deep: true
+```
+
+```html
+<body>
+    <div id="app">
+        <input type="text" v-model="info.username">
+    </div>
+
+
+
+    <!-- 导入vue的库文件，在window全局九有了Vue这个构造函数 -->
+    <script src="./vue.js"></script>
+    <script>
+        // 构建Vue的实例对象
+        const vm = new Vue({
+            //el 属性是固定的手法，表示当前 vm 实例要控制页面上的哪个区域，接受值是一个选择器
+            el: '#app',
+            // data 对象就是要渲染到页面上的数据
+            data: {
+                info: {
+                    username: 'zs'
+                }
+            },
+
+            watch: {
+                // 定义对象格式的侦听器
+                info: {
+                    handler(newVal, oldeVal) {
+                        console.log(newVal, oldeVal);
+                    },
+                    // immediate 选项的默认值是 false
+                    // immediate 的作用：控制侦听器是否自动触发一次
+                    immediate: true,
+                    // 开启深度侦听，只要对象中的任何一个属性变化了，都会触发“对象的侦听器”
+                    deep: true
+                }
+            },
+        })
+    </script>
+</body>
+```
+
+
+
+## 1.6 监听对象单个属性的变化
+
+如果<font color='red'>**只想监听对象中单个属性的变化**</font>，则可以按照如下的方式定义watch侦听器：
+
+> **侦听这种对象内属性需要加单引号或双引号**
+
+```
+            watch: {
+                // 定义对象格式的侦听器
+                // 侦听这种对象内属性需要加单引号或双引号
+                'info.username': {
+                    handler(newVal, oldeVal) {
+                        console.log(newVal, oldeVal);
+                    },
+                }
+            },
+```
+
+```html
+<body>
+    <div id="app">
+        <input type="text" v-model="info.username">
+    </div>
+
+
+
+    <!-- 导入vue的库文件，在window全局九有了Vue这个构造函数 -->
+    <script src="./vue.js"></script>
+    <script>
+        // 构建Vue的实例对象
+        const vm = new Vue({
+            //el 属性是固定的手法，表示当前 vm 实例要控制页面上的哪个区域，接受值是一个选择器
+            el: '#app',
+            // data 对象就是要渲染到页面上的数据
+            data: {
+                info: {
+                    username: 'zs'
+                }
+            },
+
+            watch: {
+                // 定义对象格式的侦听器
+                // 侦听这种对象内属性需要加单引号或双引号
+                'info.username': {
+                    handler(newVal, oldeVal) {
+                        console.log(newVal, oldeVal);
+                    },
+                }
+            },
+        })
+    </script>
+</body>
+```
+
+
+
+
+
+# 二.计算属性
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 三. Vue-cli
+
+
+
+# 四. vue 组件
 
 
 
