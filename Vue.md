@@ -1084,29 +1084,351 @@ deep: true
 
 # 二.计算属性
 
+计算属性指的是，通过一系列计算，最终得到一个属性值
+
+这个动态计算出来的属性值可以被模板结构或 methods 方法使用，
+
+<font color='red'>**所有的计算属性都要定义到`computed`下**</font>
+
+<font color='red'>**计算属性在定义时，要定义成‘方法格式’，所以有返回值return**</font>
+
+<font color='red'>**但使用是当属性来使用**</font>
+
+好处：实现了代码的复用
+
+```html
+<body>
+    <div id="app">
+        {{ rgb }}
+    </div>
+
+
+
+    <!-- 导入vue的库文件，在window全局九有了Vue这个构造函数 -->
+    <script src="./vue.js"></script>
+    <script>
+        // 构建Vue的实例对象
+        const vm = new Vue({
+            //el 属性是固定的手法，表示当前 vm 实例要控制页面上的哪个区域，接受值是一个选择器
+            el: '#app',
+            // data 对象就是要渲染到页面上的数据
+            data: {
+                r: 0,
+                g: 0,
+                b: 0
+            },
+
+            // 所有的计算属性都要定义到`computed`下
+            // 计算属性在定义时，要定义成‘方法格式’ 所以有返回值return
+            // 但使用是当属性来使用
+            computed: {
+                // rgb作为一个计算属性，被定义成了方法格式
+                // 在这个方法中最终返回一个字符串
+                rgb() {
+                    return `rgb(${this.r},${this.g},${this.b})`
+                }
+            },
+
+            methods: {
+                show() {
+                    // 调用属性
+                    onsole.log(this.rgb);
+                }
+            }
+        })
+    </script>
+</body>
+```
 
 
 
 
 
+# 三.axios
+
+> axios *[æk'si:əʊs]*是一个专注于网络请求的库！
+
+相比于XHR 它更简单易用
+
+相比于JQ它更轻量化，专注于网络数据请求
+
+> axios是通过Promise实现对ajax技术的一种封装,就像jquery对ajax的封装一样,简单来说就是ajax技术实现了局部数据的刷新,axios实现了对ajax的封装,axios有的ajax都有,ajax有的axios不一定有,总结一句话就是axios是ajax,ajax不止axios
+
+## 安装
+
+使用 npm:
+
+```
+$ npm install axios
+```
+
+使用 bower:
+
+```
+$ bower install axios
+```
+
+使用 cdn:
+
+```
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+```
+
+
+
+## 基础语法：
+
+```html
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+
+        // 调用axios方法返回值是promise对象
+        axios({
+            // 请求方式
+            method: 'GET',
+            // 请求地址
+            url: 'http://www.liulongbin.top:3006/api/getbooks'
+        }).then((result) => {
+            // .then 用来指定请求成功后的回调函数
+            // 形参中的result是请求成功之后的结果,
+            // 真实的数据在 result的data内，即 result.data
+            console.log(result);
+        })
+    </script>
+```
+
+[^promise]: 补充知识部分
+
+<font color='red'>**axios在请求到数据之后，在真正的数据之外，套了一层壳，进行了包装**</font>
+
+如图所示，网页显示和apipost的结果不同
+
+
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-27_09-41-05.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-27_09-41-14.png)
+
+
+
+实际<font color='red'>**真实的数据**</font>在`axios`数据的`data`项里
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-27_09-43-04.png)
+
+
+
+## get请求
+
+```
+axios({
+	method: 'GET',
+	url: 'http://www.liulongbin.top:3006/api/get',
+	params: {
+		name: 'zs',
+		age: 20
+    }
+}).then(function(res){
+	console.log(res.data)
+})
+```
+
+## post请求
+
+```
+axios({
+	method: 'POST',
+	url: 'http://www.liulongbin.top:3006/api/post',
+	data: {
+		bookname: '程序员自我修养',
+		price: 666
+    }
+}).then(function(res){
+	console.log(res.data)
+})
+```
+
+<font color='red'>**两者传参不同 get请求用params，post请求用data**</font>
+
+
+
+## 解决.then回调地狱的问题
+
+> 相比于Promise，async/await能更好的处理then链
+> await关键字只能在async function中使用，在任何非async function的函数中使用await关键字都会抛出错误。await关键字在执行下一行代码之前 等待右侧表达式（可能是一个Promise）返回。
+>
+> async/await的优势在于处理then的调用链，能够更清晰准确的写出代码，并且也能解决[回调](https://so.csdn.net/so/search?q=回调&spm=1001.2101.3001.7020)地狱的问题。当然也存在一些缺点，因为await将异步代码改造成了同步代码，如果多个异步代码**没有依赖性**却使用了await会导致性能上的降低。
+
+**如果调用某个方法的返回值是promise实例，则前面可以添加await**
+
+**await 只能用在被async "修饰"的方法中**
+
+```html
+<scripy>
+    document.querySelector('#id名字').addEventListener('click', async function(){
+    	const result = await axios({
+    		method: 'POST',
+			url: 'http://www.liulongbin.top:3006/api/post',
+			data: {
+				bookname: '程序员自我修养',
+			price: 666
+    		}
+    	})
+    
+    	console.log(result.data)
+    })
+</scripy>
+```
+
+## 实际使用
+
+1. 调用 axios 之后，使用 async/await 进行简化，以简化.then操作
+2. 使用赋值解构，从axios封装的大对象中，把 data属性解构出来
+3. 把解构出来的 data 属性，使用 冒号 ：进行重命名，一般都命名为 { data:res }
+4. res.data即真实数据
+
+```html
+<body>
+
+    <div>
+        <button id="btn">GET</button>
+    </div>
+
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        document.querySelector('#btn').addEventListener('click', async function () {
+            // 1. 调用 axios 之后，使用 async/await 进行简化
+            // 2. 使用赋值解构，从axios封装的大对象中，把 data属性解构出来
+            // 3. 把解构出来的 data 属性，使用 冒号 ：进行重命名，一般都命名为 { data:res }
+            // 4. res.data即真实数据
+            // 解构赋值的时候，只用：进行重命名
+            // 调用axios方法返回值是promise对象
+            const { data: res } = await axios({
+                // 请求方式
+                method: 'GET',
+                // 请求地址
+                url: 'http://www.liulongbin.top:3006/api/getbooks'
+            })
+            // .then((result) => {
+            // .then 用来指定请求成功后的回调函数
+            // 形参中的result是请求成功之后的结果
+            // console.log(result);
+            // })
+            console.log(res.data);
+        })
+    </script>
+</body>
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-27_11-16-39.png)
+
+
+
+### 10.1 axios发起GET请求
+
+```
+引入axios本地文件
+<script src="../axios.min.js"></script>
+```
+
+```
+axios.get('url',{params:{ /*参数*/ }}).then(callback)
+```
+
+```
+		// 请求的URL地址
+        const url = 'http://www.liulongbin.top:3006/api/get'
+        // 请求的参数对象
+        const paramsOBj = { name: 'zs', age: 20 }
+        // 调用axios.get() 发起GET请求
+        document.querySelector('#btn').addEventListener('click', async function () {
+        	const {data:res}= await axios.get(url, { params: paramsOBj })
+        	console.log(res.data)
+        })
+```
+
+### 10.2 axios发起POST请求
+
+```
+axios.post('url',{ /*参数*/ }).then(callback)
+```
+
+```
+		// 请求的URL地址
+        const url = 'http://www.liulongbin.top:3006/api/post'
+        // 要提交到服务器的数据
+        const dataObj = { location:'北京', address:'顺义' }
+        // 调用axios.post() 发起POST请求
+        document.querySelector('#btn').addEventListener('click', async function () {
+        	const {data:res}= await axios.post(url, dataObj)
+        	console.log(res.data)
+        })
+```
+
+### 
+
+# 四. Vue-cli
+
+Vue CLI 是一个基于 Vue.js 进行快速开发的完整系统
+
+> Vue CLI 致力于将 Vue 生态中的工具基础标准化。它确保了各种构建工具能够基于智能的默认配置即可平稳衔接，这样你可以专注在撰写应用上，而不必花好几天去纠结配置的问题。与此同时，它也为每个工具提供了调整配置的灵活性，无需 eject
+
+## 安装
+
+Node 版本要求
+
+Vue CLI 4.x 需要 [Node.js](https://nodejs.org/) v8.9 或更高版本 (推荐 v10 以上)。你可以使用 [n](https://github.com/tj/n)，[nvm](https://github.com/creationix/nvm) 或 [nvm-windows](https://github.com/coreybutler/nvm-windows) 在同一台电脑中管理多个 Node 版本。
+
+可以使用下列任一命令安装这个新的包：
+
+```
+npm install -g @vue/cli
+# OR
+yarn global add @vue/cli
+```
+
+安装之后，你就可以在命令行中访问 `vue` 命令。你可以通过简单运行 `vue`，看看是否展示出了一份所有可用命令的帮助信息，来验证它是否安装成功。
+
+你还可以用这个命令来检查其版本是否正确：
+
+```
+vue --version
+```
+
+### 升级[#](https://cli.vuejs.org/zh/guide/installation.html#升级)
+
+如需升级全局的 Vue CLI 包，请运行：
+
+```
+npm update -g @vue/cli
+
+# 或者
+yarn global upgrade --latest @vue/cli
+```
+
+#### 项目依赖[#](https://cli.vuejs.org/zh/guide/installation.html#项目依赖)
+
+上面列出来的命令是用于升级全局的 Vue CLI。如需升级项目中的 Vue CLI 相关模块（以 `@vue/cli-plugin-` 或 `vue-cli-plugin-` 开头），请在项目目录下运行 `vue upgrade`：
+
+```
+用法： upgrade [options] [plugin-name]
+
+（试用）升级 Vue CLI 服务及插件
+
+选项：
+  -t, --to <version>    升级 <plugin-name> 到指定的版本
+  -f, --from <version>  跳过本地版本检测，默认插件是从此处指定的版本升级上来
+  -r, --registry <url>  使用指定的 registry 地址安装依赖
+  --all                 升级所有的插件
+  --next                检查插件新版本时，包括 alpha/beta/rc 版本在内
+  -h, --help            输出帮助内容
+```
 
 
 
 
 
-
-
-
-
-
-
-
-
-# 三. Vue-cli
-
-
-
-# 四. vue 组件
+# 五. vue 组件
 
 
 
@@ -1122,31 +1444,190 @@ deep: true
 
 <font color='red'>****</font>
 
+# 补充知识
 
 
 
+## promise
+
+介绍
+promise是ES6的重要特性之一
+
+传统的异步编程的解决方案是使用回调函数，但是这样就会导致嵌套过深，产生回调地狱，那么promise异步编程的另一种解决方案，而且会更加的强大。
+
+三种状态
+
+- pending（待定）初始状态，既没有被兑现，也没有被拒绝
+- fulfilled（已兑现）意味着操作成功完成
+- rejected（已拒绝）意味着操作失败。
+
+特点
+
+- 待定状态的 Promise 对象要么会通过一个值被兑现（fulfilled），要么会通过一个原因（错误）*被拒绝（rejected）*当这些情况之一发生时，我们用 promise 的 then 方法排列起来的相关处理程序就会被调用
+- Promise.prototype.then 和 Promise.prototype.catch 方法返回的是 promise， 所以它们可以被链式调用
+
+## promise的三个实例方法
+
+### then（）方法
+
+- then是实例状态发生改变时的回调函数，第一个参数是resolved状态的回调函数，第二个参数是rejected状态的回调函数
+- then方法返回的是一个新的Promise实例，也就是promise能链式书写的原因
+
+```javascript
+promise.then(result => {···})
+```
+
+### catch方法
+
+当出现异常 则需要catch方法进行捕获
+
+```javascript
+promise.then(result => {···}).catch(error => {···})
+```
+
+### finally()方法
+
+方法用于指定不管 Promise 对象最后状态如何，都会执行的操作
+
+```
+promise.then(result => {···}).catch(error => {···}).finally(() => {···});
+```
+
+promise的静态方法
+resolve方法
+方法返回一个以给定值解析后的Promise 对象
+定值有以下几种情况：
+
+- 如果这个值是一个 promise ，那么将返回这个 promise
+- 参数不是具有then()方法的对象，或根本就不是对象，Promise.resolve()会返回一个新的 Promise 对象，状态为resolved
+- 没有参数时，直接返回一个resolved状态的 Promise 对象
+
+### reject()方法
+
+Promise.reject(reason)方法也会返回一个新的 Promise 实例,该实例的状态为rejected
+
+```
+const p = Promise.reject('出错了')
+
+等同于
+const p = new Promise((resolve, reject) => reject('出错了'))
+p.then(null, function (s) {console.log(s)})
+//出错了Promise.reject()方法的参数，会原封不动地变成后续方法的参数
+```
+
+### any()方法
+
+接收一个Promise可迭代对象，只要其中的一个 promise 成功，就返回那个已经成功的 promise 。如果可迭代对象中没有一个 promise 成功（即所有的 promises 都失败/拒绝），就返回一个失败的 promise 和AggregateError类型的实例，它是 Error 的一个子类，用于把单一的错误集合在一起。本质上，这个方法和Promise.all()是相反的。
+
+```
+const pErr = new Promise((resolve, reject) => {
+  reject("总是失败");
+});
+
+const pSlow = new Promise((resolve, reject) => {
+  setTimeout(resolve, 500, "最终完成");
+});
+
+const pFast = new Promise((resolve, reject) => {
+  setTimeout(resolve, 100, "很快完成");
+});
+
+Promise.any([pErr, pSlow, pFast]).then((value) => {
+  console.log(value);
+  // pFast fulfils first
+})
+```
+
+#### All()方法
+
+1. 方法接收一个promise的iterable类型（注：Array，Map，Set都属于ES6的iterable类型）的输入，并且只返回一个[`Promise`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise)实例
+
+```
+const p = Promise.all([p1, p2, p3]);
+```
+
+> 实例p的状态由p1,p2,p3决定，分两种情况：
+>
+> 1. 只有p1、p2、p3的状态都变成fulfilled，p的状态才会变成fulfilled，此时p1、p2、p3的返回值组成一个数组，传递给p的回调函数
+> 2. 只要p1、p2、p3之中有一个被rejected，p的状态就变成rejected，此时第一个被reject的实例的返回值，会传递给p的回调函数
+
+#### allSettled方法
+
+> Promise.all 会在任何一个请求失败的时候进入失败状态
+>
+> 由于单一 Promise 进入 rejected 状态便会立即让 Promise.all() 的结果进入 rejected 状态，以至于通过 Promise.all() 进入 rejected 状态时，其中的源 Promise 仍然可能处于 pending 状态，以至于无法获得所有 Promise 完成的时机。
+
+> Promise.allSettled() 静态方法会等待所有源 Promise 进入 fulfilled 或者 rejected 状态，从而确保不会造成时序上的冲突。
+
+#### race方法
+
+该方法同样是将多个 Promise 实例，包装成一个新的 Promise 实例
+
+```
+const p = Promise.race([p1, p2, p3]);
+```
+
+> 1. 只要p1、p2、p3之中有一个实例率先改变状态，p的状态就跟着改变
+> 2. 率先改变的 Promise 实例的返回值则传递给p的回调函数
+
+### [语法糖](https://so.csdn.net/so/search?q=语法糖&spm=1001.2101.3001.7020)Async/Await
+
+在ES8中新增了`Promise`的语法糖`async await`来更优雅的处理异步。
+
+`async` 可以单独存在, 用该关键字声明的函数返回的是一个 Promise 对象。
+
+```
+async funtion add(){
+    return 1
+}
+add()
+add() instanceof Promise // true
+```
+
+`await` 不可以单独存在，必须要配合 `async` 一起存在使用
+
+```
+function sub() {
+    await 1
+}
+// 这个方法定义就不满足语法的，会如下报错
+// Uncaught SyntaxError: await is only valid in async function
+```
+
+`async` `await` 让异步处理更优雅
+
+```
+let fs = require('fs')
+
+var  gen = async function() {
+
+    const f1= await readFile('files/a.txt');//封装一个promise对象
+    console.log(f1)
+    const f2=  await readFile('files/b.txt');
+    console.log(f2)
+    const f3=  await readFile('files/c.txt');
+    console.log(f3)
+  
+  };
 
 
+  var readFile=function(path){
+     return  new Promise((resolve,reject)=>{
+        fs.readFile(path,'utf-8',function(err,data){
+            if(!err){
+          
+             resolve(data)
+            }else{
+              reject(err)
+            }
+            
+         });
+      })
+   
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
+var obj = gen();
+```
 
