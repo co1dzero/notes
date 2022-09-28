@@ -1367,13 +1367,13 @@ axios.post('url',{ /*参数*/ }).then(callback)
 
 ### 
 
-# 四. Vue-cli
+# 四. Vue-cli （脚手架）
 
 Vue CLI 是一个基于 Vue.js 进行快速开发的完整系统
 
 > Vue CLI 致力于将 Vue 生态中的工具基础标准化。它确保了各种构建工具能够基于智能的默认配置即可平稳衔接，这样你可以专注在撰写应用上，而不必花好几天去纠结配置的问题。与此同时，它也为每个工具提供了调整配置的灵活性，无需 eject
 
-## 安装
+## 一.安装
 
 Node 版本要求
 
@@ -1393,6 +1393,8 @@ yarn global add @vue/cli
 
 ```
 vue --version
+or
+vue -V
 ```
 
 ### 升级[#](https://cli.vuejs.org/zh/guide/installation.html#升级)
@@ -1426,10 +1428,225 @@ yarn global upgrade --latest @vue/cli
 
 
 
+## 二.创建一个项目
+
+在<font color='red'>**要创建的目录里运行**</font>vue create
+
+运行以下命令来创建一个新项目：
+
+```
+vue create 项目的名称
+```
+
+接下来弹出一个信息框：
+
+```
+?  Your connection to the default npm registry seems to be slow.   
+   Use https://registry.npm.taobao.org for faster installation? Yes
+```
+
+由于我是在国内操作的，访问比较慢，所以弹出一个信息询问我们是否加速，我们选择 `yes`。
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_09-16-07.png)
+
+vue2 vue3 自定义
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_09-20-01.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_09-20-53.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_09-23-23.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_09-25-18.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_09-25-42.png)
+
+如果看到这行文字就说明你项目初始化成功。
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200911204005946.png#pic_center)
+
+```
+cd xxx 		//到根目录
+
+npm run serve //与webpack自定义的 run dev相同时运行的意思
+```
+
+### 窗口冻结和恢复
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_09-26-55.png)
+
+
+
+## 三.跑起来项目
+
+运行以下命令，进入监听（类似于webpack-dev-serve插件）然后打开域名，如图所示
+
+```
+cd xxx 		//到根目录
+
+npm run serve //与webpack自定义的 run dev相同时运行的意思
+```
+
+<font color='red'>**npm窗口不能关啊，否则监听就断了**</font>
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_09-36-37.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_09-36-51.png)
+
+
+
+同样的在`package.json`配置文件中，有同样的`scripts`，只不过相较于`webpack`的`dev/build`，`Vue`这里默认是`serve/build`
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_09-42-03.png)
+
+也可以用vscode自带的终端，快捷键ctrl+`
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_09-51-19.png)
+
+
+
+## 四.项目的目录结构
+
+1. src--源代码
+2. .gitgnore--git忽略文件
+3. babel.xxx--babel配置文件（js语法兼容 加载器
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_10-00-47.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_10-06-08.png)
+
+vue脚手架将new vue控制放到了自动的js文件中
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_10-08-00.png)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20181124105445337.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4NjUyODcx,size_16,color_FFFFFF,t_70)
+
+>bulid
+>里面是一些操作文件，使用npm run * 时执行的就是这里的文件。
+>config
+>配置文件，执行文件需要的配置信息。例如运行的端口，IP等等信息
+>src
+>资源文件，所有的组件以及所用的图片都是在这个文件夹下放着。
+>看一下这个文件夹都放了哪些东西。
+>assets
+>资源文件夹，放图片之类的资源，
+>components
+>组件文件夹，写的所有组件都放在这个文件夹下，
+>router
+>路由文件夹，这个决定了页面的跳转规则，
+>App.vue
+>应用组件，所有自己写的组件，都是在这个组件之上运行了。
+>main.js
+>webpack入口文件。
+
+node_modules
+
+>node_modules是安装node后用来存放用包管理工具下载安装的包的文件夹。比如webpack、gulp、grunt这些工具。在node.js中模块与文件是一一对应的，也就是说一个node.js文件就是一个模块。
+>
+>modules(模块)：在node.js中模块与文件是一一对应的，也就是说一个node.js文件就是一个模块，文件内容可能是我们封装好的一些JavaScript方法、jsON数据、编译过的C/C++拓展等，在关于node.js的误会提到过node.js的架构。
+>
+>其中http、fs、net等都是node.js提供的核心模块，使用C/C++实现，外部用JavaScript封装。
+
+### vue项目中src目录的构成（重要*）
+
+```
+assets 文件夹：资源文件夹，放图片、css样式表之类的资源，
+components 组件文件夹，写的、封装的、可复用的所有组件都放在这个文件夹下，
+main.js 是项目的入口文件，整个项目的执行需要先执行main.js
+App.vue 是项目的根组件，控制UI界面，应用组件，所有自己写的组件，都是在这个组件之上运行了。
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_10-19-59.png)
+
+在vue项目中，src目录下的main.js就是wepack的entry节点语法
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_10-27-34.png)
+
+
+
+
+
+## 六. vue项目运行的过程
+
+在工程化的项目中，vue要做的事是通过<font color='red'>**main.js**</font>把<font color='red'>**App.vue**</font>的UI结构渲染到<font color='red'>**index.html**</font>的指定区域中。
+
+其中：
+
+1. <font color='red'>**App.vue**</font> 用来编写待渲染的<font color='red'>**模板结构**</font>
+2. <font color='red'>**index.html**</font>中需要预留一个 <font color='red'>**el区域**</font>
+3. <font color='red'>**main.js**</font> 把 App.vue 渲染到了 index.html 所预留的区域中
+
+### main结构如下所示
+
+```js
+// 导入 vue这个包，得到 Vue 构造函数
+import Vue from 'vue'
+// 导入 App.vue根组件，将来要把 App.vue 中的模板UI结构，渲染到 HTML 页面中
+import App from './App.vue'
+
+// 去掉生产模式下的一些提示，防止浏览器控制台打印警告信息
+Vue.config.productionTip = false
+
+// 创建 Vue 的实例对象
+new Vue({
+  el: '#app',
+  // 把 render 函数指定的组件，渲染到 HTML 页面中
+  render: h => h(App),
+})
+```
+
+> **`render`的作用，把导入的`App.vue`渲染到`index.html`的`<div id="app"></div>`中，即用`App.vue`顶替到`<div id="app"></div>`中**
+
+**Vue实例的 .$mount('#app') 方法，作用与el属性完全一样**
+
+```js
+// 导入 vue这个包，得到 Vue 构造函数
+import Vue from 'vue'
+// 导入 App.vue根组件，将来要把 App.vue 中的模板UI结构，渲染到 HTML 页面中
+import App from './App.vue'
+
+// 去掉生产模式下的一些提示，防止浏览器控制台打印警告信息
+Vue.config.productionTip = false
+
+// 创建 Vue 的实例对象
+new Vue({
+  // el: '#app',
+  // 把 render 函数指定的组件，渲染到 HTML 页面中
+  render: h => h(App),
+}).$mount('#app')
+
+// Vue实例的 .$mount('#app') 方法，作用与el属性完全一样
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # 五. vue 组件
 
+## 1.什么是组件化开发
+
+<font color='red'>**组件化开发**</font>指的是：根据<font color='red'>**封装**</font>的思想，<font color='red'>**把页面上可重用的UI结构封装为组件**</font>，从而方便开发和维护
+
+## 2.Vue项目中的组件化开发
+
+`vue` 是一个<font color='red'>**支持组件化开发**</font>的前端框架。
+
+`vue` 中规定：<font color='red'>**组件的后缀名**</font>是<font color='red'>**.vue**</font>。`APP.vue` 文件本质上是一个 vue 的组件
 
 
 
@@ -1440,9 +1657,6 @@ yarn global upgrade --latest @vue/cli
 
 
 
-# 啊啊啊
-
-<font color='red'>****</font>
 
 # 补充知识
 
@@ -1631,3 +1845,20 @@ var  gen = async function() {
 var obj = gen();
 ```
 
+
+
+### 
+
+
+
+
+
+
+
+# 啊啊啊
+
+<font color='red'>****</font>
+
+
+
+## less知识 template
