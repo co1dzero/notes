@@ -921,6 +921,7 @@ watch: {
 watch: {
 	// 定义对象格式的侦听器
 	username: {
+		// hander是固定写法，表示当 username 的值发生变化时，自动调用 hander 处理函数
 		handler(newVal, oldeVal) {
 			console.log(newVal, oldeVal);
 		},
@@ -955,6 +956,7 @@ watch: {
             watch: {
                 // 定义对象格式的侦听器
                 username: {
+                    // hander是固定写法，表示当 username 的值发生变化时，自动调用 hander 处理函数
                     handler(newVal, oldeVal) {
                         console.log(newVal, oldeVal);
                     },
@@ -1646,9 +1648,278 @@ new Vue({
 
 `vue` 是一个<font color='red'>**支持组件化开发**</font>的前端框架。
 
-`vue` 中规定：<font color='red'>**组件的后缀名**</font>是<font color='red'>**.vue**</font>。`APP.vue` 文件本质上是一个 vue 的组件
+`vue` 中规定：<font color='red'>**组件的后缀名**</font>是<font color='red'>**.vue**</font>。`APP.vue` 文件本质上是一个 vue 的<font color='red'>**组件**</font>
+
+### 根组件：render指向的.vue文件就是根组件（App.vue)
+
+## 3. vue 组件的三个组成部分
+
+每个.vue组件都由3部分构成，分别是：
+
+- <font color='red'>**template**</font> -> 组件的<font color='red'>**模板结构**</font> UI结构、DOM标签
+- <font color='red'>**script**</font> -> 组件的 <font color='red'>**JavaScript行为**</font>
+- <font color='red'>**style**</font> -> 组件的<font color='red'>**样式**</font>
+
+> 通俗来说，整个vue就是控制内，**data相较于以前要写成函数形式，其他的包括methods使用与之前一致**
+
+```vue
+<template>
+  <div class="test-box">自定义数值{{ username }}</div>
+</template>
+
+<script>
+// 默认导出。这是个固定写法
+export default {
+  // data数据源
+  // 注意： .vue组件中的data不能像之前一样，不能指向对象
+  // 注意：组件中的data必须是一个函数
+  // data: {
+  //   username: "zs",
+  // },
+  // 组件中的data写成一个函数，数据以函数返回值形式定义，这样每复用一次组件，就会返回一分新的data，类似于给每个组件实例创建一个私有的数据空间，让各个组件实例维护各自的数据
+  // 若写成以前的单纯的对象形式，就使得所有组件实例共用了一份data，就会造成一个变了全都变的情况
+  data() {
+    // 这个 return 出去的 { }中，可以定义数据
+    return {
+      username: "zs",
+    };
+  },
+};
+</script>
+
+<style>
+.test-box {
+  background-color: red;
+}
+</style>
+
+```
+
+>  data
+>
+>  注意： .vue组件中的data不能像之前一样，不能指向对象,组件中的data必须是一个**函数**
+>
+>  组件中的data写成一个函数，数据以函数返回值形式定义，这样每复用一次组件，就会返回一分新的data，类似于给每个组件实例创建一个私有的数据空间，让各个组件实例维护各自的数据
+>
+>  若写成以前的单纯的对象形式，就使得所有组件实例共用了一份data，就会造成一个变了全都变的情况
+
+## 4.组件中的methods（v-on）（@）
+
+```vue
+<template>
+  <div>
+    <div class="test-box">自定义数值{{ username }}</div>
+    <button @click="changeName">修改用户名</button>
+  </div>
+</template>
+
+<script>
+// 默认导出。这是个固定写法
+export default {
+  // data数据源
+  // 注意： .vue组件中的data不能像之前一样，不能指向对象
+  // 注意：组件中的data必须是一个函数
+  // data: {
+  //   username: "zs",
+  // },
+  // 组件中的data写成一个函数，数据以函数返回值形式定义，这样每复用一次组件，就会返回一分新的data，类似于给每个组件实例创建一个私有的数据空间，让各个组件实例维护各自的数据
+  // 若写成以前的单纯的对象形式，就使得所有组件实例共用了一份data，就会造成一个变了全都变的情况
+  data() {
+    // 这个 return 出去的 { }中，可以定义数据
+    return {
+      username: "admin",
+    };
+  },
+  methods: {
+    changeName() {
+      // 在组件中，this就表示当前组件的实例对象
+      console.log(this);
+      this.username = "hhh";
+    },
+  },
+  // 当前组建中的监听器
+  watch: {},
+  // 当前组件中的计算属性
+  computed: {},
+  // 当前组件中的过滤器
+  filters: {},
+};
+</script>
+
+<style>
+.test-box {
+  background-color: red;
+}
+</style>
+
+```
+
+在组件中，this就表示当前组件的实例对象
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-29_14-54-51.png)
+
+## 5. .vue 只能有一个根节点
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-29_14-59-35.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-29_14-56-51.png)
+
+报错，只能有一个根节点
+
+## 6.启用less语法
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-29_15-01-58.png)
 
 
+
+## 7.组件之间的父子关系
+
+组件在被封装好之后，<font color='red'>**彼此之间是相互独立的**</font>，不存在关系
+
+在<font color='red'>**使用组件**</font>，<font color='red'>**根据彼此的嵌套关系**</font>，形成了<font color='blue'>**父子关系、兄弟关系**</font>
+
+
+
+## 8.（私有子组件） 使用组件的三个步骤
+
+### 8.1 步骤一 使用 import 语法导入需要的组件
+
+```vue
+import Left from '@/components/Left.vue'
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-29_15-58-39.png)
+
+### 8.2 使用 components 节点注册组件
+
+```vue
+export default{
+	components:{
+		Left
+	}
+}
+// 若注册多个组件，就Left,right
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-29_15-59-41.png)
+
+### 8.3 以标签习惯是使用刚才注册的组件
+
+```
+	<div>
+      <!-- 这里渲染名为 left 的组件 -->
+      <Left></Left>
+    </div>
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-29_16-00-18.png)
+
+全部代码：
+
+```vue
+<template>
+  <div>
+    <div class="test-box">自定义数值{{ username }}</div>
+    <button @click="changeName">修改用户名</button>
+
+    <div>
+      <!-- 这里渲染名为 left 的组件 -->
+      <Left></Left>
+    </div>
+  </div>
+</template>
+
+<script>
+// 导入需要使用的.vue文件
+import Left from "@/components/Left.vue";
+// 默认导出。这是个固定写法
+export default {
+  // data数据源
+  // 注意： .vue组件中的data不能像之前一样，不能指向对象
+  // 注意：组件中的data必须是一个函数
+  // data: {
+  //   username: "zs",
+  // },
+  // 组件中的data写成一个函数，数据以函数返回值形式定义，这样每复用一次组件，就会返回一分新的data，类似于给每个组件实例创建一个私有的数据空间，让各个组件实例维护各自的数据
+  // 若写成以前的单纯的对象形式，就使得所有组件实例共用了一份data，就会造成一个变了全都变的情况
+  data() {
+    // 这个 return 出去的 { }中，可以定义数据
+    return {
+      username: "admin",
+    };
+  },
+  methods: {
+    changeName() {
+      // 在组件中，this就表示当前组件的实例对象
+      console.log(this);
+      this.username = "hhh";
+    },
+  },
+
+  components: {
+    // 全称代码是 'Left': left   键值对，可简写
+    Left,
+  },
+};
+</script>
+
+<style lang='less'>
+.test-box {
+  background-color: red;
+  color: "blue";
+}
+</style>
+
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-29_15-57-21.png)
+
+
+
+## 9. 使用 components 节点注册的组件是私有子组件
+
+8.2中使用 components 节点注册组件是私有子组件
+
+只有导入了vue，并且注册了才能是使用这个组件，若其他组件想使用也要进行同样的导入注册操作
+
+
+
+所以可以选择进行<font color='red'>**注册全局组件**</font>
+
+
+
+## 10. 注册全局组件
+
+在vue项目的<font color='red'>**main.js**</font>入口文件中，通过<font color='red'>**Vue.componebt()**</font>方法，可以注册全局组件，实例：
+
+```js
+// 导入需要全局注册的组件
+import Count from '@/components/Count.vue'
+
+// 参数1 字符串格式，表示组件的"注册名称",即调用的时候使用的名称
+// 参数2 需要被全局注册的那个组件
+Vue.component('MyCount',Count)
+```
+
+
+
+## 11.组件的props
+
+props 是组件的<font color='red'>**自定义属性**</font>，在<font color='red'>**封装通用组件**</font>的时候，合理的使用 props 可以极大的<font color='red'>**提高组件的复用性**</font>
+
+语法格式：
+
+```vue
+export default{
+	// 组件的自定义属性
+	props:['自定义属性A','自定义属性B'，'其他自定义属性...'],
+	
+	// 组件的私有数据
+	data(){
+		return{}
+	}
+}
+```
 
 
 
