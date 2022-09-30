@@ -882,7 +882,7 @@ Vue.filter('filterA', (message, arg1, arg2) => {
 ```
 watch: {
 	username(newVal, oldVal) {
-    //监听 username 值的变化，侦听谁的值就以谁的名字明明函数名
+    //监听 username 值的变化，侦听谁的值就以谁的名字命名函数名
     //newVal是“变化后的新值”，oldVal是“变化前的久值”
     console.log(newVal, oldVal);
     }
@@ -1517,7 +1517,7 @@ npm run serve //与webpack自定义的 run dev相同时运行的意思
 
 ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_10-06-08.png)
 
-vue脚手架将new vue控制放到了自动的js文件中
+vue脚手架将包含new vue的编译生成的控制放到了自动的js文件中
 
 ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-28_10-08-00.png)
 
@@ -1910,6 +1910,7 @@ props 是组件的<font color='red'>**自定义属性**</font>，在<font color=
 语法格式：
 
 ```vue
+// 在被调用的组件中设置props  （简化版）
 export default{
 	// 组件的自定义属性
 	props:['自定义属性A','自定义属性B'，'其他自定义属性...'],
@@ -1919,7 +1920,475 @@ export default{
 		return{}
 	}
 }
+
+or  （完整对象格式）
+
+export default:
+	props: {
+		//自定义属性A : { */ 配置选项 */ }
+		//自定义属性B : { */ 配置选项 */ }
+		//自定义属性C : { */ 配置选项 */ }
+	}
+}
 ```
+
+```
+// 在调用者组件内使用
+<组件名 自定义属性A='xxx'>
+or
+// v-bind本质是js，props的值默认是字符串，而v-bind可以是数值或
+<组件名 :自定义属性A='xxx'>
+```
+
+### 11.1结合v-bind ，如上
+
+Vue规定：组件中封装的自定义属性是<font color='red'>**只读**</font>，<font color='red'>**不能直接修改**</font>props的值。否则会报错
+
+要修改 props 的值，可以把<font color='red'>**props 的值转存到data中**</font>
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-30_10-06-56.png)
+
+### 11.2实例：
+
+`main.js` 定义`count.vue`为全局组件，标签`MyCount`
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-30_10-13-53.png)
+
+`Left`组件调用了`count.vue`组件
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-30_10-13-59.png)
+
+`Left.vue`是根组件的私有组件，渲染
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-30_10-14-17.png)
+
+使用自定义props
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-30_10-14-53.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-30_10-19-08.png)
+
+
+
+### 11.3 props 的 default 默认值
+
+在自定义属性时，可以通过default来定义属性的默认值，
+
+**props的完整对象格式**：
+
+```
+export default:
+	props: {
+		//自定义属性A : { */ 配置选项 */ }
+		//自定义属性B : { */ 配置选项 */ }
+		//自定义属性C : { */ 配置选项 */ }
+	}
+}
+```
+
+props 的 default 默认值:
+
+```coffeescript
+export default:
+	props: {
+		init: {
+			// 用default 属性定义属性的默认值 若没有传递init值 默认值才会生效
+			default: 0
+		}
+	}
+}
+```
+
+
+
+### 11.4 props 的 type 默认值
+
+> 用 `type` 属性定义属性的默认值
+
+> 如果传递过来的值不符合此类型，则会在终端报错
+
+```
+export default:
+	props: {
+		init: {
+			// 用default 属性定义属性的默认值 若没有传递init值 默认值才会生效
+			default: 0,
+			// 用 `type` 属性定义属性的默认值
+			// 如果传递过来的值不符合此类型，则会在终端报错
+			type: Number,
+		}
+	}
+}
+```
+
+<font color='red'>**报错解决**</font>
+
+> 大部分可以通过传递只时候加v-bind：来解决详见11.1
+
+
+
+### 11.5 props 的 required 必填项
+
+必填项校验，若设置为 `true` 则若调用组件时不输入传递值则报错
+
+```
+export default:
+	props: {
+		init: {
+			// 用default 属性定义属性的默认值 若没有传递init值 默认值才会生效
+			default: 0,
+			// 用 `type` 属性定义属性的默认值
+			// 如果传递过来的值不符合此类型，则会在终端报错
+			type: Number,
+			// 必填项校验
+			required: true,
+		}
+	}
+}
+```
+
+
+
+## 12 组件之间样式冲突（scoped）
+
+默认情况下，<font color='red'>**写在.vue组件中的样式会全局生效**</font>，因此会容易造成<font color='red'>**多个组件之间的样式冲突问题**</font>
+
+> 导致组件之间样式冲突的根本原因：
+>
+> 1. 单页面应用程序，所有组件的DOM结构，都是唯一的 index.html 页面进行呈现的
+> 2. 每个组件中的样式，都会影响整个 index.html 页面中的 DOM元素
+
+本质：利用css属性选择器来解决这个问题
+
+### 12.1.什么是scoped
+
+在Vue文件中的style标签上有一个特殊的属性，scoped。当一个style标签拥有scoped属性时候，它的css样式只能用于当前的Vue组件，可以使组件的样式不相互污染。如果一个项目的所有style标签都加上了scoped属性，相当于实现了样式的模块化。
+
+### 12.2.scoped的实现原理
+
+Vue中的scoped属性的效果主要是通过PostCss实现的。以下是转译前的代码:
+
+```
+<style scoped>
+
+    .example{
+
+        color:red;
+
+    }
+
+</style>
+
+<template>
+
+    <div>scoped测试案例</div>
+
+</template>
+```
+
+转译后:
+
+```
+.example[data-v-5558831a] {
+
+  color: red;
+
+}
+
+<template>
+
+    <div class="example" data-v-5558831a>scoped测试案例</div>
+
+</template>
+```
+
+既:PostCSS给一个组件中的所有dom添加了一个独一无二的动态属性，给css选择器额外添加一个对应的属性选择器，来选择组件中的dom,这种做法使得样式只作用于含有该属性的dom元素(组件内部的dom)。
+
+> 总结：scoped的渲染规则：
+
+1. 给HTML的dom节点添加一个不重复的data属性(例如: data-v-5558831a)来唯一标识这个dom 元素
+2. 在每句css选择器的末尾(编译后生成的css语句)加一个当前组件的data属性选择器(例如：[data-v-5558831a])来私有化样式
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-30_15-01-10.png)
+
+
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-30_15-10-59.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-30_15-15-37.png)
+
+
+
+<font color='red'>**scoped能使得样式只能渲染自己组件内的内容，保证样式不会污染出去**</font>
+
+<font color='red'>**但其父级若无 scoped 则会把 父级的样式染进 子级覆盖子级的样式**</font>
+
+
+
+### 12.3 /deep/ 穿透
+
+scoped看起来很好用，当时在Vue项目中，当我们引入第三方组件库时(如使用vue-awesome-swiper实现移动端轮播)，需要在局部组件中修改第三方组件库的样式，而又不想去除scoped属性造成组件之间的样式覆盖。这时我们可以通过特殊的方式穿透scoped。
+
+> sass和less的样式穿透 使用/deep/
+
+<font color='red'>**通过在父级样式中添加`/deep/`可以控制子级组件的样式对其进行样式，这样就可以避免操作已经封装好的子级组件**</font>
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-30_15-31-15.png)
+
+> 查看代码可以发现其自动生成了[data -v-xxx] + 标签 来指向子级的标签
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-30_15-31-00.png)
+
+
+
+
+
+
+
+
+
+# 六.组件的生命周期
+
+## 6.1 生命周期 & 生命周期函数
+
+<font color='red'>**生命周期**</font> （ Life Cycle ）是指一个组件从 <font color='red'>**创建**</font> -> <font color='red'>**运行**</font> -> <font color='red'>**销毁**</font> 的整个阶段， <font color='red'>**强调的是一个时间段 **</font>。
+<font color='red'>**生命周期函数**</font> ：是由 vue 框架提供的 <font color='red'>**内置函数**</font> ，会伴随着组件的生命周期， <font color='red'>**自动按次序执行**</font> 。
+注意： <font color='blue'>**生命周期强调的是时间段，生命周期函数强调的是时间点**</font>。
+
+## 6.2 组件生命周期函数的分类
+
+![img](https://img-blog.csdnimg.cn/1b79ad28000f4f47b0c5c07d59ec0323.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5qyi5oSJ772e,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+## 6.3 生命周期图示
+
+> 编译流程
+>
+> `.vue`文件`html`无法识别，所以通过脚手架中`package.json`配置文件中的`vue-template-compiler`编译器从`main.js`开始编译，对根节点进行编译，然后编译在根节点中调用的其他组件，最后都会被编译成`html`下方的那两个js文件内。
+>
+> 组件可以当成是构造函数，调用组建的过程可以看作是`new`一个构造函数的实例
+
+参考 vue 官方文档给出的“生命周期图示”：
+https://cn.vuejs.org/v2/guide/instance.html# 生命周期图示
+
+![img](https://img-blog.csdnimg.cn/3c069e13b29246a984e406a179c634ae.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5qyi5oSJ772e,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+##  6.4 生命周期函数
+
+### 创建阶段
+
+new Vue() 即以<>标签形式创建实例
+
+#### 1.beforeCreate（不重要）
+
+**创建阶段的第1个生命周期函数,组件的props，methods，data尚未被创建，处于不可用**
+
+#### 2.created（最早可以发起Ajax请求）
+
+创建阶段的第2个生命周期函数，组件的props，methods，data已创建好，可以使用，但**组件的模板结构尚未生成 ，不能操作DOM，！！！但最早可以发起Ajax请求**
+
+经常通过created函数调用methods中的方法，请求服务器的数据，并且把请求到的数据转存到data中，供template模板渲染时去使用
+
+#### 3.beforeMount
+
+创建阶段的第3个生命周期函数,内存编译好的HTML结构准备渲染到浏览器中，此时浏览器中还没有当前组件的DOM结构，**无法操作DOM**
+
+#### 4.mounted（最早可以操作DOM）
+
+创建阶段的第4个生命周期函数，**已经渲染内存的HTML结构**到浏览器中，包含了当前组件的DOM结构，
+
+**！！！最早可以操作DOM**
+
+### 运行阶段（根据数据变化进入运行阶段）
+
+#### 1.beforeUpdate
+
+运行阶段的第1个生命周期函数，**将要**根据数据变化后、最新的数据，重新渲染组件的模板结构，**此时数据变化后还未放到模板结构上**
+
+#### 2.updated（当数据变化后，为了能够操作到最新的DOM结构）
+
+运行阶段的第2个生命周期函数，完成了最新数据重新渲染到组件的DOM结构
+
+**!!!当数据变化后，为了能够操作到最新的DOM结构,应将代码写在update中**
+
+### 销毁阶段
+
+#### 1.beforeDestroy
+
+销毁阶段的第1个生命周期函数，**组件还处于正常工作状态**
+
+#### 2.destroyed
+
+销毁阶段的第2个生命周期函数
+
+```vue
+<template>
+  <div class="test-container">
+      <h3 id="myh3">Test.vue组件  ----{{books.length }}本图书</h3>
+      <p id="pppp">message的值是：{{message}}</p>
+      <button @click="message+='迪丽热巴'">修改message的值</button>
+  </div>
+</template>
+ 
+<script>
+export default {
+    props:['info'],
+    data(){
+        return{
+            message:'hello vue.js!',
+            /* 定义books数组，存储的是所有图书列表数据，默认为空数组 */
+            books:[]
+        }
+    },
+    methods:{
+        show(){
+            console.log('调用了Test组件的show方法！');
+        },
+        /* 使用Ajax请求图书列表的数据 */
+        initBookList(){
+            const xhr=new XMLHttpRequest()
+            xhr.addEventListener('load',()=>{
+               const result=JSON.parse(xhr.responseText)
+               console.log(result);
+               this.books=result.data
+            })
+            xhr.open('GET','http://www.liulongbin.top:3006/api/getbooks')
+            xhr.send()
+        }
+    },
+    /* 创建阶段的第1个生命周期函数,
+    组件的props，methods，data
+    尚未被创建，处于不可用 */
+    beforeCreate() {
+        /* console.log(this.info);
+        console.log(this.message);
+        this.show() */
+    },
+   
+   /* 创建阶段的第2个生命周期函数
+    组件的props，methods，data已创建好
+    可以使用，但组件的模板结构尚未生成
+    ，不能操作DOM，
+    ！！！但最早可以发起Ajax请求
+     */
+    created() {
+       /*created生命周期函数  
+       经常通过created函数调用methods中的方法，
+       请求服务器的数据，并且把请求到的数据转存到data中
+       供template模板渲染时去使用 */
+    /* console.log(this.info);
+        console.log(this.message);
+        this.show() */
+        this.initBookList()
+        
+    },
+    
+    /* 创建阶段的第3个生命周期函数,
+    内存编译好的HTML结构准备渲染到浏览器中
+    此时浏览器中还没有当前组件的DOM结构
+    无法操作DOM */
+    beforeMount(){
+        /* console.log('beforeMount');
+        const dom=document.querySelector('#myh3')
+        console.log(dom); */
+    },
+ 
+    /* 创建阶段的第4个生命周期函数
+    已经渲染内存的HTML结构到浏览器中
+    包含了当前组件的DOM结构，
+    ！！！最早可以操作DOM */
+    mounted() {
+    //   console.log(this.$el);  
+     const dom=document.querySelector('#myh3')
+        console.log(dom);
+    },
+ 
+    /* 运行阶段的第1个生命周期函数
+    将要根据数据变化后、最新的数据，重新渲染组件的
+    模板结构，此时数据变化后还未放到模板结构上 */
+    beforeUpdate(){
+      /*   console.log('beforeUpdate');
+        console.log(this.message);
+        const dom=document.querySelector('#pppp')
+        console.log(dom.innerHTML); */
+    },
+    
+    /* 运行阶段的第2个生命周期函数,
+    完成了最新数据重新渲染到组件的DOM结构
+    !!!当数据变化后，为了能够操作到最新的DOM结构,
+    应将代码写在update中 */
+    updated() {
+          console.log('beforeUpdate');
+        console.log(this.message);
+        const dom=document.querySelector('#pppp')
+        console.log(dom.innerHTML);
+    },
+ 
+ 
+    /* 销毁阶段的第1个生命周期函数
+    组件还处于正常工作状态 */
+    beforeDestroy(){
+        console.log('beforeDestroy');
+        console.log(this.message);
+    },
+ 
+    /* 销毁阶段的第2个生命周期函数 */
+    destroyed() {
+        
+    },
+ 
+}
+</script>
+ 
+<style lang="less" scoped>
+test-container{
+    background-color: pink;
+    height: 200px;
+}
+ 
+</style>
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 七.组件之间的数据共享
+
+
+
+# 八.ref引用
+
+
+
+
+
+
 
 
 
@@ -2127,6 +2596,232 @@ var obj = gen();
 
 
 ### 
+
+## CSS 属性选择器详解
+
+**CSS 2 引入了属性选择器。**
+
+**属性选择器可以根据元素的属性及属性值来选择元素。**
+
+------
+
+### 简单属性选择
+
+如果希望选择有某个属性的元素，而不论属性值是什么，可以使用简单属性选择器。
+
+------
+
+例子 1
+
+如果您希望把包含标题（title）的所有元素变为红色，可以写作：
+
+```
+*[title] {color:red;}
+```
+
+例子 2
+
+与上面类似，可以只对有 href 属性的锚（a 元素）应用样式：
+
+```
+a[href] {color:red;}
+```
+
+例子 3
+
+还可以根据多个属性进行选择，只需将属性选择器链接在一起即可。
+
+例如，为了将同时有 href 和 title 属性的 HTML 超链接的文本设置为红色，可以这样写：
+
+```
+a[href][title] {color:red;}
+```
+
+例子 4
+
+可以采用一些创造性的方法使用这个特性。
+
+例如，可以对所有带有 alt 属性的图像应用样式，从而突出显示这些有效的图像：
+
+```
+img[alt] {border: 5px solid red;}
+```
+
+例子 5：为 XML 文档使用属性选择器
+
+属性选择器在 XML 文档中相当有用，因为 XML 语言主张要针对元素和属性的用途指定元素名和属性名。
+
+假设我们为描述太阳系行星设计了一个 XML 文档。如果我们想选择有 moons 属性的所有 planet 元素，使之显示为红色，以便能更关注有 moons 的行星，就可以这样写：
+
+```
+planet[moons] {color:red;}
+```
+
+这会让以下标记片段中的第二个和第三个元素的文本显示为红色，但第一个元素的文本不是红色：
+
+```
+<planet>Venus</planet>
+<planet moons="1">Earth</planet>
+<planet moons="2">Mars</planet>
+```
+
+------
+
+### 根据具体属性值选择
+
+除了选择拥有某些属性的元素，还可以进一步缩小选择范围，只选择有特定属性值的元素。
+
+例子 1
+
+例如，假设希望将指向 Web 服务器上某个指定文档的超链接变成红色，可以这样写：
+
+```
+a[href="http://www.w3school.com.cn/about_us.asp"] {color: red;}
+```
+
+例子 2
+
+与简单属性选择器类似，可以把多个属性-值选择器链接在一起来选择一个文档。
+
+```
+a[href="http://www.w3school.com.cn/"][title="W3School"] {color: red;}
+```
+
+这会把以下标记中的第一个超链接的文本变为红色，但是第二个或第三个链接不受影响：
+
+```
+<a href="http://www.w3school.com.cn/" title="W3School">W3School</a>
+<a href="http://www.w3school.com.cn/css/" title="CSS">CSS</a>
+<a href="http://www.w3school.com.cn/html/" title="HTML">HTML</a>
+```
+
+例子 3
+
+同样地，XML 语言也可以利用这种方法来设置样式。
+
+下面我们再回到行星那个例子中。假设只希望选择 moons 属性值为 1 的那些 planet 元素：
+
+```
+planet[moons="1"] {color: red;}
+```
+
+上面的代码会把以下标记中的第二个元素变成红色，但第一个和第三个元素不受影响：
+
+```
+<planet>Venus</planet>
+<planet moons="1">Earth</planet>
+<planet moons="2">Mars</planet>
+```
+
+
+
+#### 属性与属性值必须完全匹配
+
+请注意，这种格式要求必须与属性值完全匹配。
+
+如果属性值包含用空格分隔的值列表，匹配就可能出问题。
+
+请考虑一下的标记片段：
+
+```
+<p class="important warning">This paragraph is a very important warning.</p>
+```
+
+如果写成 p[class="important"]，那么这个规则不能匹配示例标记。
+
+要根据具体属性值来选择该元素，必须这样写：
+
+```
+p[class="important warning"] {color: red;}
+```
+
+------
+
+### 根据部分属性值选择
+
+如果需要根据属性值中的词列表的某个词进行选择，则需要使用波浪号（~）。
+
+假设您想选择 class 属性中包含 important 的元素，可以用下面这个选择器做到这一点：
+
+```
+p[class~="important"] {color: red;}
+```
+
+如果忽略了波浪号，则说明需要完成完全值匹配。
+
+#### 部分值属性选择器与点号类名记法的区别
+
+该选择器等价于我们在类选择器中讨论过的点号类名记法。
+
+也就是说，p.important 和 p[class="important"] 应用到 HTML 文档时是等价的。
+
+那么，为什么还要有 "~=" 属性选择器呢？因为它能用于任何属性，而不只是 class。
+
+例如，可以有一个包含大量图像的文档，其中只有一部分是图片。对此，可以使用一个基于 title 文档的部分属性选择器，只选择这些图片：
+
+```
+img[title~="Figure"] {border: 1px solid gray;}
+```
+
+这个规则会选择 title 文本包含 "Figure" 的所有图像。没有 title 属性或者 title 属性中不包含 "Figure" 的图像都不会匹配。
+
+#### 子串匹配属性选择器
+
+下面为您介绍一个更高级的选择器模块，它是 CSS2 完成之后发布的，其中包含了更多的部分值属性选择器。按照规范的说法，应该称之为“子串匹配属性选择器”。
+
+很多现代浏览器都支持这些选择器，包括 IE7。
+
+下表是对这些选择器的简单总结：
+
+| 类型         | 描述                                       |
+| :----------- | :----------------------------------------- |
+| [abc^="def"] | 选择 abc 属性值以 "def" 开头的所有元素     |
+| [abc$="def"] | 选择 abc 属性值以 "def" 结尾的所有元素     |
+| [abc*="def"] | 选择 abc 属性值中包含子串 "def" 的所有元素 |
+
+可以想到，这些选择有很多用途。
+
+举例来说，如果希望对指向 W3School 的所有链接应用样式，不必为所有这些链接指定 class，再根据这个类编写样式，而只需编写以下规则：
+
+```
+a[href*="w3school.com.cn"] {color: red;}
+```
+
+**提示：**任何属性都可以使用这些选择器。
+
+------
+
+### 特定属性选择类型
+
+最后为您介绍特定属性选择器。请看下面的例子：
+
+```
+*[lang|="en"] {color: red;}
+```
+
+上面这个规则会选择 lang 属性等于 en 或以 en- 开头的所有元素。因此，以下示例标记中的前三个元素将被选中，而不会选择后两个元素：
+
+```
+<p lang="en">Hello!</p>
+<p lang="en-us">Greetings!</p>
+<p lang="en-au">G'day!</p>
+<p lang="fr">Bonjour!</p>
+<p lang="cy-en">Jrooana!</p>
+```
+
+一般来说，[att|="val"] 可以用于任何属性及其值。
+
+假设一个 HTML 文档中有一系列图片，其中每个图片的文件名都形如 *figure-1.jpg* 和 *figure-2.jpg*。就可以使用以下选择器匹配所有这些图像：
+
+```
+img[src|="figure"] {border: 1px solid gray;}
+```
+
+当然，这种属性选择器最常见的用途还是匹配语言值。
+
+
+
+
 
 
 
