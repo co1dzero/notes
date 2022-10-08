@@ -279,7 +279,7 @@ vue提供的`{{}}`语法，是用来解决`v-text`会覆盖默认文本内容的
 
 
 
-## 4.3 属性绑定指令（v-bind）
+## 4.3 属性绑定指令（v-bind）（：）
 
 **`插值表达式 {{}} 只能用在内容节点中，不能用在属性节点中`**
 
@@ -386,7 +386,7 @@ Vue提供了 v-on 事件绑定指令，来辅助为DOM元素绑定事件监听
 >
 > **分别为： `v-on:click` 、`v-on:input`、`v-on:keyup`**
 >
-> **即： `@click` 、`@input` 、`@keyup` `**
+> **即： `@click` 、`@input` 、`@keyup` **
 
 
 
@@ -462,7 +462,7 @@ Vue提供了时间修饰符，来更方便的<font color='red'>**对事件的触
 | :-----------------------------------: | :-------------------------------------------------------- |
 | <font color='red'>**.prevent**</font> | **阻止默认行为（例如：阻止a链接的跳转、阻止表单的提交）** |
 |  <font color='red'>**.stop**</font>   | **阻止事件冒泡**                                          |
-|              .capture**               | 以捕获模式触发当前的事件处理函数                          |
+|             **.capture**              | 以捕获模式触发当前的事件处理函数                          |
 |                 .once                 | 绑定的事件只能触发一次                                    |
 |                 .self                 | 只有在event.target是当前元素自身时触发事件处理函数        |
 
@@ -507,7 +507,7 @@ Vue提供了时间修饰符，来更方便的<font color='red'>**对事件的触
 
 `v-bind`单向的，后台数据影响表单，但表单数据不会影响数据源
 
-v-model` 本质是监听标签的 `value 属性`
+v-model` 本质是监听标签的 `value 属性
 
 ```html
 	<div id="app">
@@ -2178,17 +2178,19 @@ https://cn.vuejs.org/v2/guide/instance.html# 生命周期图示
 
 new Vue() 即以<>标签形式创建实例
 
-#### 1.beforeCreate（不重要）
+#### 1.beforeCreate（不重要没用）
 
 **创建阶段的第1个生命周期函数,组件的props，methods，data尚未被创建，处于不可用**
 
 #### 2.created（最早可以发起Ajax请求）
 
-创建阶段的第2个生命周期函数，组件的props，methods，data已创建好，可以使用，但**组件的模板结构尚未生成 ，不能操作DOM，！！！但最早可以发起Ajax请求**
+创建阶段的第2个生命周期函数，组件的props，methods，data已创建好，可以使用，但<font color='red'>**组件的模板结即`<template>`构尚未生成 ，不能操作DOM，！！！但最早可以发起Ajax请求**</font>
 
-经常通过created函数调用methods中的方法，请求服务器的数据，并且把请求到的数据转存到data中，供template模板渲染时去使用
+<font color='red'>**经常通过created函数调用methods中的方法，请求服务器的数据，并且把请求到的数据转存到data中，供template模板渲染时去使用**</font>
 
-#### 3.beforeMount
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-08_09-37-56.png)
+
+#### 3.beforeMount（没啥用）
 
 创建阶段的第3个生命周期函数,内存编译好的HTML结构准备渲染到浏览器中，此时浏览器中还没有当前组件的DOM结构，**无法操作DOM**
 
@@ -2196,21 +2198,35 @@ new Vue() 即以<>标签形式创建实例
 
 创建阶段的第4个生命周期函数，**已经渲染内存的HTML结构**到浏览器中，包含了当前组件的DOM结构，
 
-**！！！最早可以操作DOM**
+<font color='red'>**！！！最早可以操作DOM**</font>
 
 ### 运行阶段（根据数据变化进入运行阶段）
 
 #### 1.beforeUpdate
 
-运行阶段的第1个生命周期函数，**将要**根据数据变化后、最新的数据，重新渲染组件的模板结构，**此时数据变化后还未放到模板结构上**
+运行阶段的第1个生命周期函数，**将要**根据数据变化后、最新的数据，重新渲染组件的模板结构，<font color='red'>**此时数据变化后还未放到模板结构上**</font>
 
 #### 2.updated（当数据变化后，为了能够操作到最新的DOM结构）
 
 运行阶段的第2个生命周期函数，完成了最新数据重新渲染到组件的DOM结构
 
-**!!!当数据变化后，为了能够操作到最新的DOM结构,应将代码写在update中**
+<font color='red'>**!!!当数据变化后，为了能够操作到最新的DOM结构,应将代码写在update中**</font>
 
-### 销毁阶段
+### 销毁阶段（用的很少)
+
+```
+<button @click="flag = !flag">取反控制自定义·组件·Test显示还是移除</button>
+<Test v-if="flag"></Test>
+
+//
+data(){
+	return{
+		flag: true;
+	}
+}
+```
+
+
 
 #### 1.beforeDestroy
 
@@ -2379,6 +2395,514 @@ test-container{
 
 
 # 七.组件之间的数据共享
+
+在项目开发中，组件之间的最常见的关系分为如下两种：
+
+1、父子关系
+
+2、兄弟关系
+
+## 7.1 父子组件的数据共享
+
+父子组件之间的数据共享又分为：
+
+父-->子共享数据
+
+子-->父共享数据
+
+## 7.2 父组件向子组件共享数据
+
+父组件向子组件共享数据需要使用<font color='red'>**自定义属性 props**</font> 
+
+```vue
+//子组件
+<template>
+       <div>
+             <h5>Son组件</h5>
+             <p>父组件专传递过来的msg值是:{{ msg }}</p>
+             <p>父组件专传递过来的user值是:{{ user }}</p>
+       </div>
+</template>
+
+<script>
+export default {
+
+     props:["msg","user"]
+
+}
+</script>
+```
+
+
+
+```vue
+//父组件
+
+//调用子组件
+//通过属性绑定将父组件对应的属性值传给子组件，":"一定要加，不然只传递message过去，而不是hello vue.js
+<Son :msg="message" :user="userinfo"></Son>
+
+data(){
+     return{
+             message:"hello vue.js",
+             userinfo:{ name:'zs', age:20 }
+     }
+
+}
+```
+
+> 不要修改`props`的值
+
+## 7.3 子组件向父组件共享数据
+
+子组件向父组件共享数据使用<font color='red'>**自定义事件**</font>
+
+![img](https://pic4.zhimg.com/80/v2-8e957d00b4c7338a641dbf12ede729a7_1440w.webp)
+
+```vue
+<template>
+    <div>
+        父组件:{{count}}
+
+        //绑定getNewCount函数
+        <Zi @NewCount="getNewCount"></Zi>
+
+    </div>
+</template>
+
+<script>
+import Zi from '@/components/Zi.vue'
+
+
+export default {
+    components:{
+    Zi,
+    
+},
+
+    data(){
+        return {
+            count:0
+        }
+    },
+    methods:{
+
+        //定义getNewCount函数,参数val是子组件的值
+        getNewCount(val){
+            this.count=val;
+        }
+    }
+
+}
+</script>
+
+<style>
+
+</style>
+```
+
+
+
+```vue
+<template>
+    <div>
+        子组件:{{count}}
+        <button @click="add">+1</button>
+    </div>
+</template>
+
+<script>
+export default {
+
+    data(){
+        return {
+            count:0
+        }
+    },
+    methods:{
+        add(){
+
+            this.count+=1;
+            //修改数据时，通过$emit()触发自定义事件
+            this.$emit("NewCount",this.count)
+        }
+    }
+
+
+
+}
+</script>
+
+<style>
+
+</style>
+```
+
+## 兄弟组件之间的数据共享
+
+在vue2.x中，兄弟组件之间数据共享的方案是EventBus
+
+1、创建evenBus.js模块，并向外共享一个Vue的实例对象
+
+2、在数据发送方，调用bus.$emit('事件名称',要发送的数据) 方法触发自定义事件
+
+3、在数据接收方，调用bus.$on('事件名称',事件处理函数)方法注册一个自定义事件
+
+![img](https://pic2.zhimg.com/80/v2-7a52831742b4cee23350270a2f905295_1440w.webp)
+
+```vue
+//兄弟组件（数据发送端）
+<template>
+  <div>
+        <h1>Right组件{{ msg }}</h1>
+        <button @click="sendMsg"></button>
+  </div>
+</template>
+
+<script>
+
+    import bus from "@/eventBus.js"
+export default {
+
+    data(){
+        return {
+            msg:"hello vue.js"
+        }
+    },
+    methods:{
+        sendMsg(){
+            bus.$emit("share",this.msg)
+        }
+    }
+
+}
+</script>
+
+<style lang="less" scoped>
+    div{
+        width: 300px;
+        height: 400px;
+        background-color: aqua;
+    }
+</style>
+```
+
+
+
+```js
+//eventBus.js
+
+import Vue from 'vue'
+//向外共享Vue的实例对象
+export default new Vue()
+```
+
+
+
+```vue
+// 兄弟组件(数据接收方)
+<template>
+   <div>
+            <h1>Lift组件{{msgFromLeft}}</h1>
+
+   </div>
+</template>
+
+<script>
+
+import bus from '@/eventBus.js'
+
+export default {
+        data(){
+            return {
+                msgFromLeft:""
+            }
+        },
+        created(){  
+            bus.$on("share",val=>{
+                this.msgFromLeft=val;
+            })
+        }
+}
+</script>
+
+<style lang="less" scoped>
+div{
+    width: 300px;
+    height: 400px;
+    background-color: antiquewhite;
+}
+</style>
+```
+
+## ref引用
+
+什么是ref引用
+
+ref用来辅助开发者在不依赖jQuery的情况下，获取DOM元素或组件的引用。
+
+每个vue的组件实例上，都包含一个$refs对象，里面存储着对应的DOM元素或组件的引用。默认情况下，组件的$refs指定一个空对象
+
+```vue
+<template>
+  <div>
+
+    <!-- 起ref名字 -->
+    <h1 ref="h1">App根目录</h1>
+    <h2 ref="h2">aa</h2>
+    <button @click="show">打印this</button>
+  </div>
+</template>
+
+<script>
+export default {
+
+  methods:{
+    show(){
+
+      //通过this.$refs.名字获取标签
+      console.log(this.$refs.h1)
+    }
+  }
+    
+
+}
+</script>
+```
+
+使用ref引用组件实例
+
+如果想要使用ref引用页面上的组件实例，则可以按照如下的方式进行操作
+
+```vue
+<template>
+  <div>
+    counter组件
+  </div>
+</template>
+
+<script>
+export default {
+
+    methods:{
+        add(){
+            console.log("+1")
+        }
+
+    }
+
+}
+</script>
+```
+
+
+
+```vue
+<template>
+  <div>
+
+    <!-- 使用ref属性，为对应的组件添加对应的名称 -->
+      <My-Count ref="counterRef"></My-Count>
+      <button @click="show">+1</button>
+
+  </div>
+</template>
+
+<script>
+import MyCount from "@/components/counter.vue" 
+
+export default {
+
+  components:{
+    "My-Count":MyCount,
+  },
+
+
+
+  methods:{
+    show(){
+
+      //通过this.$refs.引用名称，可以引用组件的实例
+      console.log(this.$refs.counterRef)
+
+      //引用到组件的实例之后，就可以调用组件上的methods方法
+      this.$refs.counterRef.add()
+
+    }
+  }
+    
+
+}
+</script>
+```
+
+## this.$nextTick(cb)
+
+组件的$nextTick(cb)方法，会把cb回调推迟到下一个DOM更新周期之后执行。通俗的理解是：等组件的DOM更新完成之后，再执行cb回调函数，从而能保证cb回调函数可以操作到最新的DOM
+
+```vue
+<template>
+  <div>
+    <input type="text" v-if="inputVisible" @blur="showButton" ref="iptRef">
+    <button @click="showInput" v-else >输入内容</button>
+  </div>
+</template>
+
+<script>
+export default {
+
+  data(){
+    return {
+      inputVisible:false
+    }
+  },
+
+    methods:{
+
+      //点击按钮，展示输入框
+        showInput(){
+
+          //1、切换布尔值，把文本展示出来
+          this.inputVisible=true
+
+          //让文本框获取焦点
+          //直接使用this.$refs.iptRef.focus()会报错，因为DOM没有渲染完成，不能拿到dom的focus(),使用$nextTick()等待DOM渲染完成
+          this.$nextTick(()=>{
+            this.$refs.iptRef.focus()
+          })
+
+
+        },
+
+      
+        showButton(){
+          this.inputVisible=false
+        }
+
+    }
+
+}
+</script>
+```
+
+## 动态组件
+
+### 什么是动态组件
+
+动态组件指的是动态切换组件的显示与隐藏
+
+### 如何实现动态组件的渲染
+
+vue提供了一个内置的<component>组件，专门用来实现动态组件的渲染
+
+```vue
+<template>
+  <div>
+    <div>
+      <h1>App组件</h1>
+      <button @click="showLeft">切换为Left组件</button>
+      <button @click="showRight">切换为Right组件</button>
+    </div>
+    <div class="www">
+      <component :is="comName"></component>  
+    </div>
+  </div>
+</template>
+
+<script>
+import Left from "@/components/Left.vue"
+import Right from "@/components/Right.vue"
+export default {
+
+  data(){
+      return {
+        comName:"Left"
+      }
+  },
+
+  components:{
+    Left,
+    Right,
+  },
+
+  methods:{
+    showLeft(){
+      this.comName="Left"
+    },
+    showRight(){
+      this.comName="Right"
+    }
+
+  }
+}
+</script>
+```
+
+### 使用keep-alive保持状态
+
+当组件被切换到其他组件在切换回来的时候是，组件会重新创建新的组件，原来的组件被销毁，原来的数据跟着销毁，为了保持原来的数据和组件不被销毁可以使用**keep-alive将组件缓存**
+
+```text
+<keep-alive>
+      <component :is="comName"></component>  
+</keep-alive>
+```
+
+### keep-alive对应的生命周期函数
+
+当组件被缓存时，会自动触发组件的deactivated生命周期
+
+当组件被激活时，会自动触发组件的activated生命周期
+
+这些生命周期写在组件中
+
+### keep-alive的include属性
+
+指定那些组件可以缓存，即那个组件可以由keep-alive
+
+include属性用来指定：只有名称匹配的组件会被缓存。多个组件名之间使用英文的逗号分隔
+
+exclude属性表示不被缓存的组件，include和exclude不能同时使用
+
+```text
+<keep-alive include="myLefr,MyRight">
+      <component :is="comName"></component>  
+</keep-alive>
+```
+
+如果在“声明组件”的时候，没有为组件指定name名称，则组件队的名称默认就是“注册时候的名称”
+
+当提供了name属性之后，组件的名称就是name属性的值
+
+组件的“注册名称”的主要应用场景是，以标签的形式，把注册号的组件，渲染和使用到页面结构中
+
+组件声明时候的name名称的主要应用场景：结合keep-alive标签实现缓存功能，以及调试工具中看到组件的name名称
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2835,4 +3359,8 @@ img[src|="figure"] {border: 1px solid gray;}
 
 
 
-## less知识 template
+## less知识 
+
+## Virtual Dom
+
+# 简单了解SPA、SEO及CSR和SSR渲染方式
