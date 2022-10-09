@@ -2410,7 +2410,7 @@ test-container{
 
 子-->父共享数据
 
-## 7.2 父组件向子组件共享数据
+### 7.2 父组件向子组件共享数据
 
 父组件向子组件共享数据需要使用<font color='red'>**自定义属性 props**</font> 
 
@@ -2453,11 +2453,17 @@ data(){
 
 > 不要修改`props`的值
 
-## 7.3 子组件向父组件共享数据
+### 7.3 子组件向父组件共享数据
 
 子组件向父组件共享数据使用<font color='red'>**自定义事件**</font>
 
+> 通过触发`add`然后执行`$emit`，通过`$emit`触发自定义事件`numchange`将`count`传递过去，再触发事件绑定的事件处理函数`getNewCount`将传递过来的子组件的值
+
 ![img](https://pic4.zhimg.com/80/v2-8e957d00b4c7338a641dbf12ede729a7_1440w.webp)
+
+可以通过vue插件的事件栏
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-09_13-56-31.png)
 
 ```vue
 <template>
@@ -2524,6 +2530,7 @@ export default {
 
             this.count+=1;
             //修改数据时，通过$emit()触发自定义事件
+            //NewCount 是自定义事件名
             this.$emit("NewCount",this.count)
         }
     }
@@ -2538,17 +2545,21 @@ export default {
 </style>
 ```
 
-## 兄弟组件之间的数据共享
+## 7.4兄弟组件之间的数据共享
 
-在vue2.x中，兄弟组件之间数据共享的方案是EventBus
+非父子即兄弟
 
-1、创建evenBus.js模块，并向外共享一个Vue的实例对象
+在`vue2.x`中，兄弟组件之间数据共享的方案是`EventBus`
 
-2、在数据发送方，调用bus.$emit('事件名称',要发送的数据) 方法触发自定义事件
+1、创建<font color='red'>**`evenBus.js`**</font>模块，并向外共享一个<font color='red'>**`Vue`的实例对象`d`**</font>
 
-3、在数据接收方，调用bus.$on('事件名称',事件处理函数)方法注册一个自定义事件
+2、在数据<font color='red'>**发送方**</font>，调用<font color='red'>**`bus.$emit`**</font>('事件名称',要发送的数据) 方法<font color='red'>**触发自定义事件**</font>
+
+3、在数据<font color='red'>**接收方**</font>，调用<font color='red'>**`bus.$on`**</font>('事件名称',事件处理函数)方法<font color='red'>**注册一个自定义事件**</font>
 
 ![img](https://pic2.zhimg.com/80/v2-7a52831742b4cee23350270a2f905295_1440w.webp)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-09_14-12-40.png)
 
 ```vue
 //兄弟组件（数据发送端）
@@ -2635,19 +2646,29 @@ div{
 </style>
 ```
 
-## ref引用
+# 八. ref引用
 
-什么是ref引用
+## 8.1什么是ref引用
 
-ref用来辅助开发者在不依赖jQuery的情况下，获取DOM元素或组件的引用。
+`ref`用来辅助开发者在<font color='red'>**不依赖`jQuery`的情况下**</font>，获取`DOM`元素或组件的引用。
 
-每个vue的组件实例上，都包含一个$refs对象，里面存储着对应的DOM元素或组件的引用。默认情况下，组件的$refs指定一个空对象
+每个`vue`的组件实例上，都包含一个<font color='red'>**`$refs`对象**</font>，里面存储着对应的DOM元素或组件的引用。默认情况下，<font color='red'>**组件的`$refs`指定一个空对象**</font>
+
+> $开头的都是Vue内置的
+
+## 8.2 ref获取dom引用
+
+1. 在`DOM`标签内设置`ref `名字 
+
+   > 尽量名字以`Ref`结尾方便查看
+
+2. `this.$refs.名字`     获取标签 eg：`this.$refs.h1Ref`
 
 ```vue
 <template>
   <div>
 
-    <!-- 起ref名字 -->
+    <!-- 起ref名字 名字任意 -->
     <h1 ref="h1">App根目录</h1>
     <h2 ref="h2">aa</h2>
     <button @click="show">打印this</button>
@@ -2660,8 +2681,9 @@ export default {
   methods:{
     show(){
 
-      //通过this.$refs.名字获取标签
-      console.log(this.$refs.h1)
+      //通过this.$refs.名字获取标签 this是这个vue实例
+      console.log(this.$refs.h1);
+      this.$refs.h1.style.color='red'
     }
   }
     
@@ -2670,9 +2692,15 @@ export default {
 </script>
 ```
 
-使用ref引用组件实例
+## 8.3 使用ref引用组件实例
 
-如果想要使用ref引用页面上的组件实例，则可以按照如下的方式进行操作
+如果想要使用`ref`<font color='red'>**引用页面上的组件实例**</font>，则可以按照如下的方式进行操作
+
+> 尽量名字以`Ref`结尾方便查看
+
+1. 先对要引用的组件添加`ref`      eg：`<My-Count ref="counterRef"></My-Count>`
+2. 通过`this.$refs.名字.方法()`来运行子组建的方法  eg： `this.$refs.counterRef.add()` 
+3. 也广泛用于便捷获取组件的值或对值操作   eg：`this.$refs.counterRef.count = 0`
 
 ```vue
 <template>
@@ -2736,9 +2764,15 @@ export default {
 </script>
 ```
 
-## this.$nextTick(cb)
+## 8.4 this.$nextTick(cb)
 
-组件的$nextTick(cb)方法，会把cb回调推迟到下一个DOM更新周期之后执行。通俗的理解是：等组件的DOM更新完成之后，再执行cb回调函数，从而能保证cb回调函数可以操作到最新的DOM
+官方挂载方法，组件的<font color='red'>**`$nextTick(cb)`**</font>方法，会把cb回调<font color='red'>**推迟到下一个`DOM`更新周期之后执行**</font>。通俗的理解是：等组件的`DOM`更新完成之后，再执行`cb`回调函数，从而能保证`cb`回调函数可以操作到最新的`DOM`
+
+```
+this.$nextTick(()=>{
+            this.$refs.iptRef.focus()
+          })
+```
 
 ```vue
 <template>
@@ -2785,7 +2819,7 @@ export default {
 </script>
 ```
 
-## 动态组件
+# 动态组件
 
 ### 什么是动态组件
 
@@ -2902,11 +2936,310 @@ exclude属性表示不被缓存的组件，include和exclude不能同时使用
 
 
 
+# 路由
+
+# 一. 前端路由的概念和原理
+
+## 1. 什么是路由
+
+路由（英文：router）就是<font color='red'>**对应关系**</font>。
+
+## 2. SPA 与前端路由
+
+SPA 指的是一个 web 网站只有唯一的一个 HTML 页面，所有组件的展示与切换都在这唯一的一个页面内完成。
+此时，不同组件之间的切换需要通过前端路由来实现。
+
+结论：在 SPA 项目中，不同功能之间的切换，要依赖于前端路由来完成！
+
+## 3. 什么是前端路由
+
+通俗易懂的概念：<font color='red'>**Hash 地址**</font>与<font color='red'>**组件之间**</font>的<font color='red'>**对应关系。**</font>
+
+> Hash地址 就是 锚链接 #
+
+## 4. 前端路由的工作方式
+
+① 用户点击了页面上的<font color='red'>**路由链接**</font>
+② 导致了<font color='red'>**URL 地址栏**</font> 中的<font color='red'>**Hash 值**</font>发生了变化
+③ <font color='red'>**前端路由监听了到 Hash 地址的变化**</font>
+④ 前端路由把当前 <font color='red'>**Hash 地址对应的组件**</font>渲染都浏览器中
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/67918c1647ed42d0a2990763c08b6b0b.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAMDU0MzE=,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+> 结论：前端路由，指的是 Hash 地址与组件之间的对应关系！
+
+## 5. 实现简易的前端路由
+
+步骤1：通过component标签，结合 comName 动态渲染组件。示例代码如下：
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/c74f2d6985044d4eb80bfbe907822497.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAMDU0MzE=,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+步骤2：在 App.vue 组件中，为 链接添加对应的 `hash` 值：
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/a5e19fd150e346ea93432d582cd85e31.png)
+
+步骤3：在 created 生命周期函数中，监听浏览器地址栏中 hash 地址的变化，动态切换要展示的组件的名称：
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2dcff9df7db749d89969f0f961d50753.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAMDU0MzE=,size_17,color_FFFFFF,t_70,g_se,x_16)
+
+完整代码：
+
+```vue
+<template>
+  <div class="app-container">
+    <h1>App 根组件</h1>
+
+    <a href="#/home">首页</a>
+    <a href="#/movie">电影</a>
+    <a href="#/about">关于</a>
+    <hr />
+    <component :is="comName"></component>
+  </div>
+</template>
+
+<script>
+// 导入组件
+import Home from '@/components/Home.vue'
+import Movie from '@/components/Movie.vue'
+import About from '@/components/About.vue'
+
+export default {
+  name: 'App',
+  data() {
+    return {
+      // 在动态组件的位置，要展示的组件的名字，值必须是字符串
+      comName: 'Home'
+    }
+  },
+  created() {
+    // 只要当前的 App 组件一被创建，就立即监听 window 对象的 onhashchange 事件
+    window.onhashchange = () => {
+      console.log('监听到了 hash 地址的变化', location.hash)
+      switch (location.hash) {
+        case '#/home':
+          this.comName = 'Home'
+          break
+        case '#/movie':
+          this.comName = 'Movie'
+          break
+        case '#/about':
+          this.comName = 'About'
+          break
+      }
+    }
+  },
+  // 注册组件
+  components: {
+    Home,
+    Movie,
+    About
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.app-container {
+  background-color: #efefef;
+  overflow: hidden;
+  margin: 10px;
+  padding: 15px;
+  > a {
+    margin-right: 10px;
+  }
+}
+</style>
+
+
+```
+
+这里使用a标签进行定位，会用到a标签的锚链接的功能，所以在访问的路径的前面需要加个“#”
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/59d461ae94f34c10bb4e9612ad37c6d7.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAMDU0MzE=,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+App.vue组件的生命周期函数created()方法中，通过window.onhashchange事件，即监听导航栏的地址是否发生变化，将相应的组件通过动态绑定的方式，更新到component组件中。
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/5038fc75bcd44739abf06bf5313e328a.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAMDU0MzE=,size_20,color_FFFFFF,t_70,g_se,x_16)
 
 
 
 
-# 八.ref引用
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 二. vue-router 的基本使用
+
+# 一、vue-router是什么？
+
+可以把他看成一个可以进行组件路由的工具
+
+# 二、如何使用vue-router
+
+## 
+
+**1.安装**
+
+在终端下输入命令 npm install vue-router --save
+
+**`2.前期准备`**
+
+我们要使用这个工具要准备几个组件到时候就是对这几个组件进行跳转
+
+![img](https://img-blog.csdnimg.cn/21188bd3f4754be4b89d83e77f6a8a80.png)
+
+在一个vue项目中我们通常把路由组件放在src文件夹下的pages文件夹内
+
+在这里我们分别把这些组件放在不同名字的文件夹内取相同的名字index.vue这样在引入时路径只需要写到这个文件夹即可，因为会自动去找index文件进行引入
+
+**3.路由配置**
+
+我们首先在src文件夹下建立一个名为router的文件夹里面放一个index.js的文件我们将在这个文件里面进行路由配置
+
+![img](https://img-blog.csdnimg.cn/2645363475c94600a7dd53a53e4ac39e.png)
+
+这个路由配置分三步
+
+1.初始化
+
+import Vue from 'vue'
+
+import VueRouter from 'vue-router'
+
+Vue.use(VueRouter);
+
+2.引入所需要配置的路由组件
+
+import Home from '@/pages/Home'
+
+import Search from '@/pages/Search'
+
+import Login from '@/pages/Login'
+
+import Register from '@/pages/Register'
+
+3.进行路由配置
+
+export default new VueRouter({
+
+ // 配置路由
+
+  routes:[
+
+    {
+      path:'/home',
+    
+      component:Home
+    
+    },
+    
+    {
+      path:'/search',
+    
+      component:Search
+    
+    },
+    
+    {
+      path:'/login',
+    
+      component:Login
+    
+    },
+    
+    {
+      path:'/register',
+    
+      component:Register
+    
+    },
+    
+    // 重定向  在项目跑起来的时候 立马访问首页
+    
+    {
+      path:"*",
+    
+      redirect:'/home'
+    
+    }
+
+  ]
+
+})
+
+这里面有两点  path是到时候路由的路径
+
+component 就是我们引入的组件名称 和第二步中import 后面的名字一致即可
+
+重定向不用理解一般都是默认 重定向首页路由也就是home组件
+
+**4.路由注册**
+
+我们配置完路由还需要对路由进行注册，注册完就可以使用了
+
+注册就是在main.js文件下输入两行代码即可
+
+![img](https://img-blog.csdnimg.cn/b9d14daa5292447ca798e92bb18c0d56.png)
+
+就是标记的这两处
+
+**5.路由的使用**
+
+我们注册完还需要在App这个根组件下进行显示![img](https://img-blog.csdnimg.cn/44da2522cdf8401f995fab6b6751627d.png)
+
+ 只需要加入这一行代码即可
+
+**6.效果展示**
+
+![img](https://img-blog.csdnimg.cn/92f4f23c0cc743c3b0dcad1b31e4d738.png)
+
+ 当我们在网址后面加上后缀/home即可在页面上展示Home组件内容
+
+**7.路由跳转的使用**
+
+​    有两种方法可以实现路由跳转
+
+​            1.声明式导航 router-link 可以进行路由的跳转
+
+​    我们在需要页面跳转的地方加上router-link即可 例如：
+
+![img](https://img-blog.csdnimg.cn/c7e88a1b65a142e0b4ad2e9c43d110bb.png)
+
+2.编程式导航push| replace 可以进行路由跳转
+
+​                这个是利用点击事件函数回调方法进行的路由跳转：
+
+![img](https://img-blog.csdnimg.cn/e8104372117f489d92f734ba6c3177ca.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 三. vue-router 的常见用法
+
+
+
+# 四. 后台管理案例
+
+
+
+# 
 
 
 
