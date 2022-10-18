@@ -703,6 +703,55 @@ data：{
 </ul>
 ```
 
+`v-for`渲染列表`table`：
+
+```
+			<table class="rules-table">
+              <tr>
+                <th>里程区间（公里）</th>
+                <th>自提（+ x 天）</th>
+                <th>配送（+x 天）</th>
+              </tr>
+              <tr v-for="item in ranges" :key="item.id">
+                <td>{{ item.mileageRange }}</td>
+                <td>{{ item.ownTime }}</td>
+                <td>{{ item.distributionTime }}</td>
+              </tr>
+            </table>
+            
+            -------------------------------------------------------
+            data() {
+    return {
+      ranges: [
+        {
+          id: 1,
+          mileageRange: '0<里程≤100',
+          ownTime: '0~1',
+          distributionTime: '1~2',
+        },
+        {
+          id: 2,
+          mileageRange: '100<里程≤200',
+          ownTime: '1~2',
+          distributionTime: '1~2',
+        },
+        {
+          id: 3,
+          mileageRange: '200<里程≤300',
+          ownTime: '1~2',
+          distributionTime: '1~2',
+        },
+        {
+          id: 4,
+          mileageRange: '300<里程',
+          ownTime: '1~2',
+          distributionTime: '1~2',
+        },
+      ],
+    }
+  },
+```
+
 
 
 ### 4.8.1 v-for 中的索引
@@ -2700,7 +2749,7 @@ export default {
 
 1. 先对要引用的组件添加`ref`      eg：`<My-Count ref="counterRef"></My-Count>`
 2. 通过`this.$refs.名字.方法()`来运行子组建的方法  eg： `this.$refs.counterRef.add()` 
-3. 也广泛用于便捷获取组件的值或对值操作   eg：`this.$refs.counterRef.count = 0`
+3. 也广泛用于**便捷**获取组件的值或对值操作（比子父传递和兄弟传递更方便）   eg：`this.$refs.counterRef.count = 0`
 
 ```vue
 <template>
@@ -2819,13 +2868,13 @@ export default {
 </script>
 ```
 
-# 动态组件
+# 九. 动态组件
 
-### 什么是动态组件
+## 9.1 什么是动态组件
 
-动态组件指的是动态切换组件的显示与隐藏
+动态组件指的是<font color='red'>**动态切换组件的显示与隐藏**</font>
 
-### 如何实现动态组件的渲染
+### 9.2 如何实现动态组件的渲染
 
 vue提供了一个内置的<component>组件，专门用来实现动态组件的渲染
 
