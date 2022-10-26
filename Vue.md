@@ -1,4 +1,4 @@
-`preventDefault() 阻止默认`
+preventDefault() 阻止默认`
 
 
 
@@ -80,7 +80,7 @@ new Vue（）
     <div id="app">{{ username }}</div>
 
 
-    <!-- 导入vue的库文件，在window全局九有了Vue这个构造函数 -->
+    <!-- 导入vue的库文件，在window全局就有了Vue这个构造函数 -->
     <script src="./vue.js"></script>
     <script>
         // 构建Vue的实例对象
@@ -857,6 +857,8 @@ data：{
 
 **全局过滤器** 独立于每个 vm 之外 ,**基本都是定义全局过滤器**
 
+<font color='red'>**全局过滤器写在`main.js`内**</font>
+
 ```coffeescript
 // 全局过滤器 独立于每个 vm 之外
 // Vue.filiter() 方法接受两个参数：
@@ -1395,6 +1397,7 @@ axios.get('url',{params:{ /*参数*/ }}).then(callback)
         document.querySelector('#btn').addEventListener('click', async function () {
         	const {data:res}= await axios.get(url, { params: paramsOBj })
         	console.log(res.data)
+        	console.log(res)
         })
 ```
 
@@ -1417,6 +1420,100 @@ axios.post('url',{ /*参数*/ }).then(callback)
 ```
 
 ### 
+
+
+
+## *vue 中axios
+
+```vue
+Get请求
+<template>
+  <div class="back1">
+    <h1>left组件</h1>
+    <button @click="getInfo">发送GET请求</button>
+  </div>
+</template>
+
+<script>
+import axios from 'axios'
+export default {
+  methods: {
+    async getInfo() {
+      const { data: res } = await axios.get(
+        'http://www.liulongbin.top:3006/api/get'
+      )
+      console.log(res)
+      console.log(res.data)
+    },
+  },
+}
+</script>
+
+<style lang="less" scoped>
+.back1 {
+  background-color: aqua;
+  min-height: 200px;
+  flex: 1;
+}
+</style>
+
+```
+
+```vue
+<template>
+  <div class="back">
+    <h1>right组件</h1>
+    <button @click="postInfo">POST请求</button>
+  </div>
+</template>
+
+<script>
+import axios from 'axios'
+export default {
+  methods: {
+    async postInfo() {
+      const { data: res } = await axios.post(
+        'http://www.liulongbin.top:3006/api/post',
+        { name: 'zs', age: 20 }
+      )
+      console.log(res)
+      console.log(res.data)
+    },
+  },
+}
+</script>
+
+<style lang="less" scoped>
+.back {
+  background-color: deeppink;
+  min-height: 200px;
+  flex: 1;
+}
+</style>
+
+```
+
+### 简易
+
+#### 把axios挂载到vue原型上
+
+> `vue.prototype.axios` 中的`axios`是自定义的，可以改为例如`$http`,则在使用的时候就要修改成对应的`this.$http.get`或`this.&http.host`
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-24_15-03-29.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-24_15-17-19.png)
+
+#### 并配置请求根目录
+
+> 把 axios 挂载到 Vue.prototype 上，供每个 .vue 组件的实例直接使用，
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-24_15-24-58.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-24_15-26-37.png)
+
+<font color='red'>**`注意`**</font>：但是，把`axios`挂载到`Vue`原型上，有一个缺点，不利于`api`接口的复用`
+
+
 
 # 四. Vue-cli （脚手架）
 
@@ -2868,15 +2965,23 @@ export default {
 </script>
 ```
 
-# 九. 动态组件
+
+
+# 九. 动态组件 components
 
 ## 9.1 什么是动态组件
 
 动态组件指的是<font color='red'>**动态切换组件的显示与隐藏**</font>
 
-### 9.2 如何实现动态组件的渲染
+## 9.2 如何实现动态组件的渲染
 
-vue提供了一个内置的<component>组件，专门用来实现动态组件的渲染
+vue提供了一个内置的**`<components>`**组件，专门用来实现动态组件的渲染
+
+> `componment`作为一个占位符来使用
+>
+> `is` 属性的值，表示要渲染的组件的名字
+
+
 
 ```vue
 <template>
@@ -2887,7 +2992,7 @@ vue提供了一个内置的<component>组件，专门用来实现动态组件的
       <button @click="showRight">切换为Right组件</button>
     </div>
     <div class="www">
-      <component :is="comName"></component>  
+      <components :is="comName"></components>  
     </div>
   </div>
 </template>
@@ -2921,31 +3026,47 @@ export default {
 </script>
 ```
 
-### 使用keep-alive保持状态
+## 9.3 使用keep-alive保持状态
 
-当组件被切换到其他组件在切换回来的时候是，组件会重新创建新的组件，原来的组件被销毁，原来的数据跟着销毁，为了保持原来的数据和组件不被销毁可以使用**keep-alive将组件缓存**
+当组件被切换到其他组件在切换回来的时候是，**组件会重新创建新的组件，原来的组件被销毁**，原来的数据跟着销毁，为了保持原来的数据和组件不被销毁可以使用**keep-alive将组件缓存**
+
+> `keep-alive` 可以把内部的组件进行缓存，而不是销毁组件
 
 ```text
 <keep-alive>
-      <component :is="comName"></component>  
+      <components :is="comName"></component>  
 </keep-alive>
 ```
 
-### keep-alive对应的生命周期函数
+ 被缓存：
 
-当组件被缓存时，会自动触发组件的deactivated生命周期
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-19_14-56-38.png)
 
-当组件被激活时，会自动触发组件的activated生命周期
+## 9.4 keep-alive对应的生命周期函数
 
-这些生命周期写在组件中
+当组件<font color='red'>**被缓存**</font>时，会自动触发组件的<font color='red'>**`deactivated`**</font>生命周期
 
-### keep-alive的include属性
+当组件<font color='red'>**被激活**</font>时，会自动触发组件的<font color='red'>**`activated`**</font>生命周期
 
-指定那些组件可以缓存，即那个组件可以由keep-alive
+<font color='red'>**这些生命周期写在组件中**</font>
 
-include属性用来指定：只有名称匹配的组件会被缓存。多个组件名之间使用英文的逗号分隔
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-19_16-02-08.png)
 
-exclude属性表示不被缓存的组件，include和exclude不能同时使用
+> 当组件第一次被创建的时候，既会执行 `created` 生命周期，也会执行 `activated` 生命周期
+>
+> 当时，当组件被激活时，只会触发 `activated` 生命周期，不再触发 `created`。因为组件没有被重新创建
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-19_16-00-12.png)
+
+
+
+## 9.5 keep-alive的include属性
+
+指定哪些组件可以缓存，即那个组件可以由`keep-alive`
+
+`include`属性用来指定：只有<font color='red'>**名称匹配的组件**</font>会被缓存。多个组件名之间使用<font color='red'>**英文的逗号分隔**</font>
+
+`exclude`属性表示不被缓存的组件，<font color='red'>**`include`和`exclude`不能同时使用**</font>
 
 ```text
 <keep-alive include="myLefr,MyRight">
@@ -2953,29 +3074,529 @@ exclude属性表示不被缓存的组件，include和exclude不能同时使用
 </keep-alive>
 ```
 
-如果在“声明组件”的时候，没有为组件指定name名称，则组件队的名称默认就是“注册时候的名称”
+## 扩展-组件name属性的影响
 
-当提供了name属性之后，组件的名称就是name属性的值
+> 如果在“声明组件”的时候，没有为组件指定name名称，则组件队的名称默认就是“注册时候的名称”即
 
-组件的“注册名称”的主要应用场景是，以标签的形式，把注册号的组件，渲染和使用到页面结构中
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-19_16-28-50.png)
 
-组件声明时候的name名称的主要应用场景：结合keep-alive标签实现缓存功能，以及调试工具中看到组件的name名称
+> 当提供了name属性之后，组件的名称就是name属性的值
 
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-19_16-29-28.png)
 
+> 组件的“注册名称”的主要应用场景是，以标签的形式，把注册号的组件，渲染和使用到页面结构中
+>
+> 组件声明时候的name名称的主要应用场景：结合keep-alive标签实现缓存功能，以及调试工具中看到组件的name名称
 
-
-
-
-
-
-
-
+<font color='red'>**设置了`name`的组件用`keep-alive`的`include`和`exclude`要使用`name`的名称而不是注册名称**</font>
 
 
 
 
 
+# 十. 插槽（#）
 
+## 10.1 什么是插槽
+
+<font color='red'>**插槽（Slot）**</font>是 vue 为<font color='red'>**组件的封装者**</font>提供的能力。允许开发者在封装组件时，把<font color='red'>**不确定的、希望由用户指定的部分**</font>定义为插槽。可以把插槽认为是组件封装期间，为用户预留的内容的占位符。
+
+> 在使用封装好的组件时可以diy组件，方便复用
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\14538900e74d087cabf71e76eaef81b5-4.png)
+
+##  10.2 体验插槽的基础用法
+
+在封装组件时，可以通过 **`<slot>`** 元素定义插槽，从而为用户预留内容占位符。示例代码如下：
+
+```vue
+<!-- left组件调用者	 -->
+<template>
+  <div id="app">
+    <left>
+      <p>插槽测试</p>
+    </left>
+  </div>
+</template>
+
+<script>
+import left from "./components/left.vue";
+export default {
+  name: "App",
+  components: {
+    left,
+  },
+};
+</script>
+```
+
+```vue
+<!-- left组件 -->
+<tem<!-- 声明一个插槽区域 -->plate>
+  <div>
+    <div>count:{{ count }}</div>
+    <button @click="count += 1">+1</button>
+    <!-- 声明一个插槽区域 -->
+    <slot></slot>
+  </div>
+</template>
+```
+
+###  （1）没有预留插槽的内容会被丢弃
+
+如果在封装组件时<font color='red'>**没有预留任何 `<slot>` 插槽**</font>，则用户提供的任何<font color='red'>**自定义内容都会被丢弃**</font>。示例代码如下：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-20_10-48-41.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-20_10-48-48.png)
+
+### （2）后备内容（默认内容）
+
+封装组件时，可以为预留的 `<slot>` 插槽提供<font color='red'>**后备内容（默认内容）**</font>。如果组件的使用者没有为插槽提供任何内容，则后备内容会生效。示例代码如下：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-20_10-51-08.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-20_10-50-47.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-20_10-50-54.png)
+
+## 10.3 具名插槽
+
+如果在封装组件时<font color='red'>**需要预留多个插槽节点**</font>，则需要为每个 `<slot>` 插槽指定<font color='red'>**具体的 `name` 名称**</font>。这种<font color='red'>**带有具体名称的插槽叫做“具名插槽”**</font>。示例代码如下：
+
+> 温馨提醒：官方规定，每个插槽都有一个`name` 名称，如果没有指定 `name` 名称的插槽，会有隐含的名称叫做 **“`default`”**。
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-20_10-22-27.png)
+
+### （1） 为具名插槽提供内容
+
+在向具名插槽提供内容的时候，我们需要指明插槽，使用 **`v-slot`** 。
+
+但需要在一个<font color='red'> **`<template>`** </font>元素上使用 **`v-slot`** 指令，并以 **`v-slot`** 的参数的形式提供其名称。示例代码如下：
+
+1. 如果要把内容填充到指定名称的插槽中，需要使用`v-slot:`这个指令
+
+2. `v-slot:`后面要跟上插槽的名字`name`
+
+3. `v-slot:`指令不能直接用在元素上身上，必须用在`template`标签上，或者<font color='red'>**自定义组件**</font>
+
+4. `template`这个标签，它是一个虚拟的标签，只起到包裹作用，但是它是不会被渲染为任何实质性的`html`元素
+5. `v-slot:`指令的简写形式是`#`
+
+>`<template>`组件并不渲染也不显示，只是在这起到包裹作用
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-20_10-35-09.png)
+
+
+
+### （2） 具名插槽的简写形式（#）
+
+跟 `v-on` 和 `v-bind` 一样，`v-slot` 也有缩写，即把参数之前的所有内容 (`v-slot:`) 替换为字符 `#`。例如 `v-slot:header`
+
+可以被重写为` #header`：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-20_10-44-13.png)
+
+
+
+## 10.4 作用域插槽
+
+在封装组件的过程中，<font color='red'>**可以为预留的 `<slot>` 插槽绑定 `props` 数据，这种带有 `props `数据的 `<slot>` 叫做“作用域插槽”**</font>。可以使用 `v-slot:` 的形式，接收作用域插槽对外提供的数据。
+
+> **实质是子传父，传递过来之后是对象的形式，接收形参通常为`scope`**
+
+示例代码如下：
+
+```vue
+<!-- left子组件 -->
+<template>
+  <div>
+    <div>count:{{ count }}</div>
+    <button @click="count += 1">+1</button>
+    <!-- 声明一个插槽区域 -->
+    <slot name="default" :msg="list">
+      <p>默认内容</p>
+    </slot>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "myleft",
+  data() {
+    return {
+      list: {
+        a: 1,
+        b: 2,
+      },
+    };
+  },
+};
+</script>
+```
+
+```vue
+<!-- 父组件名 -->
+<template>
+  <div id="app">
+    <!-- 组件名 -->
+    <left>
+      <template #default="scope">
+        <p>插槽测试</p>
+        <p>{{ scope }}</p>
+      </template>
+    </left>
+  </div>
+</template>
+
+<script>
+import left from "./components/left.vue";
+
+export default {
+  name: "App",
+  components: {
+    left,
+  },
+};
+</script>
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-20_11-12-34.png)
+
+![在这里插入图片描述](https://img.php.cn/upload/article/000/000/024/8b03904cbb5f21328af0fc53950d8c47-11.png)
+
+![在这里插入图片描述](https://img.php.cn/upload/article/000/000/024/8b03904cbb5f21328af0fc53950d8c47-12.png)
+
+###  解构插槽 Prop
+
+作用域插槽对外提供的数据对象，可以使用<font color='red'>**解构赋值**</font>简化数据的接收过程。示例代码如下：
+
+
+
+![在这里插入图片描述](https://img.php.cn/upload/article/000/000/024/0043aea935e524a0277643fb040033bd-13.png)
+
+
+
+
+
+# 十一. 自定义指令
+
+## 1 什么是自定义指令
+
+vue 官方提供了 v-text、v-for等常用指令，除此之外vue还允许开发者自定义指令
+
+## 2 自定义指令的分类
+
+vue 中的自定义指令分为两类，分别是：
+
+- <font color='red'>**私有自定义指令**</font>
+- <font color='red'>**全局自定义指令**</font>
+
+## 3 私有自定义指令
+
+在每个 `vue` 组件中，可以在 <font color='red'>**`directives`**</font> 节点下声明<font color='red'>**私有自定义指令**</font>。示例如下：
+
+### * bind函数
+
+**`bind`指令当指令第一次被绑定到元素上的时候，会立即触发`bind`指令**
+
+调用的时候需要加上 `v-` 前缀
+
+形参中的 el 是绑定了此指令的，原生的 DOM 对象
+
+```
+directives: {
+	color: {
+		//为绑定到的 HTML 元素设置红色的文字
+		bind(el) {
+			// 形参中的 el 是绑定了此指令的，原生的 DOM 对象
+			el.style.color = 'red'
+		}
+	}
+}
+```
+
+```vue
+<template>
+  <div>
+    <div v-color>count:{{ count }}</div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "myleft",
+  directives: {
+    color: {
+      //为绑定到的 HTML 元素设置红色的文字
+      bind(el) {
+        // 形参中的 el 是绑定了此指令的，原生的 DOM 对象
+        el.style.color = "red";
+      },
+    },
+  },
+};
+</script>
+```
+
+### 若绑定自定义值-使用binding
+
+传入变量，若向直接给值要加单引号
+
+查看`binding`的值发现是一个对象，接收的值都在`value`内所以使用`binding.value`来获取绑定的值
+
+```vue
+<template>
+  <div>
+    <!-- 传入变量color，若向直接给值要加单引号 -->
+    <div v-color="color">count:{{ count }}</div>
+    <div v-color="'red'">1234567</div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "myleft",
+  data() {
+    return {
+      color: "blue",
+    };
+  },
+  directives: {
+    color: {
+      //为绑定到的 HTML 元素设置红色的文字
+      //建议使用 binding 为形参名来接收被绑定的值
+      bind(el, binding) {
+        // 形参中的 el 是绑定了此指令的，原生的 DOM 对象
+        el.style.color = binding.value;
+
+        console.log(binding);
+      },
+    },
+  },
+};
+</script>
+
+<style>
+</style>
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-20_15-58-29.png)
+
+### * update函数
+
+<font color='red'>**`bind`函数只调用一次**</font>，当指令第一次绑到元素时调用，<font color='red'>**当 `DOM` 更新时 `bind` 函数不会被触发**</font>。<font color='red'>**`update`**</font> 函数会在<font color='red'>**每次 `DOM` 更新时**</font>被调用，示例如下：
+
+> `update`只有当`DOM`值变化才会触发，当一开始的时候不触发，所以`bind`和`update`结合使用
+
+```
+directives: {
+    color: {
+      //为绑定到的 HTML 元素设置红色的文字
+      //   bind当指令第一次绑到元素时调用
+      bind(el, binding) {
+        // 形参中的 el 是绑定了此指令的，原生的 DOM 对象
+        el.style.color = binding.value;
+
+        console.log(binding);
+      },
+      //   updata 函数会在每次 DOM 更新时被调用
+      update(el, binding) {
+        el.style.color = binding.value;
+      },
+    },
+  },
+```
+
+```vue
+<template>
+  <div>
+    <!-- 按键换色 -->
+    <button @click="color = 'pink'">换色</button>
+    <div v-color="color">count:{{ count }}</div>
+    <div v-color="'red'">1234567</div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "myleft",
+  data() {
+    return {
+      color: "blue",
+    };
+  },
+  directives: {
+    color: {
+      //为绑定到的 HTML 元素设置红色的文字
+      //   bind当指令第一次绑到元素时调用
+      bind(el, binding) {
+        // 形参中的 el 是绑定了此指令的，原生的 DOM 对象
+        el.style.color = binding.value;
+
+        console.log(binding);
+      },
+      //   updata 函数会在每次 DOM 更新时被调用
+      update(el, binding) {
+        el.style.color = binding.value;
+      },
+    },
+  },
+};
+</script>
+
+<style>
+</style>
+```
+
+### 函数简化
+
+如果`bind`和`update`函数中的<font color='red'>**逻辑完全相同**</font>，则<font color='red'>**对象格式**</font>的自定义指令可以简写成<font color='red'>**函数形式**</font>：
+
+```
+directives: {
+    color(el, binding) {
+      el.style.color = binding.value;
+    },
+  },
+```
+
+```
+//旧
+directives: {
+    color: {
+      //为绑定到的 HTML 元素设置红色的文字
+      //   bind当指令第一次绑到元素时调用
+      bind(el, binding) {
+        // 形参中的 el 是绑定了此指令的，原生的 DOM 对象
+        el.style.color = binding.value;
+
+        console.log(binding);
+      },
+      //   updata 函数会在每次 DOM 更新时被调用
+      update(el, binding) {
+        el.style.color = binding.value;
+      },
+    },
+  },
+```
+
+完整代码：
+
+```vue
+<template>
+  <div>
+    <!-- 按键换色 -->
+    <button @click="color = 'pink'">换色</button>
+    <div v-color="color">count:{{ count }}</div>
+    <div v-color="'red'">1234567</div>
+
+    <!-- <button @click="count += 1">+1</button> -->
+    <!-- 声明一个插槽区域 -->
+    <!-- <slot name="default" :msg="list">
+      <p>默认内容</p>
+    </slot> -->
+  </div>
+</template>
+
+<script>
+export default {
+  name: "myleft",
+  data() {
+    return {
+      color: "blue",
+      count: 0,
+      list: {
+        a: 1,
+        b: 2,
+      },
+    };
+  },
+  directives: {
+    color(el, binding) {
+      el.style.color = binding.value;
+    },
+  },
+};
+</script>
+
+<style>
+</style>
+```
+
+
+
+
+
+## 4 全局自定义指令 
+
+全局共享的自定义指令需要通过 “vue.directive()” 进行声明，
+
+<font color='red'>**书写在`main.js`文件内**</font>
+
+示例代码：
+
+```
+Vue.directive('过滤器的名字', function () {    })
+```
+
+```js
+// 全局自定义指令
+Vue.directive('color', (el, binding) => {
+  el.style.color = binding.value
+})
+```
+
+
+
+# 十二. ESLint
+
+### 什么是[eslint](https://so.csdn.net/so/search?q=eslint&spm=1001.2101.3001.7020)
+
+[ESLint](http://eslint.cn/) 是一个代码检查工具，用来检查你的代码是否符合指定的规范（例如： = 的前后必须有一个空格）。
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-24_09-56-29.png)
+
+```
+// prettier 配置
+"eslint.alwaysShowStatus": true,
+"prettier.trailingComma": "none",
+"prettier.semi": false,
+// 每行文字合数超出此限制会被迫换行
+"prettier.printWidth": 300,
+// 使用单引号替换双引号
+"prettier.singleQuote": true,
+"prettier.arrowParens": "avoid",
+// 设置.vue 文件中，HTML代码的格式化插件
+"vetur.format.defaultFormatter.html": "js-beautify-html",
+"vetur.ignoreProjectWarning": true,
+"vetur.format.defaultFormatterOptions": {
+"prettier": {
+"trailingComma":"none",
+"semi":false,
+"singleQuote":true,
+"arrowParens":"avoid",
+"printWidth":300
+},
+"js-beautify-html": {
+"wrap_attributes": "force-expand-multiline"
+}
+}
+```
+
+```
+//  EsLint 配置
+"editor.codeActionsOnSave": {
+"source.fixAll": true
+},
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-24_14-00-03.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-24_14-23-05.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-24_14-23-32.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-24_14-24-12.png)
 
 
 
@@ -3010,24 +3631,26 @@ SPA 指的是一个 web 网站只有唯一的一个 HTML 页面，所有组件�
 
 ① 用户点击了页面上的<font color='red'>**路由链接**</font>
 ② 导致了<font color='red'>**URL 地址栏**</font> 中的<font color='red'>**Hash 值**</font>发生了变化
-③ <font color='red'>**前端路由监听了到 Hash 地址的变化**</font>
+③ <font color='red'>**`前端路由`监听了到 Hash 地址的变化**</font>
 ④ 前端路由把当前 <font color='red'>**Hash 地址对应的组件**</font>渲染都浏览器中
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/67918c1647ed42d0a2990763c08b6b0b.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAMDU0MzE=,size_20,color_FFFFFF,t_70,g_se,x_16)
 
 > 结论：前端路由，指的是 Hash 地址与组件之间的对应关系！
 
-## 5. 实现简易的前端路由
+## 5. 实现前端路由(路由切换原理)
 
-步骤1：通过component标签，结合 comName 动态渲染组件。示例代码如下：
+步骤1：通过`component`标签，结合 变量`comName` 动态渲染不同的组件。示例代码如下：
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/c74f2d6985044d4eb80bfbe907822497.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAMDU0MzE=,size_20,color_FFFFFF,t_70,g_se,x_16)
 
-步骤2：在 App.vue 组件中，为 链接添加对应的 `hash` 值：
+步骤2：在 `App.vue` 组件中，为 链接添加对应的 `hash` 值：
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/a5e19fd150e346ea93432d582cd85e31.png)
 
-步骤3：在 created 生命周期函数中，监听浏览器地址栏中 hash 地址的变化，动态切换要展示的组件的名称：
+步骤3：在 `created` 生命周期函数中，监听浏览器地址栏中 `hash `地址的变化，动态切换要展示的组件的名称：
+
+> 这里不用`click`事件是因为如果手动更改`hash`值的话不会触发`click`
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2dcff9df7db749d89969f0f961d50753.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAMDU0MzE=,size_17,color_FFFFFF,t_70,g_se,x_16)
 
@@ -3101,25 +3724,80 @@ export default {
 
 ```
 
-这里使用a标签进行定位，会用到a标签的锚链接的功能，所以在访问的路径的前面需要加个“#”
+> 这里使用a标签进行定位，会用到a标签的锚链接的功能，所以在访问的路径的前面需要加个“#”
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/59d461ae94f34c10bb4e9612ad37c6d7.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAMDU0MzE=,size_20,color_FFFFFF,t_70,g_se,x_16)
 
-App.vue组件的生命周期函数created()方法中，通过window.onhashchange事件，即监听导航栏的地址是否发生变化，将相应的组件通过动态绑定的方式，更新到component组件中。
+> `App.vue`组件的生命周期函数`created()`方法中，通过`window.onhashchange`事件，即监听导航栏的地址是否发生变化，将相应的组件通过动态绑定的方式，更新到component组件中。
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/5038fc75bcd44739abf06bf5313e328a.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAMDU0MzE=,size_20,color_FFFFFF,t_70,g_se,x_16)
 
+> `location`是包含记录网址hash值的事件，打印`location`：
 
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-26_10-57-53.png)
 
+------
 
+### location.hash详解
 
+1.存在形式及意义
 
+一般情况下为URL后 "#" 及其后面一部分组成，如`http://www.test.com/#/something`，
 
+其中`http://www.test.com`为真实的路径，而#/something则为网页中的位置，称之为锚点
 
+在访问锚点时会自动跳刀锚点所在的网页位置，通常有两种方式作为锚点
 
+`<a name="something"></a>`
 
+`<element id="something"></element>`
 
+以上两种均可通过http://www.test.com/#/something使页面滚动到该元素的位置
 
+**2.hash的读写**
+
+location.hash可读可写的
+
+```commonlisp
+//当前URL为http://www.test.com/#/something
+location.hash;		        //输出 #/something
+ 
+location.hash = '#/test1';	//http://www.test.com/#/test1,并且会新增一条历史记录
+```
+
+> 在对hash写时有个需要注意的地方，如下所示
+
+```commonlisp
+//当前URL为http://www.test.com/
+location.hash = "#/test"	//http://www.test.com/#/test
+locationl.hash = "/#/test"	//http://www.test.com/#/#/test
+```
+
+当写入第一个字符不为为 "#" 时会自动生成一个 "#" 在字符串之前，再把字符串追加到生成的#后面
+
+这样会造成有两个#,此时location.hash输出 "#/#/test"
+
+**3.onhashchange事件**
+
+在hash值发生变化时会触发该事件
+
+```js
+window.onhashchange = function(e){
+	console.log(e);
+}
+```
+
+总结：
+
+location.hash与HTML5 history类似，都能够在改变页面的URL而不会引起浏览器的重载
+
+但是location.hash支持比较早的浏览器，而history是在HTML5的新API，可能某些较早的浏览器不支持
+
+因此在vue-router中对此做了两种模式，即history模式与hash模式可以适应不同的浏览器
+
+具体解释之后更新vue-router的原理分析
+
+------
 
 
 
@@ -3127,13 +3805,71 @@ App.vue组件的生命周期函数created()方法中，通过window.onhashchange
 
 # 二. vue-router 的基本使用
 
-# 一、vue-router是什么？
+## 2.1 什么是 `vue-router`
 
-可以把他看成一个可以进行组件路由的工具
+`vue-router`是`vue.js`官方给出的路由解决方案。它只能结合`vue`项目进项使用，能够轻松的管理 `SPA` 项目中的组件的切换。
 
-# 二、如何使用vue-router
+vue-router的官方文档地址：
 
-## 
+[vue-router]: http://router.vuejs.org/zh/
+
+## 2.2 `vue-router `安装和配置的步骤
+
+① 安装 vue-router 包
+
+<font color='red'>**② 创建路由模块**</font>
+
+③ 导入并挂载路由模块
+
+④ 生命<font color='red'>**路由链接**</font>和<font color='red'>**占位符**</font>
+
+### 2.2.1 在项目中安装 `vue-router`
+
+> vue2的vue-router 安装需要指定版本，否则会默认下载最新版本，最新版本只支持vue3
+
+在`vue2`项目中，安装`vue-router`的命令如下：
+
+```
+npm i vue-router@3.5.2 -S
+```
+
+
+
+### 2.2.2 创建路由模块
+
+在<font color='red'>**`src`**</font>源代码目录下，新建<font color='red'>**`router/index.js`**</font>路由模块，并初始化如下的代码：
+
+```js
+// 1. 导入 Vue 和 VueRouter 的包
+import Vue from "vue";
+import VueRouter from "vue-router";
+
+// 2. 调用 Vue.use() 函数，把 VueRouter 安装为 Vue 的插件
+// Vue.use() 函数的作用就是安装插件的
+Vue.use(VueRouter)
+
+// 3. 创建路由的实例对象
+const router =new VueRouter()
+
+// 4. 向外共享路由的实例对象
+export default router
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-26_16-36-55.png)
+
+我们配置完路由还需要对路由进行注册，注册完就可以使用了
+
+注册就是在main.js文件下输入两行代码即可
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-26_17-01-27.png)
+
+
+
+
+
+
+
+# 
 
 **1.安装**
 
@@ -3288,7 +4024,19 @@ component 就是我们引入的组件名称 和第二步中import 后面的名�
 
 
 
-# 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3316,7 +4064,11 @@ component 就是我们引入的组件名称 和第二步中import 后面的名�
 
 
 
-## promise
+## * main.js中
+
+`main.js`的`Vue.config.productionTip = false`只是关闭了开发模式和发布模式的文本提醒没有啥用
+
+## * promise
 
 介绍
 promise是ES6的重要特性之一
@@ -3334,7 +4086,7 @@ promise是ES6的重要特性之一
 - 待定状态的 Promise 对象要么会通过一个值被兑现（fulfilled），要么会通过一个原因（错误）*被拒绝（rejected）*当这些情况之一发生时，我们用 promise 的 then 方法排列起来的相关处理程序就会被调用
 - Promise.prototype.then 和 Promise.prototype.catch 方法返回的是 promise， 所以它们可以被链式调用
 
-## promise的三个实例方法
+## * promise的三个实例方法
 
 ### then（）方法
 
@@ -3503,7 +4255,7 @@ var obj = gen();
 
 ### 
 
-## CSS 属性选择器详解
+## * CSS 属性选择器详解
 
 **CSS 2 引入了属性选择器。**
 
@@ -3724,6 +4476,546 @@ img[src|="figure"] {border: 1px solid gray;}
 ```
 
 当然，这种属性选择器最常见的用途还是匹配语言值。
+
+
+
+
+
+
+
+
+
+## * 在vue中使用rules对表单字段进行验证
+
+> vue 中[表单](https://so.csdn.net/so/search?q=表单&spm=1001.2101.3001.7020)字段验证的写法和方式有多种，本博客介绍三种较为常用的验证方式。
+
+### 1.写在data里的验证
+
+```vue
+<!-- 表单 -->
+<el-form ref="rulesForm" :rules="formRules" :model="rulesForm" label-width="200px">
+    <el-form-item label="用户名称:" prop="userName">
+       <el-input v-model="rulesForm.userName" style="width:300px" maxlength="50"/>
+    </el-form-item>
+</el-form>
+```
+
+- `<el-form>`：代表这是一个表单
+- `<el-form>` -> `ref`：表单被引用时的名称，标识
+- `<el-form>` -> `rules`：表单验证规则
+- `<el-form>` -> `model`：表单数据对象
+- `<el-form>` -> `label-width`：表单域标签的宽度，作为 Form 直接子元素的 form-item 会继承该值
+- `<el-form>` -> `<el-form-item>`：表单中的每一项子元素
+- `<el-form-item>` -> `label`：标签文本
+- `<el-form-item>` -> `prop`：表单域 model 字段，在使用 validate、resetFields 方法的情况下，该属性是必填的
+- `<el-input>`：输入框
+- `<el-input>` -> `v-model`：绑定的表单数据对象属性
+- `<el-input>` -> `style`：行内样式
+- `<el-input>` -> `maxlength`：最大字符长度限制
+
+#### **data 数据**
+
+```office
+data() {
+    return {
+        // 省略别的数据定义
+        ...
+        
+        // 表单验证
+        formRules: {
+            userName: [
+                {required: true,message: "请输入用户名称",trigger: "blur"}
+            ]
+        }
+    }
+}
+```
+
+- `formRules`：与上文  '表单内容' 中 `<el-form>` 表单的 `:rules` 属性值相同
+- `userName`：与上文 '表单内容' 中 `<el-form-item>` 表单子元素的 `prop` 属性值相同
+- **`验证内容是：必填，失去焦点时验证，如果为空，提示信息为 '请输入用户名称'`**
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\image-20221025143212122.png)
+
+------
+
+###  **2. 写在行内**
+
+**表单内容**:
+
+```vue
+<!-- 表单 -->
+<el-form ref="rulesForm" :rules="formRules" :model="rulesForm" label-width="200px">
+    <el-form-item label="银行名称:" prop="accountName" :rules="[{required:true,message:'请输入银行名称',trigger:'blur'}]">
+        <el-input v-model="rulesForm.accountName" style="width:300px" maxlength="50"/>
+    </el-form-item>
+</el-form>
+```
+
+- `<el-form-item>` -> `rules`：和第一种方式表现的效果一致，只是写法不一样，这里不再赘述
+
+**data 数据没有内容**
+
+------
+
+### **3. 引入外部定义的规则**
+
+**表单内容**:
+
+```vue
+<!-- 表单 -->
+<el-form ref="rulesForm" :rules="formRules" :model="rulesForm" label-width="200px">
+    <el-form-item label="银行卡号:" prop="accountNumber">
+       <el-input v-model="rulesForm.accountNumber" style="width:300px" maxlength="19"/>
+    </el-form-item>
+</el-form>
+```
+
+- 表单内容与第一种方式写法一致，这里不再赘述
+
+**script 内容**
+
+```vue
+<script>
+// 引入了外部的验证规则
+import { validateAccountNumber } from "@/utils/validate";
+ 
+// 判断银行卡账户是否正确
+const validatorAccountNumber = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error("请输入账户信息"));
+  } else {
+    if (validateAccountNumber(value)) {
+      callback();
+    } else {
+      return callback(new Error('账号格式不正确'))
+    }
+  }
+};
+ 
+export default {
+    data() {
+        return {
+            // 省略别的数据定义
+            ...
+        
+            // 表单验证
+            formRules: {
+                accountNumber: [
+                    {required: true,validator: validatorAccountNumber,trigger: "blur"}
+                ]
+            }
+        }
+    }
+}
+</script>
+```
+
+- `import`：先引入了外部的验证规则 
+- `const`：定义一个规则常量，常量名可变， '= (rule, value, callback) => {}' 为固定格式，`value` 入参为验证的字段值
+- `formRules` -> `accountNumber`：表单验证中使用 validator 指定自定义校验规则常量名称
+
+**validate.js**
+
+```js
+/* 银行账户 */
+export function validateAccountNumber(str) {
+  const reg = /^([1-9]{1})(\d{14}|\d{18})$/
+  return reg.test(str)
+}
+```
+
+- 验证规则
+
+------
+
+#### **以上都是在失去焦点时的验证，下面来分析一下如何在表单提交时验证
+
+ **1. 表单的提交按钮**
+
+```vue
+<!-- 表单 -->
+<el-form ref="rulesForm" :rules="formRules" :model="rulesForm" label-width="200px">
+    <el-form-item>
+        <el-button type="primary" @click="onSubmit('rulesForm')">保存</el-button>
+        <el-button @click="cancel">取消</el-button>
+    </el-form-item>
+</el-form>
+```
+
+- `<el-button>`：按钮
+- `<el-button>`-> `type`：按钮类型
+- `<el-button>` -> `@click`：按钮点击时触发的事件，这里注意方法的入参为 'rulesForm'，这里要与 `<el-form>` 表单的 rel 属性值一致
+
+ **2. methods 方法**
+
+```js
+methods: {
+    // 保存
+    onSubmit(formName) {
+        this.$refs[formName].validate(valid => {
+            if (valid) {
+                console.log("success submit!!");
+            }else{
+                console.log("error submit!!");
+            }
+        });
+    },
+    // 取消
+    cancel() {
+        
+    }
+}
+```
+
+- `this.$refs[formName].validate：中的 formName` 就是传入的 'rulesForm'，与 `<el-form>` 表单的 `rel` 属性值一致，这样就指定好需要验证的表单了
+- 然后要结合`validate.js`来判断必须要有`validate.js`
+
+------
+
+**完整示例代码如下**：
+
+**1. rules.vue**：
+
+```vue
+<template>
+  <div class="app-container">
+    <el-tabs v-model="activeName">
+      <el-tab-pane label="表单" name="rulesPane" @tab-click="handleClick">
+        <!-- 表单 -->
+        <el-form ref="rulesForm" :rules="formRules" :model="rulesForm" label-width="200px">
+          <el-form-item label="用户名称:" prop="userName">
+            <el-input v-model="rulesForm.userName" style="width:300px" maxlength="50"/>
+          </el-form-item>
+          <el-form-item label="银行名称:" prop="accountName" :rules="[{required:true,message:'请输入银行名称',trigger:'blur'}]">
+            <el-input v-model="rulesForm.accountName" style="width:300px" maxlength="50"/>
+          </el-form-item>
+          <el-form-item label="银行卡号:" prop="accountNumber">
+            <el-input v-model="rulesForm.accountNumber" style="width:300px" maxlength="50"/>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit('rulesForm')">保存</el-button>
+            <el-button @click="cancel">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
+</template>
+ 
+<script>
+import { validateAccountNumber } from "@/utils/validate";
+ 
+// 判断银行卡账户是否正确
+const validatorAccountNumber = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error("请输入账户信息"));
+  } else {
+    if (validateAccountNumber(value)) {
+      callback();
+    } else {
+      return callback(new Error('账号格式不正确'))
+    }
+  }
+};
+ 
+export default {
+  name: "rules",
+  data() {
+    return {
+      activeName: "rulesPane",
+      defaultProps: {
+        children: "children",
+        label: "label"
+      },
+      rulesForm: {
+      },
+      //   表单验证
+      formRules: {
+        userName: [
+          {
+            required: true,
+            message: "请输入用户名称",
+            trigger: "blur"
+          }
+        ],
+        accountNumber: [
+          {
+            required: true,
+            validator: validatorAccountNumber,
+            trigger: "blur"
+          }
+        ],
+      }
+    };
+  },
+  created() {},
+  mounted() {},
+  methods: {
+    handleClick(tab) {
+      
+    },
+    // 取消
+    cancel() {
+      
+    },
+    // 保存
+    onSubmit(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          console.log("success submit!!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    }
+  }
+};
+</script>
+ 
+<style lang="scss">
+</style>
+```
+
+**2. validate.js**
+
+```js
+/* 银行账户 */
+export function validateAccountNumber(str) {
+  const reg = /^([1-9]{1})(\d{14}|\d{18})$/
+  return reg.test(str)
+}
+```
+
+**效果图**	
+
+![rules](https://img-blog.csdnimg.cn/20190108111721773.gif)
+
+------
+
+
+
+### 校验规则
+
+| 参数       | 说明                                                         | 类型                                    | 默认值   |
+| :--------- | :----------------------------------------------------------- | :-------------------------------------- | :------- |
+| enum       | 枚举类型                                                     | string                                  | -        |
+| len        | 字段长度                                                     | number                                  | -        |
+| max        | 最大长度                                                     | number                                  | -        |
+| message    | 校验文案                                                     | string                                  | -        |
+| min        | 最小长度                                                     | number                                  | -        |
+| pattern    | 正则表达式校验                                               | RegExp                                  | -        |
+| required   | 是否必选                                                     | boolean                                 | `false`  |
+| transform  | 校验前转换字段值                                             | function(value) => transformedValue:any | -        |
+| type       | 内建校验类型，[可选项](https://github.com/yiminghe/async-validator#type) | string                                  | 'string' |
+| validator  | 自定义校验（注意，[callback 必须被调用](https://github.com/ant-design/ant-design/issues/5155)） | function(rule, value, callback)         | -        |
+| whitespace | 必选时，空格是否会被视为错误                                 | boolean                                 | `false`  |
+
+#### trigger:‘blur’ OR trigger:‘change’ OR 不设置:
+
+> 对el-input输入框的验证，trigger的值选blur，即失去焦点时进行验证。
+>
+> 下拉框（el-select）、日期选择器（el-date-picker）、复选框（el-checkbox）、单选框（el-radio）验证时，trigger的值选择change，即当值发生变化时就进行验证。
+
+------
+
+
+
+
+
+
+
+## *【JS】正则表达式总结(用于校验)
+
+**1.数字/货币金额（支持负数、千分位分隔符）**
+
+```
+/(^[-]?[1-9]\d{0,2}($|(,\d{3})*($|(\.\d{1,2}$))))|((^[0](\.\d{1,2})?)|(^[-][0]\.\d{1,2}))$/
+```
+
+**2.数字/货币金额 (只支持正数、不支持校验千分位分隔符)**
+
+```
+/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+```
+
+**3.银行卡号（16或19位）**
+
+```
+/^([1-9]{1})(\d{15}|\d{18})$/
+```
+
+**4.中文姓名**
+
+```
+/^([\u4e00-\u9fa5·]{2,10})$/
+```
+
+**5.手机号(严谨), 根据工信部2019年最新公布的手机号段**
+
+```
+/^1((3[\d])|(4[5,6,7,9])|(5[0-3,5-9])|(6[5-7])|(7[0-8])|(8[\d])|(9[1,8,9]))\d{8}$/
+```
+
+**6.手机号(宽松), 只要是13,14,15,16,17,18,19开头即可**
+
+```
+/^1[3-9]\d{9}$/
+```
+
+**7.email地址**
+
+```
+/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
+```
+
+**8.国内座机电话,如: 0341-86091234**
+
+```
+/\d{3}-\d{8}|\d{4}-\d{7}/
+```
+
+**9.二代身份证号(18位数字),最后一位是校验位,可能为数字或字符X**
+
+```
+/^\d{6}(18|19|20)\d{2}(0\d|11|12)([0-2]\d|30|31)\d{3}(\d|X|x)$/
+```
+
+
+
+------
+
+
+
+
+
+## * RegExp(正则表达式)
+
+### 一、RegExp([正则表达式](https://so.csdn.net/so/search?q=正则表达式&spm=1001.2101.3001.7020))
+
+正则表达式（RegExp）是Regular Expression缩写，是用于查找符合某些规则的字符串的工具。
+正则表达式是一个描述字符模式的对象，当检索某个文本时，可以使用一种模式来描述要检索的内容，RegExp 就是这种模式。
+
+#### 正则的创建
+
+构造函数
+字面量
+
+```js
+    // 构造函数式
+    // var reg=new RegExp(pattern,attribute);
+    var reg1 = new RegExp('a','i');
+​
+    // 字面量式
+    // var reg=/pattern/attribute;
+    var reg2 = /a/i; 
+
+```
+
+上面两种创建方式所表达的内容是一致的，都是匹配字符串中的’a’，并且是忽略大小写的。
+pattern：匹配模式。
+attribute：匹配特征。
+
+#### 正则对象的属性和方法
+
+上面我们仅仅只是得到一个正则对象，还不能做任何事情，例如对字符串的校验等。
+
+```coffeescript
+正则对象的属性
+global:全局的，对应修饰符g
+ignoreCase:忽略大小写，对应修饰符i
+multiline:多行，对应修饰符m
+lastIndex:下一次匹配的字符位置
+正则对象的属性
+test():测试方法，用于测试一个字符串是否符合正则表达式对象所指定的模式规则，返回true或false
+exec()：搜索方法，用于在字符串中查找符合正则表达式对象所指定的模式的子字符串，返回找到的结果，若找不到则返回null
+```
+
+#### 匹配模式pattern
+
+在正则中匹配模式`pattern`是整个正则表达式的灵魂，同样它也是正则表达式中最复杂的部分。 在匹配模式中我们需要学习三个部分：
+
+```coffeescript
+元字符：具有特殊含义的字符
+量词：指定字符出现的次数
+特殊符号：具有特定含义的符号
+元字符
+\s:匹配任何的空白字符
+\S:任何非空白字符
+\d:匹配一个数字字符，等价于[0-9]
+\D:除了数字之外的任何字符，等价于[^0-9]
+\w:匹配一个数字、下划线或字母字符，等价于[A-Za-z0-9_]
+\W:任何非单字字符，等价于[^a-zA-z0-9_]
+.:匹配除了换行符之外的任意字符
+量词
+{n}:匹配前一项n次
+{n,}:匹配前一项至少n次
+{n,m}:匹配前一项至少n次最多m次
+*:匹配前一项至少0次最多无数次，{0,}
++:匹配前一项至少1次最多无数次，{1,}
+?:匹配前一项最多1次，{0,1}
+特殊符号
+/.../:代表一个模式的开始和结束
+^:匹配字符串的开始，即表示行的开始
+$:匹配字符串的结束，即表示行的结束
+[ ]:表示可匹配的列表
+( ):用于分组
+|:表示或者
+[^ ]:在[  ]中的尖括号表示非
+
+```
+
+#### string对象的正则方法
+
+match
+search
+replace
+split
+
+------
+
+## * 关于overflow:hidden的作用（溢出隐藏、清除浮动、解决外边距塌陷、省略号等等）
+
+https://blog.csdn.net/qq_41638795/article/details/83304388
+
+
+
+------
+
+## * Vue 中 import from @符号指的是什么
+
+> 简单说默认就是 src 
+>
+> eg：@/utils/auth = src/utils/auth
+
+**1、假设vue文件中引入如下代码**
+
+```java
+import { auth } from "@/utils/auth";
+```
+
+**2、@符号表示的含义**
+
+- @符号表示一个特定路径名称，这个设置引入的是src/utils路径下的auth.js文件
+
+**3、lz的vue框架中，@符号可以在build/vue.config.js文件中设置，如下图：lz的@符号表示src路径**
+
+- 具体在哪个文件下的vue配置文件可根据实际情况参考
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210611233751367.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xpMTMyNTE2OTAyMQ==,size_16,color_FFFFFF,t_70#pic_center)
+
+------
+
+## * 关于hash和history的区别和使用
+
+https://blog.csdn.net/weixin_46589442/article/details/125796515
+
+
+
+
+
+
 
 
 
