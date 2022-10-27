@@ -3606,7 +3606,7 @@ Vue.directive('color', (el, binding) => {
 
 
 
-# 路由
+# vue路由
 
 # 一. 前端路由的概念和原理
 
@@ -3638,7 +3638,7 @@ SPA 指的是一个 web 网站只有唯一的一个 HTML 页面，所有组件�
 
 > 结论：前端路由，指的是 Hash 地址与组件之间的对应关系！
 
-## 5. 实现前端路由(路由切换原理)
+## 5. 实现前端路由(原生路由切换原理)
 
 步骤1：通过`component`标签，结合 变量`comName` 动态渲染不同的组件。示例代码如下：
 
@@ -3651,6 +3651,8 @@ SPA 指的是一个 web 网站只有唯一的一个 HTML 页面，所有组件�
 步骤3：在 `created` 生命周期函数中，监听浏览器地址栏中 `hash `地址的变化，动态切换要展示的组件的名称：
 
 > 这里不用`click`事件是因为如果手动更改`hash`值的话不会触发`click`
+>
+> 自己封装事件是非常麻烦的，所以常用vue-router
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2dcff9df7db749d89969f0f961d50753.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAMDU0MzE=,size_17,color_FFFFFF,t_70,g_se,x_16)
 
@@ -3807,7 +3809,7 @@ location.hash与HTML5 history类似，都能够在改变页面的URL而不会引
 
 ## 2.1 什么是 `vue-router`
 
-`vue-router`是`vue.js`官方给出的路由解决方案。它只能结合`vue`项目进项使用，能够轻松的管理 `SPA` 项目中的组件的切换。
+<font color='red'>`vue-router`</font>是`vue.js`官方给出的<font color='red'>路由解决方案</font>。它只能结合`vue`项目进项使用，能够轻松的管理 `SPA` 项目中的组件的切换。
 
 vue-router的官方文档地址：
 
@@ -3815,9 +3817,11 @@ vue-router的官方文档地址：
 
 ## 2.2 `vue-router `安装和配置的步骤
 
+> 若在创建项目的时候选择了vue-router插件，则这些步骤可以省略
+
 ① 安装 vue-router 包
 
-<font color='red'>**② 创建路由模块**</font>
+<font color='red'>**② 创建路由模块**</font>(js文件)
 
 ③ 导入并挂载路由模块
 
@@ -3837,6 +3841,8 @@ npm i vue-router@3.5.2 -S
 
 ### 2.2.2 创建路由模块
 
+> 若在创建项目的时候选择了vue-router插件，则这些步骤可以省略
+
 在<font color='red'>**`src`**</font>源代码目录下，新建<font color='red'>**`router/index.js`**</font>路由模块，并初始化如下的代码：
 
 ```js
@@ -3851,7 +3857,7 @@ Vue.use(VueRouter)
 // 3. 创建路由的实例对象
 const router =new VueRouter()
 
-// 4. 向外共享路由的实例对象
+// 4. 向外共享路由的实例对象，让其他组件可以使用
 export default router
 ```
 
@@ -3861,162 +3867,277 @@ export default router
 
 注册就是在main.js文件下输入两行代码即可
 
+> `new vue`是项目的实例，将`router`实例对象加到项目的实例里
+>
+> `router:router`   等同于 `router`
+
+>第一处的路径也可以直接写成 `@/router` ，因为 在进行模块漫画导入的时候，如果给定的文件夹，则默认导入这个文件下的，名字叫做 `index.js` 的文件
+
 ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-26_17-01-27.png)
 
 
 
+## 2.3 在路由模块中声明路由的对应关系
 
+路由模块：router/index.js
 
+### 路由链接`<router-view>`（渲染位置）
 
+```vue
+<template>
+  <div class="app-container">
+    <h1>App2 组件</h1>
+    
+    <a href="#/home">首页</a>
+    <a href="#/movie">电影</a>
+    <a href="#/about">关于</a>
+ 
+    <hr />
+    
+    <!-- 只要在项目中安装和配置了 vue-router 就可以使用 vue-router 组件了 -->
+    <!-- 它的作用为: 占位符 -->
+    <router-view></router-view>
+    
+  </div>
+</template>
+```
 
-# 
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-27_15-18-13.png)
 
-**1.安装**
+在路由模块中导入需要切换的组件,并且声明它的路由规则 ( 对应关系 ) 
 
-在终端下输入命令 npm install vue-router --save
+> hash值和组件的对应关系
+>
+> path中的路径必须省略掉 # 号否则报错
 
-**`2.前期准备`**
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-27_15-38-47.png)
 
-我们要使用这个工具要准备几个组件到时候就是对这几个组件进行跳转
-
-![img](https://img-blog.csdnimg.cn/21188bd3f4754be4b89d83e77f6a8a80.png)
-
-在一个vue项目中我们通常把路由组件放在src文件夹下的pages文件夹内
-
-在这里我们分别把这些组件放在不同名字的文件夹内取相同的名字index.vue这样在引入时路径只需要写到这个文件夹即可，因为会自动去找index文件进行引入
-
-**3.路由配置**
-
-我们首先在src文件夹下建立一个名为router的文件夹里面放一个index.js的文件我们将在这个文件里面进行路由配置
-
-![img](https://img-blog.csdnimg.cn/2645363475c94600a7dd53a53e4ac39e.png)
-
-这个路由配置分三步
-
-1.初始化
-
+```js
+// src/router /index.js 就是当前项目的路由模块
+// 导入 Vue 和 VueRouter 的包
 import Vue from 'vue'
-
-import VueRouter from 'vue-router'
-
-Vue.use(VueRouter);
-
-2.引入所需要配置的路由组件
-
-import Home from '@/pages/Home'
-
-import Search from '@/pages/Search'
-
-import Login from '@/pages/Login'
-
-import Register from '@/pages/Register'
-
-3.进行路由配置
-
-export default new VueRouter({
-
- // 配置路由
-
-  routes:[
-
-    {
-      path:'/home',
-    
-      component:Home
-    
-    },
-    
-    {
-      path:'/search',
-    
-      component:Search
-    
-    },
-    
-    {
-      path:'/login',
-    
-      component:Login
-    
-    },
-    
-    {
-      path:'/register',
-    
-      component:Register
-    
-    },
-    
-    // 重定向  在项目跑起来的时候 立马访问首页
-    
-    {
-      path:"*",
-    
-      redirect:'/home'
-    
-    }
-
-  ]
-
+import VueRouter from "vue-router"
+ 
+// 导入需要的组件
+import Home from "../components/Home.vue"
+import Movie from "../components/Movie.vue"
+import About from "../components/About.vue"
+ 
+// 调用 Vue.use() 函数 把 VueRouter 安装为 Vue 的插件
+Vue.use(VueRouter)
+ 
+// 创建路由的实例对象
+const router = new VueRouter({
+  // routers 是一个数组 作用为 定义 "hash地址" 与 "组件" 之间的对应关系
+  // 必须省略掉 # 号
+  routes: [
+    // 理由规则
+    {path: '/home', component: Home},
+    {path: '/movie', component: Movie},
+    {path: '/about', component: About}
+  ],
 })
+ 
+// 向外共享路由的实例对象
+export default router
+```
 
-这里面有两点  path是到时候路由的路径
+### 占位符`<router-link>`（hash跳转）
 
-component 就是我们引入的组件名称 和第二步中import 后面的名字一致即可
+<font color='red'>**在安装了 `vue-router` 后,可以使用 `<router-link>` 标签替代 `<a>` 标签**</font>
 
-重定向不用理解一般都是默认 重定向首页路由也就是home组件
+<font color='red'>**使用 `<router-link>` 标签时,链接推荐省略 "#" 号**</font>
 
-**4.路由注册**
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-27_15-51-58.png)
 
-我们配置完路由还需要对路由进行注册，注册完就可以使用了
+```vue
+<template>
+  <div class="app-container">
+    <h1>App 根组件</h1>
 
-注册就是在main.js文件下输入两行代码即可
+    <!-- 当安装了 vue-router 后 就可以使用 router-link 来替代普通的 a 链接了 -->
+    <!-- <a href="#/left">左</a> -->
+    <router-link to="/left">左</router-link>
+    <a href="#/right">右</a>
+    <hr />
 
-![img](https://img-blog.csdnimg.cn/b9d14daa5292447ca798e92bb18c0d56.png)
+    <!-- 只要在项目中安装并配置了 vue-router ，就可以使用 router-view 这个组件了 -->
+    <!-- 它的作用很单纯：占位符 -->
+    <router-view></router-view>
+  </div>
+</template>
 
-就是标记的这两处
+<script>
+export default {
+  name: 'App',
+}
+</script>
 
-**5.路由的使用**
+<style lang="less" scoped>
+.app-container {
+  background-color: #efefef;
+  overflow: hidden;
+  margin: 10px;
+  padding: 15px;
+  > a {
+    margin-right: 10px;
+  }
+}
+</style>
+```
 
-我们注册完还需要在App这个根组件下进行显示![img](https://img-blog.csdnimg.cn/44da2522cdf8401f995fab6b6751627d.png)
+>`<router-link>`改变`hash`值跳转，然后自动去`index.js`的`routes`中去查找渲染的组件，然后component指定的组件会渲染到路由链接`<router-view>`的位置上
+>
+>在调用的组件内无需再引入，因为再`index.js`中已经调用
 
- 只需要加入这一行代码即可
-
-**6.效果展示**
-
-![img](https://img-blog.csdnimg.cn/92f4f23c0cc743c3b0dcad1b31e4d738.png)
-
- 当我们在网址后面加上后缀/home即可在页面上展示Home组件内容
-
-**7.路由跳转的使用**
-
-​    有两种方法可以实现路由跳转
-
-​            1.声明式导航 router-link 可以进行路由的跳转
-
-​    我们在需要页面跳转的地方加上router-link即可 例如：
-
-![img](https://img-blog.csdnimg.cn/c7e88a1b65a142e0b4ad2e9c43d110bb.png)
-
-2.编程式导航push| replace 可以进行路由跳转
-
-​                这个是利用点击事件函数回调方法进行的路由跳转：
-
-![img](https://img-blog.csdnimg.cn/e8104372117f489d92f734ba6c3177ca.png)
-
-
-
-
-
-
-
-
+------
 
 
 
 
 
 # 三. vue-router 的常见用法
+
+## 3.1 路由重定向
+
+<font color='red'>路由重定向</font>指的是：用户在访问<font color='red'>地址 A </font>的时候，<font color='red'>强制用户跳转</font>到地址 C ，从而展示特定的组件页面。通过路由规则的<font color='red'> `redirect` </font>属性，指定一个新的路由地址，可以很方便地设置路由的重定向：
+
+> 常用于解决 `/`  地址问题
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-27_16-09-39.png)
+
+## 3.2 嵌套路由
+
+通过路由实现<font color='red'>组件的嵌套展示</font>，叫做嵌套路由。
+
+通过 children 属性声明子路由规则:
+
+```
+/user/johnny/profile                     /user/johnny/posts
++------------------+                  +-----------------+
+| User             |                  | User            |
+| +--------------+ |                  | +-------------+ |
+| | Profile      | |  +------------>  | | Posts       | |
+| |              | |                  | |             | |
+| +--------------+ |                  | +-------------+ |
++------------------+                  +-----------------+
+    父级路由链接                   内还有子级路由链接显示子级模板
+```
+
+### 3.2.1 声明子级路由链接和占位符
+
+> 子级组件内
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-27_16-36-02.png)
+
+```vue
+<template>
+  <div class="app-container">
+    <h1>about组件</h1>
+
+    <!-- 子级路由链接 -->
+    <router-link to="/about/tab1">tab1</router-link>
+    <router-link to="/about/tab2">tab2</router-link>
+    <hr />
+
+    <!-- 子级路由占位符 -->
+    <router-view></router-view>
+  </div>
+</template>
+
+<script>
+export default {}
+</script>
+
+<style lang="less" scoped>
+.app-container {
+  background-color: aqua;
+  overflow: hidden;
+  margin: 10px;
+  padding: 15px;
+  > a {
+    margin-right: 10px;
+  }
+}
+</style>
+
+```
+
+### 3.2.2 通过 children 声明嵌套路由的规则
+
+在 `src/router/inder.js`路由模块中，导入需要的组件，并使用 <font color='red'>`children`属性</font>声明嵌子路由规则
+
+>子级路由规则中，path尽量不要‘/’
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-27_16-47-34.png)
+
+```js
+// 1. 导入 Vue 和 VueRouter 的包
+import Vue from "vue";
+import VueRouter from "vue-router";
+
+// 导入需要的组件
+import left from "@/components/left.vue"
+import right from "@/components/right.vue"
+import about from "@/components/about.vue"
+
+import tab1 from "@/components/tab/tab1.vue"
+import tab2 from "@/components/tab/tab2.vue"
+
+
+// 2. 调用 Vue.use() 函数，把 VueRouter 安装为 Vue 的插件
+Vue.use(VueRouter)
+
+// 3. 创建路由的实例对象
+const router =new VueRouter({
+  // routes 是一个数组，作用：定义 “ hash 地址 ” 与 “组件” 之间的对应关系
+  routes:[
+    // 重定向路由规则
+    {
+      path:'/',redirect:'/right'
+    },
+    {
+      path:'/left',component: left
+    },
+    {
+      path:'/right',component: right
+    },
+    {      // about 页面的路由规则（父级路由规则）
+      path:'/about',
+      component: about,
+      // redirect:'/about/tab1',
+      children:[   // 1. 通过 children 属性，嵌套生命子级路由规则
+        // 子级路由规则中，path尽量不要‘/’
+        {path:'/',redirect:'/about/tab1'},
+        { path:'tab1', component:tab1 }, // 2. 访问 /about/tab1 时，展示 tab1 组件
+        { path:'tab2', component:tab2 },
+
+      ]
+    },
+
+  ]
+})
+
+// 4. 向外共享路由的实例对象
+export default router
+
+```
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-27_16-52-57.png)
+
+
+
+### 3.2.3 默认子路由
+
+默认子路由：如果`children`数组中，某个路由规则的`path`值为空字符串，则这条路由规则，叫做“默认子路由”
+
+> 与‘/’相似
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-27_17-02-04.png)
+
+
+
+
 
 
 
@@ -4985,7 +5106,7 @@ https://blog.csdn.net/qq_41638795/article/details/83304388
 
 ## * Vue 中 import from @符号指的是什么
 
-> 简单说默认就是 src 
+> 简单说安装了插件默认是 src 
 >
 > eg：@/utils/auth = src/utils/auth
 
@@ -5013,9 +5134,9 @@ https://blog.csdn.net/weixin_46589442/article/details/125796515
 
 
 
+------
 
-
-
+## * export default向外共享路由的实例对象，让其他组件可以使用
 
 
 
