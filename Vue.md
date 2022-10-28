@@ -4137,11 +4137,59 @@ export default router
 
 
 
+## 3.3 动态路由匹配
+
+动态路由指的是：把 `hash`地址中<font color='red'>可变得部分</font>定义为<font color='red'>参数项</font>，从而<font color='red'>提高路由规则的复用性</font>
+
+在`vue-router`中使用<font color='red'>英文的冒号（:）</font>来定义路由的参数项。示例代码如下：
+
+```js
+// 路由中的动态参数以 : 进行声明，冒号后面的是动态参数的名称
+{ path:'/movie/:id',component:Movie }
+
+// 将以下三个路由规则合并为一个，提高了路由的复用性
+{ path:'/movie/1',component:Movie }
+{ path:'/movie/2',component:Movie }
+{ path:'/movie/3',component:Movie }
+```
+
+（太麻烦了通常是用props）在``movie`组件内可以通过`{{ this.$router.params.mid }}`获得`mid`的值，`this.`可以省略
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/78e8e7d6d7b8487eaf58bb21457f42ab.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQmxpenphcmTliY3nq68=,size_12,color_FFFFFF,t_70,g_se,x_16#pic_center)
+
+### 为路由打开props传参
+
+```js
+// 在movie组件中添加props
+//使用：来声明参数，参数名自取，在movie组件中，mid为props匹配的参数名
+//在组件中定义props数组
+  // 接收 props 数据
+  props: ['mid'],
+      
+//在router中
+  //可以为路由规则开启props传参，从而方便的拿到动态参数的值
+   { path: '/movie/:mid', component: Movie, props: true },
+```
+
+路径参数 查询参数query
+
+
+
+
+
+
+
+
+
 
 
 
 
 # 四. 后台管理案例
+
+
+
+
 
 
 
@@ -5138,7 +5186,7 @@ https://blog.csdn.net/weixin_46589442/article/details/125796515
 
 ## * export default向外共享路由的实例对象，让其他组件可以使用
 
-
+------
 
 
 
