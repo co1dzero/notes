@@ -281,6 +281,8 @@ vue提供的`{{}}`语法，是用来解决`v-text`会覆盖默认文本内容的
 
 ## 4.3 属性绑定指令（v-bind）（：）
 
+> 在绑定 布尔值 即 `true`和`false`时，例如 `allowClear="false"` 定义在字符串内，所以借用`v-bind`将其绑定为一个变量，即 `:allowClear="false"` 来实现正常使用
+
 **`插值表达式 {{}} 只能用在内容节点中，不能用在属性节点中`**
 
 ### 4.3.1 v-bind
@@ -471,6 +473,50 @@ Vue提供了时间修饰符，来更方便的<font color='red'>**对事件的触
 ```html
         <a href="http://www.baidu.com" @click.prevent="show">跳转</a>
 ```
+
+------
+
+#### 事件修饰符(1) .stop 阻止冒泡
+
+在vue中使用.stop来阻止默认冒泡事件
+
+```html
+<div id="app">
+        <div id="inner" @click="innerClick()">
+            <input type="button" value="按钮"  @click="btnClick()" name="" id="">
+        </div>
+    </div>
+<script src="./js/vue.js"></script>
+    <script>
+ 
+        let vm = new Vue({
+            el:"#app",
+            data:{},
+            methods:{
+                innerClick(){// 内部div点击事件
+                    console.log("内部div点击事件");
+                },
+                btnClick(){// 按钮点击事件
+                    console.log("按钮点击事件");
+                }
+            }
+        })
+ 
+    </script>
+```
+
+![img](https://img-blog.csdnimg.cn/f60512f769e040358f7f568687d4f56c.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5pyA54ix5Zad5oCh5a6d,size_6,color_FFFFFF,t_70,g_se,x_16)
+
+加上.stop
+
+```html
+                                 <!-- (1) .stop  阻止冒泡 -->
+<input type="button" value="按钮"  @click.stop="btnClick()" name="" id="">
+```
+
+![img](https://img-blog.csdnimg.cn/b4a3d6bd7cdc443c9428e88cf90aa87b.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5pyA54ix5Zad5oCh5a6d,size_6,color_FFFFFF,t_70,g_se,x_16)
+
+------
 
 
 
@@ -758,6 +804,8 @@ data：{
 
 `v-for`指令还支持一个<font color='red'>**可选的第二个参数**</font>，即<font color='red'>**当前项的索引**</font>。语法格式为 `(item, index) in items`，
 
+> `index`从0开始
+
 ```html
 data：{
 	list: [  //列表数据
@@ -771,7 +819,7 @@ data：{
 </ul>
 ```
 
-注意：`v-for`指令中的 <font color='red'>**item 项**</font>和<font color='red'>**index 索引**</font>都是形参，可以进行重命名，例如：(user,i) in userlist
+注意：`v-for`指令中的 <font color='red'>**item 项**</font>和<font color='red'>**index 索引**</font>都是形参，可以	进行重命名，例如：(user,i) in userlist
 
 
 
@@ -968,7 +1016,7 @@ watch: {
 
 ### `immediate` 的作用：控制侦听器是否自动触发一次
 
-```html
+```js
 watch: {
 	// 定义对象格式的侦听器
 	username: {
@@ -3627,6 +3675,14 @@ SPA 指的是一个 web 网站只有唯一的一个 HTML 页面，所有组件�
 
 > Hash地址 就是 锚链接 #
 
+>`注意1`：在 hash 地址中，`/` 后面的参数项，叫做“路径参数”。																			在路由的“参数对象”中，需要使用 `this.$route.params` 来访问路径参数
+
+> `注意2`：在 hash 地址中，`？` 后面的参数项，叫做“查询参数”。																			在路由的“参数对象”中，需要使用 `this.$route.query` 来访问查询参数
+
+> `注意3`：在 `this.$route` 中，`path` 只是路径部分，`fullPath` 是完整的地址
+
+> eg：`/movie/2?name=zs&age=20` 是`fullPath`																										`/movie/2` 是`path`的值
+
 ## 4. 前端路由的工作方式
 
 ① 用户点击了页面上的<font color='red'>**路由链接**</font>
@@ -3880,6 +3936,8 @@ export default router
 ## 2.3 在路由模块中声明路由的对应关系
 
 路由模块：router/index.js
+
+> router-view是渲染位置，但除去在根组件app.vue中的特殊情况，可以直接使用，在组件中嵌套的话使用各种嵌套渲染使用router-view时候结合`3.2 嵌套路由`通过子路由来实现
 
 ### 路由链接`<router-view>`（渲染位置）
 
@@ -4153,11 +4211,21 @@ export default router
 { path:'/movie/3',component:Movie }
 ```
 
-（太麻烦了通常是用props）在``movie`组件内可以通过`{{ this.$router.params.mid }}`获得`mid`的值，`this.`可以省略
+（太麻烦了通常是用props）在``movie`组件内可以通过`{{ this.$route.params.mid }}`获得`mid`的值，`this.`可以省略
+
+> `注意1`：在 hash 地址中，`/` 后面的参数项，叫做“路径参数”。																			在路由的“参数对象”中，需要使用 `this.$route.params` 来访问路径参数
+>
+> `注意2`：在 hash 地址中，`？` 后面的参数项，叫做“查询参数”。																			在路由的“参数对象”中，需要使用 `this.$route.query` 来访问查询参数
+>
+> `注意3`：在 `this.$route` 中，`path` 只是路径部分，`fullPath` 是完整的地址
+>
+> eg：`/movie/2?name=zs&age=20` 是`fullPath`																										`/movie/2` 是`path`的值
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/78e8e7d6d7b8487eaf58bb21457f42ab.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQmxpenphcmTliY3nq68=,size_12,color_FFFFFF,t_70,g_se,x_16#pic_center)
 
-### 为路由打开props传参
+
+
+## 3.4 为路由打开props传参
 
 ```js
 // 在movie组件中添加props
@@ -4171,11 +4239,201 @@ export default router
    { path: '/movie/:mid', component: Movie, props: true },
 ```
 
-路径参数 查询参数query
 
 
 
 
+## 3.5 声明式导航 & 编程式导航
+
+在浏览器中，<font color='red'>点击链接</font>实现导航的方式，叫做<font color='red'>声明式导航</font>。例如：
+
+- 普通网页中点击<font color='red'>`<a>`链接</font>、`vue`项目中点击<font color='red'>`<router-link>`</font>都属于声明式导航
+
+在浏览器中，<font color='red'>调用 API 方式</font>实现导航的方式，叫做<font color='red'>编程式导航</font>。例如：
+
+- 普通网页中点击<font color='red'>`location.href`</font>跳转到新页面的方式，属于编程式导航，但这是原生的方法 vue有自己的的API
+
+
+
+### 3.5.1 vue-router 中编程式导航 API
+
+vue-router 提供了许多编程式导航的 API，其中最常用的导航 API 分别是：
+
+① this.$router.<font color='red'>push</font>('hash 地址')
+
+- 跳转到指定的 hash 地址，并<font color='red'>增加</font>一条历史记录
+
+② this.$router.<font color='red'>replace</font>('hash 地址')
+
+- 跳转到指定的 hash 地址，并<font color='red'>替换掉当前的</font>历史记录
+
+③ this.$router.<font color='red'>go</font>(数值 n )
+
+- 实现导航历史的前进、后退
+
+>  this.$route 是路由的“ 参数对象 ”
+>
+> this.$router 是路由的“ 导航对象 ”，他提供了很多导航功能
+
+#### $router.push
+
+增加一条历史记录
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-31_16-18-09.png)
+
+#### $router.replace
+
+替换当前历史记录
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-31_16-21-55.png)
+
+#### $router.go
+
+实现导航历史的前进、后退
+
+> 如果后退的层数超过上限，则会原地不动 eg:$router.go(-100)
+
+```vue
+<template>
+  <div class="back">
+    <h1>right组件</h1>
+    <button @click="postInfo">POST请求</button>
+    <button @click="gotoGY">通过push跳转到关于</button>
+    <button @click="gotoGY2">通过replace跳转到关于</button>
+    <button @click="goback">通过go后退</button>
+    <button @click="gofront">通过go前进</button>
+  </div>
+</template>
+
+<script>
+import axios from 'axios'
+export default {
+  methods: {
+    async postInfo() {
+      const { data: res } = await axios.post('/api/post', {
+        name: 'zs',
+        age: 20,
+      })
+      console.log(res)
+      console.log(res.data)
+    },
+    gotoGY() {
+      // 通过编程式导航API跳转到指定页面
+      this.$router.push('/about')
+    },
+    gotoGY2() {
+      // 通过编程式导航API跳转到指定页面
+      this.$router.replace('/about')
+    },
+    goback() {
+      //如果后退的层数超过上限，则会原地不动
+      this.$router.go(-1)
+    },
+    gofront() {
+      this.$router.go(1)
+    },
+  },
+}
+</script>
+
+<style lang="less" scoped>
+.back {
+  background-color: deeppink;
+  min-height: 200px;
+  flex: 1;
+}
+</style>
+
+```
+
+#### $router.go 的简化方法
+
+在实际开发中，一般只会前进或者后退一层页面，因此 vue-router 提供了如下两个简便方法：
+
+① this.$router.<font color='red'>back</font>()
+
+- 在历史记录中，<font color='red'>后退</font>到上一个页面
+
+② this.$router.<font color='red'>forward</font>()
+
+- 在历史记录中，<font color='red'>前进</font>到下一个页面
+
+> 在行内使用编程式导航跳转的时候，`this`必须省略，否则报错，可以理解为this指向按钮报错
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-31_16-36-16.png)
+
+## 3.6 导航守卫
+
+<font color='red'>导航守卫</font>可以<font color='red'>控制路由的访问权限</font>。示意图如下：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Screenshot_20221101_103802_tv.danmaku.bili.jpg)
+
+### 3.6.1 全局前置守卫
+
+每次发生路由的<font color='red'>导航跳转</font>时，都会触发<font color='red'>全局前置守卫</font>。因此，在全局前置守卫中，程序员可以对每个路由进行<font color='red'>访问权限</font>的控制：
+
+```js
+// 创建路由实例对象
+const router = new VueRouter({ ... })
+                              
+// 调用路由实例对象的 beforeEach 方法，即可声明 "全局前置守卫"
+// 每次发生路由导航跳转的时候，都会自动触发 fn 这个 "回调函数"
+router.beforeEach(fn)                              
+```
+
+### 3.6.2 守卫方法的三个形参
+
+<font color='red'>全局前置守卫</font>的回调函数中接受 3 个形参，格式为：
+
+```js
+// 创建路由实例对象
+const router = new VueRouter({ ... })
+                              
+// 全局前置守卫
+router.beforeEach((to, from, next) => {
+    // to 是将要访问的路由的信息对象
+    // from 是将要离开的路由的信息对象
+    // next 是一个函数，调用 next() 表示放行，允许这次路由导航
+    next() //没有 next() 所有跳转均会失效
+})          
+```
+
+### 3.6.3  next 函数的 3 种调用方式
+
+参考示意图，3种调用方式最终的导致的结果：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Screenshot_20221101_142405.jpg)
+
+当前用户<font color='red'>拥有</font>后台主页的访问权限，直接放行：`next()`
+
+当前用户<font color='red'>没有</font>后台主页的访问权限，<font color='red'>强制其跳转到当前页面</font>：`next('/login')`
+
+当前用户<font color='red'>没有</font>后台主页的访问权限，<font color='red'>不允许跳转到后台页面</font>：`next(false)`
+
+### 3.6.4 控制后台主页的访问权限
+
+```js
+// 创建路由实例对象
+const router = new VueRouter({ ... })
+                              
+// 全局前置守卫
+router.beforeEach((to, from, next) => {
+	if(to.path === '/main') {
+        const token = localStorage.getItem('token')
+        if (token) {
+            next()  // 访问的是后台主页，且有 token 的值，即有权限
+        } else {
+            next('login')  // 访问的是后台页面，但是没有 token 的值，即没有权限，跳转到登陆页面
+        }
+    } else {
+        next()  // 访问的不是后台主页，直接放行
+    }
+})
+```
+
+可以手动加一个`token`
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-11-01_15-00-08.png)
 
 
 
@@ -4230,6 +4488,197 @@ export default router
 
 
 # 补充知识
+
+
+
+## * scss的基本使用
+
+### SCSS-基本语法
+
+内容：嵌套语法； &父[选择器](https://so.csdn.net/so/search?q=选择器&spm=1001.2101.3001.7020)；变量；mixins；模块
+
+#### 1. 嵌套语法
+
+和less一样，scss同样支持嵌套型的语法
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/e241261e619e477880a9c487a99b0d7a.png#pic_center)
+
+转化成css后
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/3a0ee6d8d0344217908f80450e8c1248.png#pic_center)
+
+#### 2. 变量
+
+定义变量：sass使用$符号来标识变量
+![在这里插入图片描述](https://img-blog.csdnimg.cn/42ffeedd035b4e40a6758d2aad33b55a.png#pic_center)
+使用变量：
+![在这里插入图片描述](https://img-blog.csdnimg.cn/576130a679b34ef2b8868b5c5f3b4452.png#pic_center)
+
+#### 3. 父选择器 &
+
+> & 用在嵌套的scss代码里，来引用父元素
+
+```scss
+.dashboard {
+	&-container {
+		margin: 30px;
+	}
+	&-text {
+		font-size: 30px;
+		line-height: 46px;
+	}
+}
+
+==
+
+.dashboard-container {
+	margin: 30px; 
+}
+.dashboard-text {
+	font-size: 30px;
+	line-height: 46px; 
+}
+```
+
+在嵌套 CSS 规则时，有时也需要直接使用嵌套外层的父选择器，例如，当给某个元素设定 hover 样式时，或者当 body 元素有某个 classname 时，可以用 & 代表嵌套规则外层的父选择器。
+![在这里插入图片描述](https://img-blog.csdnimg.cn/6a04ca2fa20f43ba9555e1a3ad0283d9.png#pic_center)
+
+```scss
+.el-checkbox__inner {
+  &:hover {
+    border-color: #42b983;
+  }
+}
+
+==
+
+.el-checkbox__inner:hover {
+    border-color: #42b983;
+}
+```
+
+
+
+#### 4. 混合 mixins
+
+mixins混入，是代码复用的方式
+定义格式：@mixin 名称 { 代码 }
+使用格式：include 名称
+定义样式：
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/3f444e92212d408c945c76dba3647b23.png#pic_center)
+
+使用mixins
+![在这里插入图片描述](https://img-blog.csdnimg.cn/55a8b793cb894c8081a69ad4c742efdd.png#pic_center)
+
+#### 5. 模块
+
+一个.scss文件就是一个模块，多个.scss文件之间可以相互引用。
+例如：在base.scss定义变量，然后在test.scss中引入这个文件，就可以使用其中定义的变量了
+![在这里插入图片描述](https://img-blog.csdnimg.cn/a5a8b62cd1124c059e793f2286a78a4c.png#pic_center)
+
+格式：@import ‘./xxxx.scss’;
+示例：新建base.scss，并定义变量
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/dd284b99d313449da61ca7473e86711e.png#pic_center)
+
+在test.scss中引入base.scss
+![在这里插入图片描述](https://img-blog.csdnimg.cn/346467f571ef4737b3f884e55d20d622.png#pic_center)
+
+
+
+
+
+
+
+https://blog.csdn.net/weixin_67745264/article/details/125141904
+
+------
+
+
+
+## * JavaScript
+
+### [splice](https://so.csdn.net/so/search?q=splice&spm=1001.2101.3001.7020)()函数详解
+
+> splice() 方法向/从[数组](https://so.csdn.net/so/search?q=数组&spm=1001.2101.3001.7020)中添加/删除项目，然后返回被删除的项目。
+> 注释：该方法会改变原始数组。
+>
+> 参数：
+>
+> 1. index —— 必需。整数，规定添加/删除项目的位置，使用负数可从数组结尾处规定位置。
+> 2. howmany —— 必需。要删除的项目数量。如果设置为 0，则不会删除项目。
+> 3. item1, …, itemX —— 可选。向数组添加的新项目。
+>
+> 返回值
+>
+> 1. Array —— 包含被删除项目的新数组，如果有的话。
+
+[https://blog.csdn.net/weixin_45726044/article/details/120151153](https://blog.csdn.net/weixin_45726044/article/details/120151153)
+
+------
+
+## *css
+
+### display：flex和display: inline-flex区别
+
+flex： 将对象作为弹性伸缩盒显示
+inline-flex：将对象作为内联块级弹性伸缩盒显示
+
+flex
+
+```css
+<style>
+.main{
+      background-color: #0f0;
+      display: flex;/*父div设置该属性*/
+    }               
+    .main>div{
+      width: 50px;
+      height: 50px;
+      border: 1px solid black;
+    }
+</style>
+```
+
+此时没有为父元素main设置宽度，默认为100%；
+
+![img](https://upload-images.jianshu.io/upload_images/6522941-adacf1c29b59e976.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp)
+
+inline-flex
+
+```html
+//样式
+<style>
+.main{
+      background-color: #0f0;
+      display: inline-flex;/*父div设置该属性*/
+    }
+    .main>div{
+      width: 50px;
+      height: 50px;
+      border: 1px solid black;
+    }
+    .main div:nth-child(2){
+            height:60px;
+    }
+</style>
+//DOM
+<div class="main">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+```
+
+此处虽然木有给父元素设置宽度，但是父元素默认会根据子元素的宽高去自适应。
+
+![img](https://upload-images.jianshu.io/upload_images/6522941-a6d119c9af3ffe3b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/726/format/webp)
+
+
+
+------
 
 
 
@@ -5188,11 +5637,644 @@ https://blog.csdn.net/weixin_46589442/article/details/125796515
 
 ------
 
+## * Vue中 Vue.prototype 详解及使用
+
+https://blog.csdn.net/ZYS10000/article/details/107233453/
+
+我们可能会在很多组件里用到数据/实用工具，但是不想污染全局[作用域](https://so.csdn.net/so/search?q=作用域&spm=1001.2101.3001.7020)。这种情况下，可以通过在原型上定义它们使其在每个 Vue 的实例中可用。
+
+#### 1. 基本示例
+
+在main.js中添加一个变量到 Vue.prototype
+
+```javascript
+Vue.prototype.$appName = 'My App'
+```
+
+这样 $appName 就在所有的 Vue 实例中可用了，甚至在实例被创建之前就可以
+
+```javascript
+new Vue({
+  beforeCreate: function () {
+    console.log(this.$appName)
+  }
+})
+```
+
+控制台会打印出 My App，就这么简单！
+
+#### 2. 为实例prototype设置作用域
+
+为什么 appName 要以 $ 开头？这很重要吗？
+
+这里没有什么魔法。$ 是在 Vue 所有实例中都可用的 property 的一个简单约定。这样做会避免和已被定义的数据、方法、计算属性产生冲突。
+如果我们设置：
+
+```
+Vue.prototype.appName = 'My App'
+```
+
+那么如下的代码输出什么：
+
+```js
+new Vue({
+  data: {
+    // 啊哦，`appName` 也是一个我们定义的实例 property 名！
+    appName: 'The name of some other app'
+  },
+  beforeCreate: function () {
+    console.log(this.appName)
+  },
+  created: function () {
+    console.log(this.appName)
+  }
+})
+
+```
+
+日志中会先出现 “My App”，然后出现 “The name of some other app”，因为 this.appName 在实例被创建之后被 data 覆写了。我们通过 $ 为实例 property 设置作用域来避免这种事情发生。你还可以根据你的喜好使用自己的约定，诸如 $_appName 或 ΩappName，来避免和插件或未来的插件相冲突。
+
+#### 3. 注册和使用全局变量
+
+每个组件都是一个vue实例，Vue.prototype加一个变量，只是给每个组件加了一个属性，这个属性的值并不具有全局性。
+比如以下例子：
+
+```js
+// main.js
+import Vue from 'vue'
+import App from './App'
+import router from './router'
+import store from './store'
+
+Vue.config.productionTip = false
+Vue.prototype.$appName = 'main'
+
+new Vue({
+    el: '#app',
+    store,
+    router,
+    components: { App },
+    template: '<App/>',
+})
+
+// 给所有组件注册了一个属性 $appName，赋予初始值 'main' ，所有组件都可以用 this.$appName 访问此变量;
+// 如果组件中没有赋值，初始值都是'main'
+
+```
+
+```vue
+// home.vue
+<template>
+  <div>
+    <div @click="changeName">change name</div>
+    <div @click="gotoTest2">goto test2</div>
+  </div>
+</template>
+
+<script>
+export default {
+  methods:{
+    changeName(){
+      this.$appName = "test1"
+    },
+    gotoTest2(){
+      this.$router.push('/about')
+    } 
+  }
+}
+</script>
+
+```
+
+```vue
+// about.vue
+<template>
+  <div>
+    <div>{{this.$appName}} in test2</div>
+  </div>
+</template>
+```
+
+点击 home 中的 change name 再跳转about，about里面还是显示 main in test2
+
+**如果要实现全局变量的功能，需要把属性变为引用类型**
+
+```js
+Vue.prototype.$appName = { name: 'main' }
+```
+
+**后面使用 this.$appName.name 改变和引用相应的值**
+这进入 about 后显示 test1 in test2
+
+#### 4. 原型方法的上下文
+
+在 JavaScript 中一个原型的方法会获得该实例的上下文,也就是说可以使用 this 访问：数据、计算属性、方法或其它任何定义在实例上的东西。
+让我们将其用在一个名为 $reverseText 的方法上：
+
+```js
+ // main.js
+Vue.prototype.$reverseText = function (propertyName) {
+  this[propertyName] = this[propertyName]
+    .split('')
+    .reverse()
+    .join('')
+}
+```
+
+```vue
+// 相应组件
+<script>
+export default {
+  data() {
+    return{
+      message: 'Hello'
+    }
+  },
+  created() {
+    console.log(this.message) // => "Hello"
+    this.$reverseText('message')
+    console.log(this.message) // => "olleH"
+  }
+}
+</script>
+
+```
+
+#### 5. 应用示例
+
+**5.1 引入 axios**
+
+```javascript
+npm install vue-axios --save
+
+npm install qs.js --save　　//它的作用是能把json格式的直接转成data所需的格式
+```
+
+```js
+// mian.js
+import Vue from 'vue'
+import axios from 'axios'
+import qs from 'qs'
+
+Vue.prototype.$axios = axios    //全局注册，使用方法为:this.$axios
+Vue.prototype.qs = qs           //全局注册，使用方法为:this.qs
+
+```
+
+```vue
+// 相应组件
+<script>
+  export default{
+    data(){
+      return{
+        userId:666,　　　　　　　　　
+        token:'',
+      }
+    },
+    created(){
+      this.$axios({
+        method:'post',
+        url:'api',
+        data:this.qs.stringify({    //这里是发送给后台的数据
+          userId:this.userId,
+          token:this.token,
+        })
+      }).then((response) =>{          //这里使用了ES6的语法
+        console.log(response)       //请求成功返回的数据
+      }).catch((error) =>{
+        console.log(error)       //请求失败返回的数据
+      })
+    }
+  }
+</script>
+
+```
+
+
+
+------
+
+## *vue之moment使用
+
+### 前言
+
+在日常开发中，我们常常会遇到以下几种场景：
+
+- 需要对日期进行非标准格式展示，如 ：2021年5月11日星期二下午6点42分
+- 需要对日期进行处理，如：要取前24小时的时间 等
+
+在这时候用js原生的`new Date()`处理就有些麻烦了，因此我们找到了`moment`这个类库
+
+### 一、moment是什么？
+
+`moment` 是一个 `JavaScript` 日期处理类库。
+注：以下所有时间相对于现在时间：2021/05/11/18:42 星期二
+
+### 1.日期格式化：
+
+- `moment().format('MMMM Do YYYY, h:mm:ss a');` // 五月 11日 2021, 6:42:31 下午
+- `moment().format('dddd');` // 星期二
+- `moment().format("MMM Do YY");` // 5月 11日 21
+- `moment().format('YYYY [escaped] YYYY');` // 2021 escaped 2021
+- `moment().format();` //2021-05-11T18:06:42+08:00
+
+### 2.相对时间：
+
+- `moment("20111031", "YYYYMMDD").fromNow();` // 2011/10/31号相对于现在是： 10 年前
+- `moment("20120620", "YYYYMMDD").fromNow();` // 2012/06/20号相对于现在是： 9 年前
+- `moment().startOf('day').fromNow();` //当前日期开始即：2021/05/11/00:00:00相对于现在是： 19 小时前
+- `moment().endOf('day').fromNow();` //当前日期结束即：2021/05/11/24:00:00相对于现在是： 5 小时内
+- `moment().startOf('hour').fromNow();` //当前日期小时开始即：2021/05/11/18:00:00相对于现在是： 42分钟前
+
+### 3.日历时间：
+
+- `moment().subtract(10, 'days').calendar();` // 当前时间往前推10天的日历时间： 2021/05/01
+- `moment().subtract(6, 'days').calendar();` // 当前时间往前推6天： 上星期三18:42
+- `moment().subtract(3, 'days').calendar();` // 当前时间往前推3天： 上星期六18:42
+- `moment().subtract(1, 'days').calendar();` // 当前时间往前推1天： 昨天18:42
+- `moment().calendar();` // 今天18:42
+- `moment().add(1, 'days').calendar();` // 当前时间往后推1天： 明天18:42
+- `moment().add(3, 'days').calendar();` // 当前时间往后推3天： 下星期五18:42
+- `moment().add(10, 'days').calendar();` // 当前时间往后推10天： 2021/05/21
+
+### 4.多语言支持：
+
+- `moment.locale();` // zh-cn
+- `moment().format('LT');` // 18:42
+- `moment().format('LTS');` // 18:42:31
+- `moment().format('L');` // 2021/05/11
+- `moment().format('l');` // 2021/5/11
+- `moment().format('LL');` // 2021年5月11日
+- `moment().format('ll');` // 2021年5月11日
+- `moment().format('LLL');` // 2021年5月11日下午6点42分
+- `moment().format('lll');` // 2021年5月11日 18:42
+- `moment().format('LLLL');` // 2021年5月11日星期二下午6点42分
+- `moment().format('llll');` // 2021年5月11日星期二 18:42
+
+### 二、使用步骤（例：默认查询时间24小时之前~当前时间）
+
+### 1.引入库
+
+```bash
+$ npm install moment --save
+1
+```
+
+### 2.在main.js中全局引入（也可单独在使用的文件中引入，具体看需求）
+
+```js
+import moment from "moment"
+Vue.prototype.$moment = moment;
+```
+
+### 3.在需要使用日期的地方使用
+
+HTML中：
+
+```html
+ <el-date-picker
+    	v-model="timeRange"
+        type="datetimerange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期">
+ </el-date-picker>
+
+```
+
+JS中：
+
+```js
+ data() {
+      return {
+         timeRange:[],
+      }
+   },
+  mounted(){
+        let start = this.$moment()
+            .subtract('1', 'd')
+            .format('YYYY-MM-DD HH:mm:ss') //当前时间往前推1天（24小时）：2021-05-10 18:42:53
+        let end = this.$moment().format('YYYY-MM-DD HH:mm:ss') //当前时间：2021-05-11 18:42:53
+        this.timeRange=[start,end]
+   },  
+
+```
+
+### 三、日期格式
+
+| 格式 | 含义  |  举例  |               备注                |
+| :--: | :---: | :----: | :-------------------------------: |
+| yyyy |  年   |  2021  |              同YYYY               |
+|  M   |  月   |   1    |               不补0               |
+|  MM  |  月   |   01   |                                   |
+|  d   |  日   |   2    |               不补0               |
+|  dd  |  日   |   02   |                                   |
+| dddd | 星期  | 星期二 |                                   |
+|  H   | 小时  |   3    |          24小时制；不补0          |
+|  HH  | 小时  |   18   |             24小时制              |
+|  h   | 小时  |   3    | 12小时制，须和 A 或 a 使用；不补0 |
+|  hh  | 小时  |   03   |    12小时制，须和 A 或 a 使用     |
+|  m   | 分钟  |   4    |               不补0               |
+|  mm  | 分钟  |   04   |                                   |
+|  s   |  秒   |   5    |               不补0               |
+|  ss  |  秒   |   05   |                                   |
+|  A   | AM/PM |   AM   |       仅 format 可用，大写        |
+|  a   | am/pm |   am   |       仅 format 可用，小写        |
+
+#### 具体方法以及参数可详见[moment官方文档](http://momentjs.cn/docs/)
+
+mount()
+
+要获取当前的日期和时间，只需调用不带参数的 `moment()` 即可。
+
+------
+
+## * ant-design-vue使用之路
+
+https://blog.csdn.net/qq_39692513/article/details/111468260
+
+### 引入[ant-design](https://so.csdn.net/so/search?q=ant-design&spm=1001.2101.3001.7020)-vue
+
+#### 1.全局引入
+
+```
+1. 命令行使用npm安装
+npm install ant-design-vue --save
+2. main.ts文件中导入
+import Antd from 'ant-design-vue';
+import 'ant-design-vue/dist/antd.css';
+
+```
+
+#### 2. 局部引入
+
+为了减小打包大小，提高加载速度，更推荐这种做法
+
+##### 局部引入组件
+
+```
+1. 命令行安装ant-design-vue包
+npm install ant-design-vue --save
+
+2 创建antPlugin.js文件，按需引入组件都可在这个文件中写，以button组件为例
+import Vue from 'vue'
+import {Button} from 'ant-design-vue' // 官方文档中组件去掉a，首字母大写如a-form-model， 按需引入组件就是 FormModel
+Vue.use(Button)
+
+3 main.ts 导入此文件
+import ‘@/util/antPlugin’
+
+4 babel.config.js 添加import插件，自动引入组件对应样式
+module.exports = {
+  // ...
+  plugins: [
+    [
+      'import',
+      { libraryName: 'ant-design-vue', libraryDirectory: 'es', style: 'css' }
+    ]
+  ]
+}
+
+5 坑
+引入样式时，需要npm安装less-loader去解析，less-loader版本过高超过6.0后，会报错。
+需手动设置javascriptEnabled。故我们在vue.config.js文件中设置(*楼主当时设置了好多遍也没起效，最后发现是less-loader没安装完全，多安装几次就好了*)
+modules.exports = {
+  css: {
+    loaderOptions: {
+      less: {
+        javascriptEnabled: true
+      }
+    }
+  }
+}
+
+```
+
+##### 局部引入图标
+
+按需采用吧，而且要注意ant-design-vue组件中，自带的图标，也要引用进来，不然组件图标会消失。
+
+```
+1 在项目中创建文件icons.ts ，引入并导出你需要的图标
+export { default as CloseCircleFill } from '@ant-design/icons/lib/fill/CloseCircleFill'
+export { default as QuestionCircleTwoTone } from '@ant-design/icons/lib/twotone/QuestionCircleTwoTone'
+export { default as ForkOutline } from '@ant-design/icons/lib/outline/ForkOutline'
+2 在vue.config.js中配置将从npm包中导入映射从你创建的文件中导入
+module.exports = {
+ configureWebpack: {
+    resolve: {
+      alias: {
+        '@ant-design/icons/lib/dist$': path.resolve(__dirname, './src/util/icons.ts')
+      }
+    },
+    plugins: [
+      new MomentLocalesPlugin({
+        localesToKeep: ['zh-CN']
+      })
+    ]
+  },
+}
+3 坑
+记得找到组件自身所引入图标，也导入进来
+
+```
+
+### 使用
+
+#### 1message的使用
+
+可在js中方便的调用message弹窗
+
+```
+1 创建message.js
+import { message } from 'ant-design-vue'
+2 定义sucess、error等方法，并导出，即可方便使用了
+function success (msg: string) {
+  message.success(msg)
+}
+export default { success, error, warn, info }
+
+```
+
+#### 2 日期范围组件本地化
+
+讲一下日期选择器本地化，这里讲一下多处
+多处本地化，推荐使用config-provider
+一个地方组件化，推荐使用组件中locale参数
+
+```
+tempate中使用a-config-provider
+<a-config-provider :locale="locale">
+					<a-range-picker :ranges="range" v-model="dateData" :disabledDate="getDisabledTime" :allowClear="false" format="YYYY-MM-DD HH:mm:ss" />
+				</a-config-provider>
+				
+js中
+import moment from 'moment'
+import zhCN from 'ant-design-vue/es/locale/zh_CN'
+import 'moment/locale/zh-cn'
+moment.locale('zh-cn')
+ 		class类中
+ 			public locale = zhCN //定义语言
+ 			
+	public range = { //设置快捷选项
+		今天: [moment().startOf('day'), moment()],
+		昨天: [
+			moment()
+				.startOf('day')
+				.subtract(1, 'days'),
+			moment()
+				.endOf('day')
+				.subtract(1, 'days')
+		],
+		最近三天: [
+			moment()
+				.startOf('day')
+				.subtract(2, 'days'),
+			moment()
+		],
+		最近一周: [
+			moment()
+				.startOf('day')
+				.subtract(1, 'weeks'),
+			moment()
+		]
+	}
+	
+	public getDisabledTime(current: any) { //定义选择范围
+		return current < moment().subtract(7, 'day') || current > moment()
+	}
+
+```
+
+#### 3组件化的小技巧
+
+主要是依靠[] 操作符和，传递父方法。以list和form为例
+
+##### list
+
+```
+1 子组件中
+ template中
+ 
+  <a-list item-layout="horizontal" :data-source="data">
+    <div v-if="headerButtons.length !== 0" slot="header" class="button-postion">
+     <a-button type="primary" class="button-margin"  v-for="(button) in headerButtons" :key="button.name" @click="emitParent(button.funcName,button.type)">
+        {{button.name}}
+      </a-button>
+    </div>   //  【顶部按钮，传递想展示按钮以及方法】
+    <a-list-item slot="renderItem" slot-scope="item">
+      <a-list-item-meta
+        :description="item[name]"
+      >
+        <a href="javascript:void(0);" class="title-width" v-if="mainListFunc" slot="title"  @click="emitRouter(item)">{{ item[id] }}</a>
+        <span type="link" v-else slot="title" >{{ item[id] }}</span>
+      </a-list-item-meta>  //【 list列表，将展示字段传递，使用item[字段]来调用】
+       <div class="content-width">{{item[remark]}}</div>
+      <a slot="actions">
+        <a-button size="small" type="link"  v-for="(button) in buttons" :key="button.name" @click="emitParent(button.funcName,button.type,item)">
+        {{button.name}}
+      </a-button> //【传递按钮时，同时传递方法】
+      </a>
+    </a-list-item>
+  </a-list>
+
+js中，接收参数并调用父方法
+
+ public emitParent (funcName: string, type: number, data: object = {}) {
+     this.$emit(funcName, type, data)
+   }
+
+
+2 父组件中
+template中引入子组件，并传递参数
+
+<list :headerButtons="headerButtons" :id="id" :name="name" :remark="remark" :data="data" :buttons="buttons" :mainListFunc="mainListFunc" @addOrEditData="startForm"  @startSureShow="startSureShow" @mainIdFunc="gotoRouter"></list>
+
+js中 定义传递按钮参数及其他参数
+public buttons =[{ name: '编辑', funcName: 'addOrEditData', type: 2 },
+    { name: '删除', funcName: 'startSureShow', type: 3 }]/
+
+```
+
+##### form
+
+```
+1 子组件
+template中
+  <a-form-model
+    ref="ruleForm"
+    :model="formData"
+    :rules="rules"
+    :label-col="labelCol"
+    :wrapper-col="wrapperCol"
+  >
+    <a-form-model-item class="item-margin-bottom" v-for="item in formLabel" :key="item.propName" :label="item.label" :prop="item.propName"> // 【使用form循环来遍历输入列表，传入formLabel】
+      <a-radio-group v-if="item.type === 1" v-model="formData[item.propName]" :disabled="item.disabled">  // 【使用formData[item.propName]】来双向绑定
+        <a-radio v-for="radio in item.values" :key="radio.value" :value="radio.value">{{radio.label}}</a-radio>
+      </a-radio-group>
+       <a-input v-else-if="item.type === 2" v-model="formData[item.propName]" type="textarea" :disabled="item.disabled" />
+      <a-input v-else v-model="formData[item.propName]" :disabled="item.disabled" />
+    </a-form-model-item>
+    </a-form-model>
+
+2父组件中
+template中引入并传递参数
+<dialog-form :title="title" :visible="visible" :confirmLoading="confirmLoading" :formData="formData" :formLabel="formLabel" :rules="rules" @saveFunc="saveScenceData" @cancelFunc="closeDialog"></dialog-form>
+
+js中定义参数
+
+  public formLabel = [{ label: '场景id', propName: 'businessid', disabled: false }, // 标签显示
+    { label: '场景名称', propName: 'businessname', disabled: false },
+    { label: '场景描述', propName: 'remark', disabled: false },
+  ]
+   public formData= { // 表单数据
+    businessid: '',
+    businessname: '',
+    remark： ‘’
+  }
+
+
+```
+
+### 优化
+
+#### [webpack](https://so.csdn.net/so/search?q=webpack&spm=1001.2101.3001.7020)分析插件
+
+```
+vue.config.js中
+module.exports = {
+  chainWebpack: (config) => {
+     config
+       .plugin('webpack-bundle-analyzer')
+       .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
+   },
+}
+运行后，打开地址，可看到各个文件的打包大小，进而选择性的优化
+
+```
+
+#### 优化强依赖插件moment
+
+```
+去除其他语言包，只保留中文和英文（英文内置，不可去除）
+module.exports ={
+    plugins: [
+      new MomentLocalesPlugin({
+        localesToKeep: ['zh-CN']
+      })
+    ]
+  },
+}
+
+```
 
 
 
 
 
+
+
+------
 
 
 
