@@ -1257,11 +1257,13 @@ git commit -a -m "描述信息"
 
 **`注意:前提是要跟踪的文件`**
 
-### 6.14 移除文件
+### 6.14 移除文件/移除本地仓库
 
-```
+```js
 git rm -f index.js
 git rm --cached index.css
+//移除本地仓库 然后仓库就不存在了再手动删除文件
+find . -name ".git" | xargs rm -Rf
 ```
 
 ![img](https://pic3.zhimg.com/80/v2-6bcde3fa68d7d661522e77fde4df90fa_1440w.jpg)

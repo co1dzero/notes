@@ -1436,7 +1436,7 @@ axios({
 axios.get('url',{params:{ /*参数*/ }}).then(callback)
 ```
 
-```
+```js
 		// 请求的URL地址
         const url = 'http://www.liulongbin.top:3006/api/get'
         // 请求的参数对象
@@ -1560,6 +1560,38 @@ export default {
 ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-24_15-26-37.png)
 
 <font color='red'>**`注意`**</font>：但是，把`axios`挂载到`Vue`原型上，有一个缺点，不利于`api`接口的复用`
+
+------
+
+## * axios设置headers
+
+```js
+//以post请求为例：
+ 
+axios.post(
+    url,
+    params,
+    {
+        headers: {'Content-Type': 'application/json;charset=UTF-8'},
+    	timeout: 150000}
+).then(resp => {
+ 
+    console.log(resp)
+ 
+}).catch(() => {
+ 
+    console.log('111')
+ 
+})
+ 
+//url：请求地址
+ 
+//params：请求参数
+ 
+//headers: {'Content-Type': 'application/json;charset=UTF-8'}：设置headers
+ 
+//timeout: 150000: 设置超时
+```
 
 
 
@@ -2319,7 +2351,7 @@ Vue中的scoped属性的效果主要是通过PostCss实现的。以下是转译�
 
 
 
-### 12.3 /deep/ 穿透
+### 12.3 /deep/ 穿透 ::v-deep 
 
 scoped看起来很好用，当时在Vue项目中，当我们引入第三方组件库时(如使用vue-awesome-swiper实现移动端轮播)，需要在局部组件中修改第三方组件库的样式，而又不想去除scoped属性造成组件之间的样式覆盖。这时我们可以通过特殊的方式穿透scoped。
 
@@ -2333,11 +2365,15 @@ scoped看起来很好用，当时在Vue项目中，当我们引入第三方组�
 
 ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-09-30_15-31-00.png)
 
+### vue项目使用/deep/语法报错并且无法启动项目最佳最完美解决方案
 
+https://blog.csdn.net/qq_45674727/article/details/112599849?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-112599849-blog-125008402.pc_relevant_multi_platform_whitelistv3&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-112599849-blog-125008402.pc_relevant_multi_platform_whitelistv3&utm_relevant_index=1
 
+> 然后最多的答案无非就是使用::v-/deep/ 来替换/deep/，确实有效，但是会不能使用scss嵌套写法的问题，不然样式嵌套的子元素样式不会生效如图：
 
+所以只能这样写:
 
-
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210114095315925.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1Njc0NzI3,size_16,color_FFFFFF,t_70#pic_center)
 
 
 
@@ -3322,6 +3358,66 @@ export default {
 
 ![在这里插入图片描述](https://img.php.cn/upload/article/000/000/024/0043aea935e524a0277643fb040033bd-13.png)
 
+### slot-scope
+
+slot-scope是作用域插槽。
+
+官网中有一句特别强调的话：父组件模板的所有东西都会在父级作用域内编译；子组件模板的所有东西都会在子级作用域内编译。简单的所，就是父组件中不能直接用自组件中定义的data数据。而slot-scope的出现就是解决了这样的问题。如下代码
+
+父组件
+
+```vue
+<template lang="">
+  <div>
+    <h3>这是父组件</h3>
+    <son>
+      <template slot="myslot" slot-scope="scope">
+        <ul>
+          <li v-for="item in scope.data">{{item}}</li>
+        </ul>
+      </template>
+    </son>
+  </div> 
+</template>
+```
+
+子组件
+
+```vue
+<template>
+  <div>
+    <h4>这是子组件</h4>
+    <input type="text" placeholder="请输入">
+    <slot name="myslot" :data='list'></slot>
+  </div>
+</template>
+ 
+<script>
+  export default {
+    name:'Son',
+    data(){
+      return{
+        list:[
+          {name:"Tom",age:15},
+          {name:"Jim",age:25},
+          {name:"Tony",age:13}
+        ]
+      }
+    }
+  }
+</script>
+```
+
+首先先看下效果，
+
+![img](https://img-blog.csdnimg.cn/20190906164131755.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2Zhbmc1NjI4NzgzMTE=,size_16,color_FFFFFF,t_70)
+
+其中，下方三个对象的值，我们本身是在子组件中定义的，按照官方文档中说的，本来父组件中是无法显示出来这些数据的，但是为什么现在显示出来了呢？？？这就要归功于我们强大的slot-scope了。
+
+首先，在子组件中的插槽上有一句data="list"，而在父组件中也有slot-scope="scope"，slot-scope就是取data的值，slot-scope的值是自定义的，我们可以取任何名称，但是data的值传过来时是以对象形式传输的，所以在这scope.data才是list的值。
+
+这样我们就可以在父组件中取到子组件的值，并且加以应用了。
+
 
 
 
@@ -3646,6 +3742,17 @@ Vue.directive('color', (el, binding) => {
 
 ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-24_14-24-12.png)
 
+> 上述`.prettier`文件路径设置多余
+>
+> 不需要设置`.pretter`的路径，打开设置，将`Prettier: Config Path`设置为空，这样当项目有`.pretter`的时候，会自动配置优先使用，当没有`.pretter`时。则会自动使用`vscode`的`setting`文件的配置
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210402095504249.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2E4NDMzMzQ1NDk=,size_16,color_FFFFFF,t_70)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-11-15_09-58-07.png)
+
+**如果有`editorconfig`配置文件**会自动优先使用`editorconfig`的配置
+
+> vscode使用prettier格式化代码不起作用、配置不生效的解决方法：https://blog.csdn.net/a843334549/article/details/115391605
 
 
 
@@ -3653,6 +3760,9 @@ Vue.directive('color', (el, binding) => {
 
 
 
+
+
+------
 
 # vue路由
 
@@ -4449,31 +4559,148 @@ router.beforeEach((to, from, next) => {
 
 
 
+------
+
+# vue devServer之proxy跨域
+
+> https://blog.csdn.net/mobile18611667978/article/details/100545882?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0-100545882-blog-103890037.pc_relevant_recovery_v2&spm=1001.2101.3001.4242.1&utm_relevant_index=2
+
+## 注意：代理更改后要重启项目！！！！！！！！！
+
+概念
+什么是[同源策略](https://so.csdn.net/so/search?q=同源策略&spm=1001.2101.3001.7020)
+
+同源策略是一种约定，它是浏览器最核心也最基本的安全功能，如果缺少了同源策略，则浏览器的正常功能可能都会受到影响。可以说Web是构建在同源策略基础之上的，浏览器只是针对同源策略的一种实现。
+所谓同源是指：协议、域名、端口都相同
+
+什么是跨域
+跨域就是不同源，就是不满足协议、域名、端口都相同的约定
+如：看下面的链接是否与 http://www.test.com/index.html 同源？
+
+http://www.test.com/dir/login.html 同源
+https://www.test.com/index.html 不同源 协议不同(https)
+http://www.test.com:90/index.html 不同源 端口不同(90)
+http://www.demo.com/index.html 不同源 域名不同(demo)
+
+跨域请求devServer代理几种配置
+1：先在项目的根目录下新建 vue.config.js 文件
+2：在module.exports内设置devServer来处理代理
+
+假设我们要把http://localhost:8081/allin/policy/getProductInfo 中的域名换成 www.test.com 相当于把请求换成 http://www.test.com/allin/policy/getProductInfo
+
+## 第一种代理方式
+
+把请求的url写成/allin/policy/getProductInfo
+
+注意
+请求的地址必须是/allin/policy/getProductInfo，而不是http://localhost:8081/allin/policy/getProductInfo，（下面的几种方式也是同样的）因为代理会检查请求开头是否为/allin，如果以http开头，则检查不匹配，则不走代理
+
+```js
+ devServer: {
+    proxy: {
+        '/allin': {
+            //要访问的跨域的域名
+            target: 'http://www.test.com',
+            ws: true, // 是否启用websockets
+    	    //开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样客户端端和服务端进行数据的交互就不会有跨域问题
+            changOrigin: true,
+        }
+    }
+}
+
+```
+
+<font color='red'>**相当于遇见/allin才做代理，则会把默认域名`http://localhost:8081`地址改成 `target` 对应的`http://www.test.com`地址，但是在浏览器的`F12`下，`Network->Headers`中看到还是`http://localhost:8081/allin/policy/getProductInfo`， 但是真正的请求的地址则是`http://www.test.com/allin/policy/getProductInfo`**</font>
+
+注意
+如果只是修改域名，则不需要写pathRewrite，但如果要写，则必须写成pathRewrite: {’^/allin’: ‘/allin’}，相当于把/allin标识还替换成/allin
+
+## 第二种代理方式
+
+把请求的url写成/api/allin/policy/getProductInfo
+
+```js
+ devServer: {
+     proxy: {
+         '/api': {
+             //要访问的跨域的域名
+             target: 'http://www.test.com',
+             ws: true,
+             changOrigin: true,
+             pathRewrite: {
+                 '^/api': ''
+             }
+         }
+     }
+ }
+
+```
+
+相当于遇见/api才做代理，但真实的请求中没有/api，所以在pathRewrite中把’/api’去掉, 这样既有了标识, 又能在请求接口中把/api去掉
+
+## 第三种代理方式
+
+把请求的url写成/allin/getProductInfo
+
+注意
+这里请求时我没有写/polic，目的是在拦截跨域是我再加上
+
+```js
+devServer: {
+    proxy: {
+        '/allin': {
+            //要访问的跨域的api的域名
+            target: 'http://www.test.com',
+            ws: true,
+            changOrigin: true,
+            pathRewrite: {
+                '^/allin': '/allin/policy'
+            }
+        }
+    }
+}
+
+```
+
+相当于遇见/allin则替换成/allin/policy，注意/policy后边没有/，这样拼接成功才会是http://www.test.com/allin/policy/getProductInfo
+
+## 第四种代理方式
+
+把请求的url写成/allin/getProductInfo
+注意
+这里请求时我没有写/polic，目的是在拦截跨域是我再加上
+
+```js
+devServer: {
+     proxy: {
+         '/allin': {
+             //要访问的跨域的api的域名
+             target: 'http://www.test.com/allin/policy',
+             ws: true,
+             changOrigin: true,
+             pathRewrite: {
+                 '^/allin': '/'  //必须这样写
+             }
+         }
+     }
+ }
+
+```
 
 
 
+这里/allin相当于http://www.test.com/allin/policy
+这里必须要写pathRewrite: { ‘^/allin’: ‘/’}，而且里边必须要写成’^/allin’: ‘/’，这里的斜杠代表的意思就是使用target中的/allin/policy，否则就要使用上面的方式把斜杠写成/allin/policy，并把target中只写域名，如果不写pathRewrite则请求不会成功。
 
+注意
+pathRewrite：如果不写则只能修改代理的域名，如果写则可以修改代理的域名和后边的路径
 
+使用场景
+我们开发的Vue项目大部分是用在App内的，而当我们写好一个功能后，如果想在真机上看看效果，那必须要提交到测试环境，然后App内配置好测试地址才可以正常访问。那我们能不能直接让App访问我们自己的IP地址呢，这样的话当在真机上出现问题时，可以先修改，避免了把错误的代码提交到测试环境上，而我们如果直接这么写，肯定会报跨域的问题，这里就需要用到代理机制了。我们就按照上面的几种方式设置代理就可以让App访问我们自己的机器上的代码了
 
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-11-17_10-28-45.png)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-11-17_10-29-12.png)
 
 
 
@@ -4489,7 +4716,13 @@ router.beforeEach((to, from, next) => {
 
 # 补充知识
 
+## vscode配置保存自动格式化
 
+https://blog.csdn.net/weixin_44875693/article/details/124196163
+
+
+
+------
 
 ## * scss的基本使用
 
@@ -5811,7 +6044,7 @@ npm install qs.js --save　　//它的作用是能把json格式的直接转成da
 ```
 
 ```js
-// mian.js
+// main.js
 import Vue from 'vue'
 import axios from 'axios'
 import qs from 'qs'
@@ -6152,7 +6385,7 @@ moment.locale('zh-cn')
 
 ##### list
 
-```
+```vue
 1 子组件中
  template中
  
@@ -6276,7 +6509,179 @@ module.exports ={
 
 ------
 
+## * vue里面使用echarts
 
+由于在项目中需要对数据进行可视化处理，也就是用图表展示，众所周知echarts是非常强大的插件。
+
+```
+npm install echarts -S
+或者使用淘宝的镜像
+npm install -g cnpm --registry=https://registry.npm.taobao.org
+cnpm install echarts -S
+```
+
+创建图表
+首先需要全局引入
+在main.js中
+
+```js
+// 引入echarts
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
+
+// echarts 5.以后的版本不能在使用如上方法
+import * as echarts from 'echarts';
+```
+
+在Echarts.vue中
+
+```vue
+<template>
+  <div>
+      <div id="myChart" :style="{width: '300px', height: '300px'}"></div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'hello',
+  data () {
+    return {
+      msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  mounted(){
+    this.drawLine();
+  },
+  methods: {
+    drawLine(){
+        // 基于准备好的dom，初始化echarts实例
+        let myChart = echarts.init(document.getElementById('myChart'))
+        // 绘制图表
+        myChart.setOption({
+            title: { text: '在Vue中使用echarts' },
+            tooltip: {},
+            xAxis: {
+                data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+            },
+            yAxis: {},
+            series: [{
+                name: '销量',
+                type: 'bar',
+                data: [5, 20, 36, 10, 10, 20]
+            }]
+        });
+    }
+  }
+}
+</script>
+
+<style>
+
+</style>
+
+```
+
+这样我们就把echarts引入了，然后在浏览器中保存下看下
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210430195658163.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0NTk1NDI1,size_16,color_FFFFFF,t_70)
+
+使用ECharts的时候遇到了报错：
+Error in mounted hook: “TypeError: Cannot read property ‘init’ of undefined”
+原因：echarts的引入方式错误：
+正确的echarts引入方式：
+
+```
+let echarts = require(‘echarts’)
+```
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210430200239354.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0NTk1NDI1,size_16,color_FFFFFF,t_70)
+
+其实产生这个的原因是因为echarts的版本太高了，我们现在来看package.json里面的echarts的版本
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2021043020021491.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0NTk1NDI1,size_16,color_FFFFFF,t_70)
+
+一时半会拿不准问题原因，到处搜罗了一下，发现可能是版本问题，我下载的是最新的，于是卸载了echarts，安装了低版本
+npm install echarts@4.8.0 --save或者let echarts = require(‘echarts’)
+
+**发现安装低于5的版本，这三种方式引入的都可以使用**
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210430202143630.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0NTk1NDI1,size_16,color_FFFFFF,t_70)
+
+现在我把本地的依赖都清除，然后在package.json里面把echarts删除，然后重新安装依赖看看
+现在的版本是5.1.1
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210430202716597.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0NTk1NDI1,size_16,color_FFFFFF,t_70)
+
+当使用全局引入的时候就会报错了
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210430202845203.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0NTk1NDI1,size_16,color_FFFFFF,t_70)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210430202853488.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0NTk1NDI1,size_16,color_FFFFFF,t_70)
+
+使用import的时候也是会报错
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210430202937221.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0NTk1NDI1,size_16,color_FFFFFF,t_70)
+
+使用require就不会报错了
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210430203033290.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0NTk1NDI1,size_16,color_FFFFFF,t_70)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210430203040929.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0NTk1NDI1,size_16,color_FFFFFF,t_70)
+
+由于有大佬试过说在echarts5.0版本以上的使用这个写法**import \* as echarts from 'echarts’**
+是不会报错的我这边试了下
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2021051219470466.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0NTk1NDI1,size_16,color_FFFFFF,t_70)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210512194728787.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0NTk1NDI1,size_16,color_FFFFFF,t_70)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210512194747851.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0NTk1NDI1,size_16,color_FFFFFF,t_70)
+
+**总结：如果echarts版本在5.0以下使用三种引入的方式都行，
+如果echarts的版本在5.0以上，使用require的方式引入或者import \* as echarts from 'echarts’**
+
+------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------
+
+["INFO" - 08:38:38] Prettier Options:
+
+{
+
+ "filepath": "d:\\work\\trading-crawler-web\\src\\App.vue",
+
+ "parser": "vue",
+
+ "semi": false,
+
+ "singleQuote": true,
+
+ "bracketSpacing": true
+
+}
+
+["INFO" - 08:38:38] Formatting completed in 15ms.
 
 # 啊啊啊
 
