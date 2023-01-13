@@ -52,8 +52,6 @@ jS为什么可以处理异步任务？通过事件循环(Event loop)来实现的
 
 
 
-
-
 ------
 
 # Vue
@@ -4772,6 +4770,72 @@ pathRewrite：如果不写则只能修改代理的域名，如果写则可以修
 
 
 
+
+
+------
+
+
+
+## * babel-plugin-import
+
+[引用1](https://blog.csdn.net/weixin_45954775/article/details/118359315)
+
+[使用babel-plugin-import 实现自动按需引入方式](https://www.jb51.net/article/268914.htm)
+
+[如何使用babel-plugin-import](https://blog.csdn.net/weixin_47783830/article/details/120952243)
+
+“babel-plugin-import”，可以将 import { } from 的形式导入的文件，按需加载并且自动引入其样式。
+
+- 安装
+  npm install babel-plugin-import -dev
+- 配置 ：在配置文件进行配置（package.json）
+
+```js
+"babel": {
+    "presets": [
+      "react-app"
+    ],
+    //-----------这段-------
+    "plugins": [
+      [
+        "import",
+        {
+          "libraryName": "antd",// 包名
+          "libraryDirectory": "es",// 目录，默认 lib
+          "style": true // 是否引入 style
+        },
+        "ant"
+      ],
+      [
+        "import",
+        {
+          "libraryName": "@ant-design/icons",// 包名
+          "libraryDirectory": "es/icons",
+          "camel2DashComponentName": false  //  default: true,
+          //应该是需要加这个参数才会按大驼峰找文件，否则会默认走短横线而且 library 和文件夹名称也不一样了
+        },
+        "ant-design-icons"
+      ]
+    ]
+    //--------------------
+  },
+
+```
+
+- 使用：在代码中正常使用 import { } from …导入就可以，babel会自动按需导入
+- 官方链接：
+  https://github.com/ant-design/babel-plugin-import#usage
+
+
+
+
+
+
+
+
+
+
+
 ------
 
 
@@ -6378,7 +6442,7 @@ module.exports = {
 
 可在js中方便的调用message弹窗
 
-```
+```js
 1 创建message.js
 import { message } from 'ant-design-vue'
 2 定义sucess、error等方法，并导出，即可方便使用了
