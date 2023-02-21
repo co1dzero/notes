@@ -448,7 +448,7 @@ path.basename(path[, ext])
 
 代码示例：
 
-```
+```js
 const path = require('path');
 
 const fpath = '/a/b/c/index.html';
@@ -470,7 +470,7 @@ console.log(nameWithoutExt);
 
 使用`path.extname()`方法，可以获取路径中的文件扩展名部分，语法格式如下：
 
-```
+```js
 path.extname(path)
 ```
 
@@ -481,7 +481,7 @@ path.extname(path)
 
 代码示例：
 
-```
+```js
 const path = require('path');
 
 const fpath = '/a/b/c/index.html';
@@ -496,7 +496,629 @@ console.log(fext);
 
 
 
+------
 
+# http模块
+
+## 一、什么是http模块
+
+在网络节点中，负责消费资源的计算机，叫作“客服端”，<font color='red'>负责对外提供网络资源的计算机</font>，叫作“服务器”。
+
+<font color='red'>http 模块</font>是 Node.js 官方提供的，用来<font color='red'>创建 Web 服务器</font>的模块。通过 http 模块提供的 <font color='blue'>`http.createServer()`</font> 方法，就能方便的把一台普通的电脑，变成一台 Web 服务器，从而对外提供 Web 资源服务。
+
+如果要希望使用 http 模块创建 Web 服务器，则需要先导入它：
+
+```js
+// http 模块是 Node.js 自带的，无需下载，即可引入！
+const http = require('http');
+```
+
+
+
+## 二、进一步了解http模块的作用
+
+服务器和普通电脑的<font color='red'>**区别**</font>在于，服务器上安装了<font color='red'> web 服务器软件</font>，例如：IIS、<font color='red'>Apache</font>、Nginx 等。通过安装这些服务器软件，就能把一台普通的电脑变成一台 web 服务器。
+
+在 Node.js 中，我们<font color='red'>不需要</font>使用 IIS、Apache、Nginx 等这些<font color='red'>第三方 web 服务器软件</font>。因为我们可以<font color='red'>基于 Node.js 提供的 http 模块</font>，通过几行简单的代码，就能轻松的手写一个服务器软件，从而对外提供 web 服务。
+
+
+
+## 三、服务器相关的概念
+
+### 3.1 IP地址
+
+<font color='red'>IP 地址</font>就是互联网上<font color='red'>每台计算机的唯一地址</font>，因此 IP 地址具有唯一性，只有在知道对方的 IP 地址的前提下，才能与对应的电脑之间进行数据通信。
+
+IP 地址的格式：通常使用<font color='red'> “点分十进制” 表示成（a.b.c.d）的形式</font>，其中，a,b,c,d 都是 0~255 之间的十进制整数。例如：用点分十进制表示的 IP 地址（192.168.54.2）
+
+注意：
+
+> 1. 互联网中每台 Web 服务器，都有自己的 IP 地址，例如：大家可以再 Windows 终端中运行 <font color='red'>ping www.baidu.com </font> 命令，即可查看到百度服务器的 IP 地址。
+>
+>    ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-07_16-05-30.png)
+>
+> 2. 在开发期间，自己的电脑既是一台服务器，也是一个客服端，其中：<font color='red'>127.0.0.1 </font>这个 IP 地址为本机地址，也就是本机作为服务器时的地址。仅限于本机。
+
+### 3.2 域名和域名服务器
+
+尽管 IP 地址能够唯一标记网络上的计算机，但 IP 地址是一长串数字，不直观，而且<font color='red'>不便于记忆</font>，于是人们又发明了另外一套字符型的地址方案，即所谓的<font color='red'>域名（Domain Name）地址</font>。
+
+<font color='red'>IP 地址</font>和<font color='red'>域名</font>是<font color='red'>一一对应</font>的关系，这份对应关系存在一种叫作 <font color='red'>“域名服务器”</font>（DNS，Domain name server）的电脑中，使用者只需通过好记的域名访问对应的服务器即可，对应的转换工作由域名服务器实现。因此，<font color='red'>域名服务器就是提供 IP 地址和域名之间的转换服务的服务器</font>。
+
+> 特殊的：`127.0.0.1` 对应的域名是 `localhost`，它们都代表：本机。
+
+### 3.3 端口号
+
+如果把计算机比喻成一栋大楼，那么计算机中的端口号就好像是每户的门牌号一样。
+
+同样的道理，在一台电脑中，可以运行成白上千个 web 服务，每个 web 服务都对应一个唯一的端口号。客户端发送过来的网络请求，通过端口号，可以被准确地交给<font color='red'>对应的 web 服务进行处理</font>。
+
+注意：
+
+- 端口号在 ip 或 域名 后写，用 `:` 进行分割，例如：`127.0.0.1:8080`、`localhost:8080`
+- 每个端口号不能同时被多个 web 服务占用
+- 其中 URL 中的<font color='red'> 80 端口可以被省略</font>，8081不可省略，即：`x.x.x.x:80` 等同于 `x.x.x.x`
+
+
+
+## <u>四、创建最基本的web服务器</u>
+
+### 4.1 创建web服务器的基本步骤
+
+1. 导入 http 模块
+2. 创建 web 服务器实例
+3. 为服务器实例绑定<font color='red'>` request `事件</font>，<font color='blue'>监听客户端的请求</font>
+4. 启动服务器
+
+
+
+步骤1 - 导入 http 模块
+
+```js
+const http = require('http');
+```
+
+步骤2 - 创建 web 服务器实例
+
+```js
+// 调用 http.createServer() 方法，即可快速创建一个 web 服务器实例
+const server = http.createServer();
+```
+
+步骤3 - 为服务器实例绑定 request 事件
+
+```js
+// 为服务器实例绑定 request 事件，即可 监听 客户端发送过来的网络请求
+
+// 使用服务器实例的 .on() 方法绑定事件，为服务器绑定一个 request 事件
+// 服务器实例.on('事件名',function(req, res))
+server.on('request', (req, res) => {
+    // 只要客户端来请求服务器，就会触发 request 事件，从而调用这个事件处理回调函数
+    console.log('Someone visit our web server.')
+});
+```
+
+步骤4 - 启动服务器
+
+```js
+// 调用服务器实例的 .listen() 方法，即可启动当前的 web 服务器实例
+
+// 调用 server.listen(端口号, 回调函数) 方法，即可启动 web 服务器
+server.listen(80, () => {
+    console.log('http server running at http://127.0.0.1');
+});
+```
+
+
+
+### 4.2 创建web服务器案例
+
+```js
+const http = require('http');
+
+const server = http.createServer();
+
+server.on('request', (req, res) => {
+    console.log('Someone visit our web server.')
+});
+
+server.listen(8080, () => {
+    console.log('http server running at http://127.0.0.1:8080');
+});
+```
+
+运行结果：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-07_16-51-58.png)
+
+可见，一个最基本的 web 服务器就成功运行了！我们点击这个 URL 用浏览器（客服端）进行访问：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-07_16-51-58.png)
+
+web 服务器成功接收到了客服端（浏览器）的请求，并在控制台打印 `Someone visit our web server.`，而浏览器窗口之所以一直处于加载中，那时因为目前 web 服务器并没有响应任何数据给客服端（浏览器），所以浏览器一直在等待响应。
+
+
+
+### 4.3 req 请求对象
+
+req（request【请求】）
+
+只要服务器接收到了客户端的请求，就会调用通过<font color='red'> `server.on()` </font>为服务器绑定的<font color='red'> `request` 事件处理函数</font>。
+
+如果想要在事件处理函数中，<font color='red'>访问与客户端相关的<u>**数据**</u>或<u>**属性**</u></font>，可以使用如下方式：
+
+```js
+server.on('request', (req) => {
+    // req 是请求对象，它包含了与客户端相关的数据和属性，例如：
+    // req.url 是客户端请求的 URL 地址
+    // req.method 是客户端的 method 请求类型
+    const str = `Your request url is ${req.url}, and request method is ${req.method}`;
+    console.log(str);
+});
+```
+
+现在来看实际演示：
+
+```js
+const http = require('http');
+
+const server = http.createServer();
+
+server.on('request', (req) => {
+    // req 是请求对象，它包含了与客户端相关的数据和属性，例如：
+    // req.url 是客户端请求的 URL 地址
+    // req.method 是客户端的 method 请求类型
+    const str = `Your request url is ${req.url}, and request method is ${req.method}`;
+    console.log(str);
+});
+
+server.listen(8080, () => {
+    console.log('http server running at http://127.0.0.1');
+});
+```
+
+运行代码，我们在浏览器地址栏中输入 127.0.0.1：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-07_17-01-12.png)
+
+可见，此时客户端请求的 URL 是根路径（/），请求方式是 GET（浏览器地址栏请求都是 GET 方式）。
+
+我们在浏览器地址栏中输入 127.0.0.1/index.html：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-15_11-16-10.png)
+
+可见，此时客户端请求的 URL 是（/index.html），请求方式是 `GET`。
+
+下面，我们利用 Apifox、Postman 等这些 API 请求工具来测试 POST 请求方式：
+
+> Apifox、Postman 这些都是目前最火热的 API 请求工具，其中 Postman 是全世界最出名的 API 请求工具，Apifox 是近几年国产的一款功能丰富的 API 请求工具，这里推荐直接使用 Apifox，因为支持中文，功能丰富和强大，界面友好，且免费！
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-16_16-36-07.png)
+
+可见，此时客户端请求的 URL 是（/about.html），请求方式是 POST。
+
+### 4.4 res 响应对象
+
+在服务器的 request 事件处理函数中，如果想<font color='gree'>响应与服务器相关</font>的<font color='red'>数据</font>或<font color='red'>属性</font>，可以使用如下的方式：
+
+```js
+server.on('request', (req, res) => {
+    // res 是响应对象，它包含了与服务器相关的数据和属性，例如：
+    // 要发送（响应）到客服端的字符串
+    const str = `Your request url is ${req.url}, and request method is ${req.method}`;
+    // res.end() 方法的作用：
+    // 向客户端发送指定的内容，并结束这次请求的处理过程
+    // 调用 res.end() 方法，向客户端响应内容
+    res.end(str);
+});
+```
+
+现在来看实际演示：
+
+```js
+const http = require('http');
+
+const server = http.createServer();
+
+server.on('request', (req, res) => {
+    const str = `Your request url is ${req.url}, and request method is ${req.method}`;
+    res.end(str);
+});
+
+server.listen(80, () => {
+    console.log('http server running at http://127.0.0.1');
+});
+```
+
+运行代码，我们在浏览器地址栏中输入 127.0.0.1：
+
+[![image-20221203193037820](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/03-http%E6%A8%A1%E5%9D%97/mark-img/image-20221203193037820.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/03-http模块/mark-img/image-20221203193037820.png)
+
+利用 Apifox 进行 POST 测试：
+
+[![image-20221203193303334](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/03-http%E6%A8%A1%E5%9D%97/mark-img/image-20221203193303334.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/03-http模块/mark-img/image-20221203193303334.png)
+
+### 4.5 解决中文乱码问题
+
+当调用 res.end() 方法，向客户端发送<font color='gree'>中文内容</font>的时候，会出现乱码问题，此时，需要<font color='gree'>手动设置内容的编码格式</font>：
+
+乱码情况：
+
+```js
+server.on('request', (req, res) => {
+    // 发送（响应）包含中文的内容
+    const str = `您请求的 url 地址是 ${req.url}, 请求的 method 类型是 ${req.method}`;
+    res.end(str);
+});
+```
+
+[![image-20221203202107408](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/03-http%E6%A8%A1%E5%9D%97/mark-img/image-20221203202107408.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/03-http模块/mark-img/image-20221203202107408.png)
+
+解决方案：
+
+```js
+server.on('request', (req, res) => {
+    // 发送（响应）包含中文的内容
+    const str = `您请求的 url 地址是 ${req.url}, 请求的 method 类型是 ${req.method}`;
+    // 为了防止中文显示乱码的问题，需要利用 .setHeader() 方法设置响应头 Content-Type 的值为 text/html; charset=utf-8
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.end(str);
+});
+```
+
+[![image-20221203202220335](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/03-http%E6%A8%A1%E5%9D%97/mark-img/image-20221203202220335.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/03-http模块/mark-img/image-20221203202220335.png)
+
+### 4.6 根据不同的url响应不同的内容
+
+核心实现步骤：
+
+1. 获取请求的 url 地址
+2. 设置默认的响应内容为 404 Not found
+3. 判读用户请求的是否为 / 或 /index.html 首页
+4. 判断用户请求的是否为 /about.html 关于页面
+5. 设置 Content-Type 响应头，防止中文乱码
+6. 使用 res.end() 把内容响应给客户端
+
+实现代码：
+
+```js
+const http = require('http');
+
+const server = http.createServer();
+
+server.on('request', (req, res) => {
+    // 获取请求的 url 地址
+    const url = req.url;
+    // 设置默认的内容为 404 Not found
+    let content = '<h1>404 Not found!</h1>';
+    if (url === '/' || url === '/index.html') {
+        // 客户端请求的是首页
+        content = '<h1>首页</h1>';
+    } else if (url === '/about.html') {
+        // 客户端请求的是关于页面
+        content = '<h1>关于页面</h1>';
+    }
+    // 设置 Content-Type 响应头，防止中文乱码
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    // 使用 res.end() 把内容响应给客户端
+    res.end(content);
+});
+
+server.listen(80, () => {
+    console.log('http server running at http://127.0.0.1');
+});
+```
+
+测试：
+
+[![image-20221203220857638](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/03-http%E6%A8%A1%E5%9D%97/mark-img/image-20221203220857638.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/03-http模块/mark-img/image-20221203220857638.png)
+
+## 五、web服务器案例
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-17_10-37-38.png)
+
+在 node/web 路径下有三个网页文件，我们的目标就是实现一个 Node.js Web 静态服务器来运行这个网页。
+
+**核心思路**
+
+把文件的<font color='gree'>实际存放路径</font>，<font color='red'>作为</font>每个资源的<font color='gree'>请求 url 地址</font>。
+
+下图展示了这种思路的一个基本原理及流程。
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-17_10-35-31.png)
+
+**实现代码**
+
+```js
+// 导入 http 模块
+const http = require('http');
+// 导入 fs 模块
+const fs = require('fs');
+// 导入 path 模块
+const path = require('path');
+
+// 创建 web 服务器
+const server = http.createServer();
+
+// 监听 web 服务器的 request 事件
+server.on('request', (req, res) => {
+    // 获取到客户端请求的 url 地址
+    const url = req.url;
+    // 把请求的 url 地址映射为具体的文件存放路径
+    const fpath = path.join(__dirname, url);
+
+    // 根据映射过来的文件路径读取文件的内容
+    fs.readFile(fpath, 'utf8', (err, dataStr) => {
+        // 读取失败，向客户端响应固定的错误信息
+        if (err) {
+            return res.end('404 Not Found.');
+        }
+        // 读取成功，将读取到的内容响应给客服端
+        res.end(dataStr);
+    });
+});
+
+// 启动服务器
+server.listen(80, () => {
+    console.log('server running at http://127.0.0.1');
+});
+```
+
+测试：
+
+[![image-20221203231850626](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/03-http%E6%A8%A1%E5%9D%97/mark-img/image-20221203231850626.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/03-http模块/mark-img/image-20221203231850626.png)
+
+**思考：**我们刚才只处理了对 html 文件的访问，没有处理对 css 及 js 文件的访问，那 css 及 js 是如何响应过去的呢？
+
+为了弄清楚这个问题，我们修改一下代码，打印一些信息：
+
+```js
+// 获取到客户端请求的 url 地址
+const url = req.url;
+console.log('--------------------------------------------');
+console.log(url);
+// 把请求的 url 地址映射为具体的文件存放路径
+const fpath = path.join(__dirname, url);
+console.log(fpath);
+```
+
+再次运行，访问 127.0.0.1/web/index.html，查看控制台：
+
+[![image-20221204001416768](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/03-http%E6%A8%A1%E5%9D%97/mark-img/image-20221204001416768.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/03-http模块/mark-img/image-20221204001416768.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-17_14-51-15.png)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>web服务器案例</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+    <div class="wow" id="wow">Wow!</div>
+    <script src="./index.js"></script>
+</body>
+</html>
+```
+
+解释：当访问 http://127.0.0.1/web/index.html 时，浏览器收到了服务器的响应，获得了 index.html 页面，浏览器在解析 index.html 页面时发现了该页面需要另外的 "./index.css" 以及 "./index.js"，所以浏览器会继续请求服务器来获取 css 及 js 文件，而请求的路径则是在原有路径 http://127.0.0.1/web 的基础上加上 "./index.css" 以及 "./index.js"，所以最终浏览器就以 http://127.0.0.1/web/index.css 及 http://127.0.0.1/web/index.js 的形式又请求了两次服务器（还有一次是请求浏览器窗口图标，暂时不用管）。
+
+> ` favicon.ico `请求浏览器窗口图标
+
+------
+
+通常，考虑到用户访问的方便性以及系统安全性，我们以 127.0.0.1 及 127.0.0.1/index.html 代替 127.0.0.1/code/index.html，所以我们对代码进行资源请求路径的<font color='gree'>优化</font>：
+
+```js
+// 导入 http 模块
+const http = require('http');
+// 导入 fs 模块
+const fs = require('fs');
+// 导入 path 模块
+const path = require('path');
+
+// 创建 web 服务器
+const server = http.createServer();
+
+// 监听 web 服务器的 request 事件
+server.on('request', (req, res) => {
+    // 获取到客户端请求的 url 地址
+    const url = req.url;
+    // 把请求的 url 地址映射为具体的文件存放路径
+    
+    // 优化资源的请求路径
+    let fpath = '';
+    if (url === '/') {
+        // 当路径为空为首页，自动拼接首页路径
+        fpath = path.join(__dirname, './code/index.html');
+    } else {
+        // 当客户端请求路径，自动拼接/code路径
+        fpath = path.join(__dirname, '/code', url);
+    }
+
+    // 根据映射过来的文件路径读取文件的内容
+    fs.readFile(fpath, 'utf8', (err, dataStr) => {
+        // 读取失败，向客户端响应固定的错误信息
+        if (err) {
+            return res.end('404 Not Found.');
+        }
+        // 读取成功，将读取到的内容响应给客服端
+        res.end(dataStr);
+    });
+});
+
+// 启动服务器
+server.listen(80, () => {
+    console.log('server running at http://127.0.0.1');
+});
+```
+
+[![image-20221204002358226](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/03-http%E6%A8%A1%E5%9D%97/mark-img/image-20221204002358226.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/03-http模块/mark-img/image-20221204002358226.png)
+
+
+
+------
+
+# 【模块化】
+
+> 原创内容，转载请注明出处！
+
+# 一、模块化的基本概念
+
+## 1.1 什么是模块化
+
+<font color='red'>模块化</font>是指解决一个<font color='gree'>复杂问题</font>时，自顶向下逐层<font color='gree'>把系统划分成若干模块的过程</font>。对于整个系统来说，<font color='gree'>模块是可组合、分解和更换的单元</font>。
+
+## 1.2 编程领域中的模块化
+
+编程领域中的模块化，就是<font color='red'>遵守固定的规则</font>，把一个<font color='red'>大文件</font>拆成<font color='gree'>独立并互相依赖</font>的<font color='red'>多个小模块</font>。
+
+把代码进行模块化拆分的好处：
+
+- 提高了代码的<font color='gree'>复用性</font>
+- 提高了代码的<font color='gree'>可维护性</font>
+- 可以实现<font color='gree'>按需加载</font>
+
+## 1.3 模块化规范
+
+<font color='gree'>模块化规范</font>就是对代码进行模块化的拆分与组合时，需要遵守的那些规则。
+
+例如：
+
+- 使用什么样的语法格式来<font color='gree'>引用模块</font>
+- 在模块中使用什么样的语法格式<font color='gree'>向外暴露成员</font>
+
+<font color='gree'>模块化规范的好处</font>：大家都遵守同样的模块化规范写代码，降低了沟通的成本，极大方便了各个模块之间的相互调用，利己利人。
+
+# 二、Node.js中的模块化
+
+> Node.js 默认采用 CommonJS 模块化，当然新版的 Node.js 也提供了 ES6 的模块化！
+
+## 2.1 Node.js中模块的分类
+
+Node.js 中根据模块来源不同，将模块分为了 3 大类，分别是：
+
+- <font color='red'>内置模块</font>（内置模块是由 Node.js 官方提供的，例如 fs、path、http 等）
+- <font color='red'>自定义模块</font>（用户创建的每个独立的 .js 文件，都可以看作是一个自定义模块）
+- <font color='red'>第三方模块</font>（<font color='gree'>由第三方开发出来的模块</font>，并非官方提供的内置模块，也不是用户创建的自定义模块，<font color='gree'>使用前需要下载</font>）
+
+## 2.2 <font color='gree'>加载</font>模块
+
+使用强大的<font color='red'> `require()` </font>方法，可以加载需要的<font color='gree'>内置模块、用户自定义模块、第三方模块</font>进行使用。
+
+例如：
+
+```js
+// 加载内置的 fs 模块
+const fs = require('fs');
+
+// 加载用户自定义模块（需要带上路径，.js后缀可带可不带）
+// const custom = require('./custom');
+const custom = require('./custom.js');
+
+// 加载第三方模块（关于第三方模块的下载和使用，会在后面进行专门的讲解）
+const moment = require('moment');
+```
+
+<font color='red'>注意</font>：使用 `require()` 方法加载模块的一瞬间，会立即执行被加载模块中的代码！
+
+## 2.3 Node.js中的模块作用域
+
+**什么是<font color='red'>模块作用域</font>？**
+
+和<font color='red'>函数作用域</font>类似，在自定义模块中定义的<font color='gree'>变量、方法</font>等成员，<font color='gree'>只能在所在的模块内被访问</font>，这种<font color='gree'>模块级别的访问限制</font>，叫作<font color='red'>模块作用域</font>。
+
+> **模块作用域的好处：防止了全局变量污染的问题！**
+
+## 2.4 向外共享模块作用域中的成员
+
+### **【module 对象】**
+
+在每个自定义模块中都有一个 module 对象，它里面<font color='gree'>存储了和当前模块有关的信息</font>，打印如下：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-20_16-52-04.png)
+
+其中 module 对象中的 exports 默认是一个空对象`{}`。
+
+>exports 对象用于向外共享信息
+
+### **【module.exports 对象】**
+
+外界用 `require()` 方法导入自定义模块时，得到的就是` module.exports `所指向的对象，默认为 `{}`。
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-20_16-59-33.png)
+
+在自定义模块中，我们可以使用 `module.exports` 对象，将模块内的成员共享出去，供外界使用。
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-21_16-11-09.png)
+
+共享成员时的<font color='red'>注意点</font>：
+
+使用 `require()` 方法导入模块时，导入的结果，<font color='gree'>永远以 module.exports 指向的对象为准！</font>
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-21_16-20-12.png)
+
+### **【exports 对象】**
+
+由于 module.exports 单词写起来比较复杂，为了简化向外共享成员的代码，Node 提供了<font color='gree'> exports 对象</font>。
+
+<font color='gree'>默认情况下，exports 和 module.exports 指向同一个对象</font>。最终共享的结果，还是<font color='red'>以 module.exports 指向的对象为准</font>。
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-21_16-28-14.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-21_16-33-22.png)
+
+这个发现exports指向的对象并非体现在了module.exports上为什么呢？详细注意事项
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-21_16-29-12.png)
+
+
+
+### **【exports 和 module.exports 的使用注意】**
+
+时刻谨记，`require()` 导入模块时，得到的永远是<font color='red'> module.exports </font>指向的对象：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-21_16-59-12.png)
+
+情况一：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-21_16-47-45.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-21_16-50-44.png)
+
+情况二：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-21_16-52-32.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-21_16-53-56.png)
+
+情况三：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-21_16-56-04.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-21_16-56-27.png)
+
+情况四：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-21_16-59-45.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-02-21_17-00-43.png)
+
+> <font color='red'>注意</font>：为了防止混乱，建议不要在同一个模块中同时使用 exports 和 module.exports！
+
+## 2.5 Node.js中的模块化规范
+
+Node.js 遵循了 CommonJS 模块化规范，CommonJS 规定了模块的特性和各模块之间如何相互依赖。
+
+CommonJS 规定：
+
+1. 每个模块内部，module 变量代表当前模块
+2. module 变量是一个对象，它的 exports 属性（即 module.exports）是对外的接口
+3. 加载某个模块，其实是加载该模块的 module.exports 属性，require() 方法用于加载模块
 
 
 
