@@ -5488,9 +5488,9 @@ img[src|="figure"] {border: 1px solid gray;}
 - `<el-input>` -> `style`：行内样式
 - `<el-input>` -> `maxlength`：最大字符长度限制
 
-#### **data 数据**
+**data 数据**
 
-```office
+```js
 data() {
     return {
         // 省略别的数据定义
@@ -5531,6 +5531,8 @@ data() {
 
 **data 数据没有内容**
 
+
+
 ------
 
 ### **3. 引入外部定义的规则**
@@ -5550,12 +5552,15 @@ data() {
 
 **script 内容**
 
+> 自定义验证表单时，切记不管什么情况都要执行callback函数！！！
+
 ```vue
 <script>
 // 引入了外部的验证规则
 import { validateAccountNumber } from "@/utils/validate";
  
 // 判断银行卡账户是否正确
+// 自定义验证表单时，切记不管什么情况都要执行callback函数！！！
 const validatorAccountNumber = (rule, value, callback) => {
   if (!value) {
     return callback(new Error("请输入账户信息"));
@@ -5575,9 +5580,13 @@ export default {
             ...
         
             // 表单验证
+            // 可以用逗号隔开更多校验规则
             formRules: {
                 accountNumber: [
-                    {required: true,validator: validatorAccountNumber,trigger: "blur"}
+                    {required: true,validator: validatorAccountNumber,trigger: "blur"},
+                    {pattern: /^[1-9]\d{0,9}$/, message: '请输入非零的正整数', trigger: 'blur'},
+                    {validator: num9, trigger: 'blur'},
+                    {validator: num9, trigger: 'blur'},
                 ]
             }
         }
@@ -5606,6 +5615,12 @@ export function validateAccountNumber(str) {
 
 #### **以上都是在失去焦点时的验证，下面来分析一下如何在表单提交时验证
 
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-03-16_16-05-48.png)
+
+##### <font color='red'>this.$refs[formName].validate</font>
+
+><font color='gree'>`this.$refs[formName].validate` 也可以写成 `this.$refs.formName.validate` 就可以不需要`@click="onSubmit('rulesForm')"`的时候不用传参`rulesForm`了</font>
+
  **1. 表单的提交按钮**
 
 ```vue
@@ -5630,9 +5645,13 @@ methods: {
     onSubmit(formName) {
         this.$refs[formName].validate(valid => {
             if (valid) {
+                // valid 值为true或false
+                // 成功通道
                 console.log("success submit!!");
             }else{
+                // 失败通道
                 console.log("error submit!!");
+                return false;
             }
         });
     },
@@ -5644,7 +5663,7 @@ methods: {
 ```
 
 - `this.$refs[formName].validate：中的 formName` 就是传入的 'rulesForm'，与 `<el-form>` 表单的 `rel` 属性值一致，这样就指定好需要验证的表单了
-- 然后要结合`validate.js`来判断必须要有`validate.js`
+- 然后要结合`validate.js`来判断的话必须要有`validate.js`
 
 ------
 
@@ -5682,6 +5701,7 @@ methods: {
 import { validateAccountNumber } from "@/utils/validate";
  
 // 判断银行卡账户是否正确
+// 自定义验证表单时，切记不管什么情况都要执行callback函数！！！
 const validatorAccountNumber = (rule, value, callback) => {
   if (!value) {
     return callback(new Error("请输入账户信息"));
@@ -5739,8 +5759,18 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           console.log("success submit!!");
+          // 通常在这里添加 if判断 来进行业务判断，然后通过接口提交数据
+          if(xxx>xxx){
+             this.$message.error('错误提示');
+             return false;
+		 }
+          if(xxx>xxx){
+             this.$message.error('错误提示');
+             return false;
+		 }
         } else {
           console.log("error submit!!");
+          // return false 用于提交失败 （完全执行则提交成功）
           return false;
         }
       });
@@ -5767,11 +5797,649 @@ export function validateAccountNumber(str) {
 
 ![rules](https://img-blog.csdnimg.cn/20190108111721773.gif)
 
+```js
+// 一个项目例子
+onSubmit(state) {
+      // 管道气 获取管道气表单数据
+      if (this.isPipeLineGas) {
+        this.$refs.ruleForm.validate();
+        this.$refs.pipelineGasForm.onSubmit();
+        if (!this.pipelineValidate) {
+          return;
+        }
+      }
+      const data = this.handleFormat(state);
+      console.log(data, 'submit====data');
+
+      this.$refs.ruleForm.validate(valid => {
+        if (valid) {
+          if (this.isNaturalGas) {
+            //最低采购量：需限制大于等于运输标准，且允许1-10位正整数
+            if (parseInt(data.transportStandard) > parseInt(data.minPurchase)) {
+              this.$message.error('起售量需大于等于运输标准！');
+              return false;
+            }
+            if (
+              data.transportStandard &&
+              parseInt(data.minPurchase) % parseInt(data.transportStandard) != 0
+            ) {
+              this.$message.error('起售量需为运输标准的倍数！');
+              return false;
+            }
+            if (
+              data.singleIncrease &&
+              data.transportStandard &&
+              parseInt(data.singleIncrease) % parseInt(data.transportStandard) != 0
+            ) {
+              this.$message.error('单次累加量需为运输标准的倍数');
+              return false;
+            }
+            if (
+              data.maxPurchase &&
+              parseInt(data.maxPurchase) % parseInt(data.transportStandard) != 0
+            ) {
+              this.$message.error('最高采购量需为运输标准的倍数！');
+              return false;
+            }
+            // 天然气
+            if (
+              data.goodsQuantity &&
+              data.unlimit == false &&
+              parseInt(data.minPurchase) > parseInt(data.goodsQuantity)
+            ) {
+              this.$message.error('起售量不能超过预售数量');
+              return false;
+            }
+            if (
+              data.maxPurchase &&
+              data.maxPurchase != '' &&
+              data.unlimit == false &&
+              parseInt(data.maxPurchase) > parseInt(data.goodsQuantity)
+            ) {
+              this.$message.error('最高采购不能超过预售数量');
+              return false;
+            }
+            if (
+              data.maxPurchase &&
+              data.maxPurchase != '' &&
+              parseInt(data.maxPurchase) <= parseInt(data.minPurchase)
+            ) {
+              this.$message.error('最高采购量须大于起售量！');
+              return false;
+            }
+            if (
+              data.singleIncrease &&
+              data.maxPurchase &&
+              parseInt(data.singleIncrease) > parseInt(data.maxPurchase)
+            ) {
+              this.$message.error('单次累加量不能超过最高采购');
+              return false;
+            }
+            if (this.form.salesStatus == this.fixedPreSale) {
+              //固定价
+              if (!data.startDate || !data.endDate || !data.startTime || !data.endTime) {
+                this.$message.warning('请选择交付时间');
+                return false;
+              }
+              console.log(
+                this.$moment(data.startDate).format('YYYY-MM-DD') +
+                  ' ' +
+                  this.$moment(data.startTime).format('HH:mm:ss')
+              );
+              const startTime = new Date(
+                this.$moment(data.startDate).format('YYYY-MM-DD') +
+                  ' ' +
+                  this.$moment(data.startTime).format('HH:mm:ss')
+              ).getTime();
+              const endTime = new Date(
+                this.$moment(data.endDate).format('YYYY-MM-DD') +
+                  ' ' +
+                  this.$moment(data.endTime).format('HH:mm:ss')
+              ).getTime();
+              console.log(startTime);
+              console.log(endTime);
+              if (startTime >= endTime) {
+                this.$message.warning('交付结束时间须大于交付开始时间');
+                return false;
+              }
+            }
+          }
+          // 判断 cgoodsId是否是设置的虚拟cgoodsId
+          // if (!this.hasCgoodsId && data.cgoodsId == this.newCgoodsId) {
+          //   // 虚拟数据
+          //   data.cgoodsId = ''
+          // }
+
+          //  过滤数据
+          const filterData = {};
+          for (const key in data) {
+            if (!this.$isEmpty(data[key])) {
+              filterData[key] = typeof data[key] == 'number' ? String(data[key]) : data[key];
+            }
+          }
+          filterData.pngPriceList =
+            filterData.pngPriceList &&
+            filterData.pngPriceList.map(item => {
+              return {
+                ...item,
+                pngPrice: typeof item.pngPrice == 'number' ? String(item.pngPrice) : item.pngPrice,
+                transPrice:
+                  typeof item.transPrice == 'number' ? String(item.transPrice) : item.transPrice,
+              };
+            });
+          this.loading = true;
+          //判断是否PNG新增编辑都走同一个接口
+          if (filterData.gClsId === 'P10002') {
+            filterData.containsFreight = filterData.ifContainsFreight;
+            filterData.selPressure = filterData.isSelPressure;
+            filterData.includeNeutralfee = filterData.includeNeutralFee;
+            filterData.footprintPrice = filterData.referencePrice;
+            if (!filterData.priceDecimalPlaces) {
+              filterData.priceDecimalPlaces =
+                filterData.goodsPriceDecimalPlaces + '#' + filterData.pngFeeDecimalPlaces;
+            }
+            if (filterData.displayrules === '0') {
+              filterData.displayrules = '00';
+            } else if (filterData.displayrules === '1') {
+              filterData.displayrules = '01';
+            } else {
+              filterData.displayrules = '02';
+            }
+            //管道气提交接口
+            goodsInstSave({ data: filterData, noMessage: true })
+              .then(() => {
+                if (state == '01') {
+                  this.$message.success('保存成功');
+                  this.$router.push({
+                    path: '/activityGoodsInst/goodsInst',
+                    query: {
+                      type: '2',
+                      tab: '01',
+                    },
+                  });
+                } else {
+                  this.$message.success('上架成功');
+                  this.$router.push({
+                    path: '/activityGoodsInst/goodsInst',
+                    query: {
+                      type: '2',
+                      tab: '02',
+                    },
+                  });
+                }
+              })
+              .catch(res => {
+                this.$message.info(res.response.data.describe);
+                if (res.response.data.state === '800001') {
+                  //重新赋值精度
+                  this.form.goodsPriceDecimalPlaces =
+                    res.response.data.results.goodsPriceDecimalPlaces;
+                  this.form.pngFeeDecimalPlaces = res.response.data.results.pngFeeDecimalPlaces;
+                }
+              })
+              .finally(() => {
+                this.loading = false;
+              });
+          } else {
+            if (!this.isEdit) {
+              // 新增
+              addGoodsInst({ data: filterData })
+                .then(() => {
+                  if (state == '01') {
+                    this.$message.success('保存成功');
+                    this.$router.push({
+                      path: '/activityGoodsInst/goodsInst',
+                      query: {
+                        type: '2',
+                        tab: '01',
+                      },
+                    });
+                  } else {
+                    this.$message.success('上架成功');
+                    this.$router.push({
+                      path: '/activityGoodsInst/goodsInst',
+                      query: {
+                        type: '2',
+                        tab: '02',
+                      },
+                    });
+                  }
+                  // this.$router.push({
+                  //   path: '/activityGoodsInst/goodsInst',
+                  //   query: {
+                  //     type: '2',
+                  //   },
+                  // });
+                })
+                .finally(() => {
+                  this.loading = false;
+                });
+            } else {
+              // 修改
+              updateGoodsInst({ data: filterData })
+                .then(() => {
+                  if (state == '01') {
+                    this.$message.success('保存成功');
+                    this.$router.push({
+                      path: '/activityGoodsInst/goodsInst',
+                      query: {
+                        type: '2',
+                        tab: '01',
+                      },
+                    });
+                  } else {
+                    this.$message.success('上架成功');
+                    this.$router.push({
+                      path: '/activityGoodsInst/goodsInst',
+                      query: {
+                        type: '2',
+                        tab: '02',
+                      },
+                    });
+                  }
+                })
+                .finally(() => {
+                  this.loading = false;
+                });
+            }
+          }
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+```
+
 ------
 
 
 
-### 校验规则
+##### this.$refs.表单名称.validateField
+
+> 由下可见`this.$refs.表单名称.validate`检验整个表单，`this.$refs.表单名称.validateField`检验单个或特定几个表单
+>
+> 会忽略其他校验，只校验`['xxx','xxx','xxx']`内prop指定的 输入
+
+```vue
+<template>
+  <div>
+      <a-form-model :model="form" :rules="rules" ref="formModel">
+        <!-- 输入1 -->
+        <a-form-model-item label="输入框1" prop="testInput1">
+          <a-input placeholder="请输入" v-model="form.testInput1"></a-input>
+        </a-form-model-item>
+        <!-- 输入2 -->
+        <a-form-model-item
+          label="输入框2"
+          prop="testInput2"
+        >
+          <!-- 这里的validateField没啥用，校验依然要绑定的rules中来实现 示范一下写在template中的validateField -->
+          <a-input placeholder="请输入" v-model="form.testInput2" @blur="()=>{this.$refs.formModel.validateField('testInput2')}"></a-input>
+        </a-form-model-item>
+        <!-- 输入3 -->
+        <a-form-model-item label="输入框3" prop="testInput3">
+          <a-input placeholder="请输入" v-model="form.testInput3"></a-input>
+        </a-form-model-item>
+      </a-form-model>
+      <!-- 输入3 -->
+      
+      <a-button @click="onsumit" class="m-10">提交</a-button>
+      <a-button @click="cancel">取消</a-button>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'hello',
+  data() {
+    return {
+      form: {
+        testInput1: '',
+        testInput2: '',
+        testInput3: '',
+      },
+      rules: {
+        testInput1: [{ required: true, message: '请输入', trigger: 'blur' }],
+        testInput2: [{ required: true, message: '请输入', trigger: 'blur' }],
+        testInput3: [{ required: true, message: '请输入1', trigger: 'blur' }]
+      }
+    }
+  },
+  methods: {
+    onsumit() {
+      // validate校验
+      // this.$refs.formModel.validate(valid => {
+      //   console.log(valid);
+      //   if (valid) {
+      //     console.log('success submit!!')
+      //   } else {
+      //     console.log('error submit!!')
+      //     return false
+      //   }
+      // })
+
+      // 只校验 testInput3 输入3
+      this.$refs.formModel.validateField(['testInput3'],valid => {
+      	// 若校验通过 valid 为空，若检验失败则 valid 值为 校验绑定rules中的 message
+        console.log(valid);
+        if (!valid) {
+          console.log('success submit!!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+      // 在script可通过 this.$refs.formModel.validateField('xxx')来触发校验 一定要在绑定的rules中写有相应的校验条件才能生效！！！
+      // this.$refs.formModel.validateField('testInput2')
+    },
+    cancel() {}
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.m-10{
+  margin-right: 10px;
+}
+</style>></style>
+
+```
+
+> 只校验输入框3
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-03-16_15-47-26.png)
+
+```js
+onsumit() {
+      this.$refs.formModel.validate(valid => {
+        console.log(valid);
+        if (valid) {
+          console.log('success submit!!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+      // this.$refs.formModel.validateField(['testInput3'],valid => {
+      //   console.log(valid);
+      //   if (!valid) {
+      //     console.log('success submit!!')
+      //   } else {
+      //     console.log('error submit!!')
+      //     return false
+      //   }
+      // })
+      // this.$refs.formModel.validateField('testInput2')
+    },
+```
+
+> 正常表单校验
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-03-16_15-49-46.png)
+
+> 在script可通过 this.$refs.formModel.validateField('xxx')来触发校验 一定要在绑定的rules中写有相应的校验条件才能生效！！！
+
+```js
+onsumit() {
+      // this.$refs.formModel.validate(valid => {
+      //   console.log(valid);
+      //   if (valid) {
+      //     console.log('success submit!!')
+      //   } else {
+      //     console.log('error submit!!')
+      //     return false
+      //   }
+      // })
+      // this.$refs.formModel.validateField(['testInput3'],valid => {
+      //   console.log(valid);
+      //   if (!valid) {
+      //     console.log('success submit!!')
+      //   } else {
+      //     console.log('error submit!!')
+      //     return false
+      //   }
+      // })
+    
+   	// 在script可通过 this.$refs.formModel.validateField('xxx')来触发校验 一定要在绑定的rules中写有相应的校验条件才能生效！！！
+      this.$refs.formModel.validateField('testInput2')
+    },
+```
+
+>`this.$refs.formModel.validateField('testInput2')`使用，在script可通过 this.$refs.formModel.validateField('xxx')来触发校验 一定要在绑定的rules中写有相应的校验条件才能生效！！！
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-03-16_15-51-13.png)
+
+------
+
+##### clearValidate()和resetFields()表单校验的用法和区别
+
+[原文](https://blog.csdn.net/zuo_zuo_blog/article/details/101444920)
+
+**1.整个表单的校验移除**
+
+```js
+<Form ref="form" rule={this.rules}>
+		<FormItem prop="name" label="姓名">
+			<Input/>
+		</FormItem>
+		<FormItem prop="age" label="年龄">
+			<Input/>
+		</FormItem>
+	</Form>
+	// 根据判断条件, 移除所有表单项的校验
+	if (/*条件*/) {
+		this.$refs['form'].clearValidate();
+	}
+
+	// 但是有时候只需要移除其中的某一项校验, 如只移除姓名的校验:
+	if (/*条件*/) {
+		this.$refs['form'].clearValidate(['name']);
+	}
+	
+
+```
+
+**2.resetFields和clearValidate区别**
+
+```js
+this.$refs.form.resetFields(); //移除校验结果并重置字段值
+this.$refs.form.clearValidate(); //移除校验结果
+// 二者都能清除验证，但是resetFields（）会重置字段值，而在vue中大量用到的数据的绑定，很可能出现
+// 同一个数据绑定在多处的情况，如果滥用resetFields很可能造成界面上出现莫名的bug
+
+```
+
+**3.注意**
+
+有可能this.refs[form].clearValidate()方式不识别。需要使用:this.refs[form].clearValidate();
+
+**4.element-ui中的表单校验**
+
+表单代码
+
+```js
+<el-form :label-width="120" :rules="formRules" :model="form" ref="form">
+  <el-form-item label="活动名称" prop="name">
+    <el-input v-model="form.name"></el-input>
+  </el-form-item>
+</el-form>
+<el-button type="info" @click="save">保存</el-button>
+<el-button type="info" @click="empty">重置</el-button>
+
+```
+
+方法
+
+```js
+// 校验规则
+formRules: {
+     name: [
+            { required: true, message: '请输入活动名称', trigger: 'blur' },
+            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+     ],
+}
+/**
+ * 保存函数
+ */
+save（） { 
+
+  this.$refs[form].validate((valid) => {
+
+      if (valid) {
+
+        alert('submit!');
+
+      } else {
+
+        console.log('error submit!!');
+
+        return false;
+
+      }
+
+    });
+
+  }
+  //有可能this.$refs[form].validate() 方式不识别。需要使用: this.$refs.form.validate();
+})
+empty（） { //重置
+  //根据需求二选一
+  /**
+   * 移除校验结果并重置字段值
+   * 注：清除表单项name的校验及数值
+   */
+  this.$refs.form.resetFields(); 
+  /**
+   * 移除校验结果
+   * 注：只清除表单项name的校验，不清楚表单项name的数值
+   */
+  this.$refs.form.clearValidate('name'); 
+})
+
+```
+
+表单方法（Element官网说明）：
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20190926155137944.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3p1b196dW9fYmxvZw==,size_16,color_FFFFFF,t_70)
+
+相关文章：
+Form 表单(Element官网)：
+https://element.eleme.cn/#/zh-CN/component/form#form-biao-dan
+完整form校验
+https://www.cnblogs.com/weiqinl/p/6708993.html
+
+------
+
+#### ** validate和validateField的使用及区别
+
+[原文](https://blog.csdn.net/Alan_ran/article/details/125336443)
+
+> 传参及一些具体的直接点上边官网连接
+>
+> [yyElement - The world's most popular Vue UI framework](https://element.eleme.cn/#/zh-CN/component/form)
+
+这里我主要说一下实际项目中的使用
+
+- validate 会校验表单的整个属性,只要你给这个字段设置上了rule
+
+```js
+ this.$refs.表单名称.validate(async (valid) => {
+        if (!valid) {
+          //检验不通过走这里
+          return;
+        }
+        //校验通过走这里
+    }
+```
+
+- validateField  有些时候我们只需要验证表单中的部分字段,其他字段不需要，这时候我们就需要用validateField函数了,<font color='gree'>注意,这里有几个坑大家别踩了</font>
+
+- <font color='gree'>**首先，我们得知道，使用validateField部分校验数组的时候，数组有几位，就会回调几次。当也就是空的时候，表示验证通过，回调返回为“ ”，所以就是，你校验几个规则，就会返回几个结果，如果通过就为“”（空）。**</font>
+
+-  <font color='gree'>**validateField跟validate的区别: 在这两个代码段中已经展示的很清晰了,自己上手跑一跑逻辑就通了 **</font>
+
+```js
+ let validateFieldList = [];
+      this.$refs.loginForm.validateField(
+         //这里要放数组,数组中写上要校验的字段
+        ["userName", "password", "mobilePhone"],
+        async (valid) => {
+          if (!valid) {
+            //校验通过走这里,每通过一次,会往这个数组里加一个""
+            validateFieldList.push(valid);
+ 
+            //因为我这里总共校验了三个字段,所有最终三个字段都校验成功之后,数组中会有三个""
+            if (
+              validateFieldList.length == 3 &&
+              validateFieldList.every((item) => item === "")
+            ) {
+              //这里写校验通过的业务逻辑
+            }
+            //校验不通过走这里
+            return;
+          }
+        }
+```
+
+------
+
+#### ** vue使用表单验证时提交无效的解决办法！
+
+> 简而言之：自定义验证表单时，切记不管什么情况都要执行callback函数！！！
+
+```js
+submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    }
+
+```
+
+表单验证失败时，可以触发"error [submit](https://so.csdn.net/so/search?q=submit&spm=1001.2101.3001.7020)!!"，但是验证通过后就是不触发alert(“submit!”);
+反复查看API后发现，原来是自定义表单验证引发的问题！
+
+```js
+// 校验邮箱
+    const checkEmail = (rule, value, callback) => {
+      // eslint-disable-next-line no-useless-escape
+      const reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+      if (!reg.test(value)) {
+        callback(new Error("邮箱格式不合法！"));
+      }
+    };
+
+```
+
+解决办法：
+自定义验证表单时，切记不管什么情况都要执行callback函数！！！
+
+```js
+// 校验手机号
+    const checkPhone = (rule, value, callback) => {
+      const reg = /^\d{11}$/;
+      if (!reg.test(value)) {
+        callback(new Error("手机号必须为11位数字！"));
+      } else {
+        callback();// 一定要每种情况都执行回调
+      }
+    };
+
+```
+
+一定要每种情况都执行回调，否则 this.$refs[formName].validate 就算通过也不会执行。
+
+------
+
+
+
+### 4. 校验规则
 
 | 参数       | 说明                                                         | 类型                                    | 默认值   |
 | :--------- | :----------------------------------------------------------- | :-------------------------------------- | :------- |

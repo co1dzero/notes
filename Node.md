@@ -2302,17 +2302,17 @@ app.use(express.static('files'));
 
 例如：先查找 public 中有没有，没有再去 files 中查找……
 
-### 1.3.3 挂载路径前缀
+### 1.3.3 挂载<font color='red'>路径前缀</font>
 
-如果希望在托管的静态资源访问路径之前，挂载路径前缀，则可以使用如下的方式：
+如果希望在托管的<font color='gree'>静态资源访问路径</font>之前，<font color='gree'>挂载路径前缀</font>，则可以使用如下的方式：
 
-```
+```apl
 app.use('/public', express.static('public'))
 ```
 
 现在，你就可以通过带有 /public 前缀地址来访问 public 目录中的文件了：
 
-```
+```apl
 http://localhost/public/images/kitten.jpg
 http://localhost/public/css/style.css
 http://localhost/public/js/app.js
@@ -2322,23 +2322,23 @@ http://localhost/public/js/app.js
 
 **（1）为什么要使用 nodemon**
 
-在编写调试 Node.js 项目的时候，如果修改了项目的代码，则需要频繁的手动 close 掉，然后再重新启动，非常繁琐。现在，我们可以使用 [nodemon](https://www.npmjs.com/package/nodemon) 这个工具，它能够监听项目文件的变动，当代码被修改后，nodemon 会自动帮我们重启项目，极大方便了开发和调试！
+在编写调试 Node.js 项目的时候，如果修改了项目的代码，则需要频繁的手动 close 掉，然后再重新启动，非常繁琐。现在，我们可以使用 [nodemon](https://www.npmjs.com/package/nodemon) 这个工具，它能够<font color='gree'>监听项目文件的变动</font>，当代码被修改后，nodemon 会<font color='gree'>自动帮我们重启项目</font>，极大方便了开发和调试！
 
 **（2）安装 nodemon**
 
 在终端中，运行如下命令，即可将 nodemon 安装为全局可用的工具：
 
-```
+```apl
 npm install -g nodemon
 ```
 
 **（3）使用 nodemon**
 
-当基于 Node.js 编写了一个网站应用的时候，传统的方式，是运行 node app.js 命令，来启动项目。这样做的坏处是：代码被修改之后，需要手动重启项目。
+当基于 Node.js 编写了一个网站应用的时候，传统的方式，是运行<font color='red'> node app.js </font>命令，来启动项目。这样做的坏处是：代码被修改之后，需要手动重启项目。
 
-现在，我们可以将 node 命令替换为 nodemon 命令，使用 nodemon app.js 来启动项目。这样做的好处是：代码被修改之后，会被 nodemon 监听到，从而实现自动重启项目的效果。
+现在，我们可以将 node 命令替换为 nodemon 命令，使用<font color='red'> nodemon app.js </font>来启动项目。这样做的好处是：代码被修改之后，会被 nodemon 监听到，从而实现自动重启项目的效果。
 
-```
+```apl
 nodemon app.js
 ```
 
@@ -2350,27 +2350,28 @@ nodemon app.js
 
 ### 2.1.1 什么是路由
 
-广义上来讲，路由就是映射关系。
+广义上来讲，路由就是<font color='red'>映射关系</font>。
 
 ### 2.1.2 现实生活中的路由
 
 在这里，路由是按键与服务之间的映射关系。
 
-[![image-20221213185136745](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221213185136745.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221213185136745.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-03-14_16-07-45.png)
 
 ### 2.1.3 Express中的路由
 
-在 Express 中，路由指的是 **客户端的请求** 与 **服务端处理函数** 之间的映射关系。
+在 Express 中，路由指的是<font color='red'> **客户端的请求** </font>与<font color='red'> **服务端处理函数** </font>之间的<font color='gree'>映射关系</font>。
 
-Express 中的路由分 3 部分组成，分别是：**请求的类型**、**请求的 URL 地址**、**处理函数**，格式如下：
+Express 中的路由分 3 部分组成，分别是：<font color='gree'>**请求的类型**、**请求的 URL 地址**、**处理函数**</font>，格式如下：
 
-```
+```apl
+// METHOD 即请求类型（GET、POST）
 app.METHOD(PATH, HANDLER);
 ```
 
 ### 2.1.4 Express中的路由的例子
 
-```
+```js
 // 匹配 GET 请求，且请求 URL 为 /
 app.get('/', function (req, res) {
    res.send('Got a GET request');     
@@ -2384,24 +2385,26 @@ app.post('/', function (req, res) {
 
 ### 2.1.5 路由的匹配过程
 
-每当一个请求到达服务器之后，需要先经过路由的匹配，只有匹配成功之后，才会调用对应的处理函数。
+每当一个请求到达服务器之后，<font color='gree'>需要先经过路由的匹配</font>，只有匹配成功之后，才会调用对应的处理函数。
 
-在匹配时，会按照路由的顺序进行匹配，如果请求类型和请求的 URL 同时匹配成功，则 Express 会将这次请求，转交给对应的 function 函数进行处理。
+在匹配时，会按照路由的顺序进行匹配，如果<font color='gree'>请求类型</font>和<font color='gree'>请求的 URL </font>同时匹配成功，则 Express 会将这次请求，转交给对应的 function 函数进行处理。
 
-[![image-20221213190428015](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221213190428015.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221213190428015.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-03-14_16-16-41.png)
 
 路由匹配的注意点：
 
-- 按照定义的先后顺序进行匹配
-- 请求类型和请求的 URL 同时匹配成功，才会调用对应的处理函数
+- 按照<font color='gree'>定义的先后顺序</font>进行匹配
+- <font color='gree'>请求类型</font>和<font color='gree'>请求的 URL </font>同时匹配成功，才会调用对应的处理函数
+
+
 
 ## 2.2 路由的使用
 
-### 2.2.1 最简单的用法
+### 2.2.1 最简单的用法(没用)
 
 在 Express 中使用路由最简单的方式，就是把路由挂载到 app 上，示例代码如下：
 
-```
+```js
 const express = require('express');
 
 // 创建 Web 服务器，命名为 app
@@ -2422,25 +2425,25 @@ app.listen(80, () => {
 });
 ```
 
-### 2.2.2 模块化路由
+### 2.2.2 <font color='red'>模块化</font>路由（推荐）
 
-为了方便对路由进行模块化的管理，Express 不建议将路由直接挂载到 app 上，而是推荐将路由抽离为单独的模块。
+为了<font color='gree'>方便对路由进行模块化的管理</font>，Express <font color='red'>不建议</font>将路由直接挂载到 app 上，而是<font color='gree'>推荐将路由抽离为单独的模块</font>。
 
 将路由抽离为单独模块的步骤如下：
 
 1. 创建路由模块对应的 .js 文件
-2. 调用 `express.Router()` 函数创建路由对象
+2. 调用<font color='red'> `express.Router()` </font>函数创建路由对象
 3. 向路由对象上挂载具体的路由
-4. 使用 `module.exports` 向外共享路由对象
-5. 使用 `app.use()` 函数注册路由模块
+4. 使用<font color='red'> `module.exports` </font>向外共享路由对象
+5. 使用<font color='red'> `app.use()` </font>函数注册路由模块
 
 **（1）创建路由模块 router/user.js**
 
-```
+```js
 // 导入 express
-var express = require('express');
+const express = require('express');
 // 创建路由对象
-var router = express.Router();		
+const router = express.Router();		
 
 // 挂载获取用户列表
 router.get('/user/list', function (req, res) {
@@ -2458,7 +2461,7 @@ module.exports = router;
 
 **（2）注册路由模块**
 
-```
+```js
 // 导入路由模块
 const userRouter = require('./router/user.js');
 
@@ -2470,13 +2473,13 @@ app.use(userRouter);
 
 实例代码：
 
-```
+```js
 // router/user.js
 
 // 导入 express
-var express = require('express');
+const express = require('express');
 // 创建路由对象
-var router = express.Router();
+const router = express.Router();
 
 // 挂载获取用户列表
 router.get('/user/list', function (req, res) {
@@ -2516,17 +2519,17 @@ Apifox 测试：
 
 [![image-20221213211806480](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221213211806480.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221213211806480.png)
 
-> 在注册路由模块时，我们使用到了 app.use() 函数，而在之前托管静态资源 app.use(express.static('public')) 时，也使用到了 app.use() 函数。
+> 在注册路由模块时，我们使用到了 app.use() 函数，而在之前托管静态资源 `app.use(express.static('public')) `时，也使用到了 `app.use()` 函数。
 >
-> 那 app.use() 函数到底是干什么的呢？
+> 那 `app.use()` 函数到底是干什么的呢？
 >
-> 其实，app.use() 函数的作用，就是用来注册全局中间件！（中间件相关概念后面讲）
+> 其实，<font color='gree'>`app.use()` 函数的作用，就是用来注册全局中间件！</font>（中间件相关概念后面讲）
 
-## 2.3 为路由模块添加前缀
+## 2.3 为路由模块<font color='red'>添加前缀</font>
 
 类似于托管静态资源时，为静态资源统一挂载访问前缀一样，路由模块添加前缀的方式也非常简单：
 
-```
+```js
 // 导入路由模块
 const userRouter = require('./router/user.js');
 
@@ -2536,7 +2539,7 @@ app.use('/api', userRouter);
 
 例如：
 
-```
+```apl
 http://127.0.0.1/api/user/add
 http://127.0.0.1/api/user/list
 ```
@@ -2547,35 +2550,35 @@ http://127.0.0.1/api/user/list
 
 ### 3.1.1 什么是中间件
 
-中间件（Middleware），特指业务流程的中间处理环境。
+中间件（Middleware），特指<font color='gree'>业务流程</font>的<font color='red'>中间处理环境</font>。
 
 特点：有输入，也有输出！
 
 ### 3.1.2 现实生活中的例子
 
-在处理污水的时候，一般都要经过三个处理环节，从而保证处理过后的废水，达到排放的标准。
+在处理污水的时候，一般都要经过<font color='gree'>三个处理环节</font>，从而保证处理过后的废水，达到排放的标准。
 
 [![image-20221214151430425](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221214151430425.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221214151430425.png)
 
 处理污水的这三个中间处理环节（上一级的输出是下一级的输入），就可以叫作中间件。
 
-### 3.1.3 Express中间件的调用流程
+### 3.1.3 Express中间件的<font color='red'>调用流程</font>
 
-当一个请求到达 Express 的服务器之后，可以连续调用多个中间件，从而对这次请求进行预处理。
+当一个请求到达 Express 的服务器之后，可以连续调用多个中间件，从而对这次请求进行<font color='gree'>预处理</font>。
 
 [![image-20221214152006656](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221214152006656.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221214152006656.png)
 
-### 3.1.4 Express中间件的格式
+### 3.1.4 Express中间件的<font color='red'>格式</font>
 
-Express 的中间件，本质上就是一个 **function** **处理函数**，Express 中间件的格式如下：
+Express 的中间件，<font color='red'>本质</font>上就是一个<font color='gree'> **function** **处理函数**</font>，Express 中间件的格式如下：
 
-[![image-20221214152506926](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221214152506926.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221214152506926.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-03-16_16-52-40.png)
 
-注意：中间件函数的形参列表中，**必须包含 next 参数**。而路由处理函数中只包含 req 和 res。
+注意：中间件函数的形参列表中，<font color='gree'>**必须包含 next 参数**</font>。而路由处理函数中只包含 req 和 res。
 
 ### 3.1.5 next函数的作用
 
-**next** **函数**是实现多个中间件**连续调用**的关键，它表示把流转关系转交给**下一个中间件或路由**。
+<font color='red'>**next** **函数**</font>是实现<font color='gree'>多个中间件**连续调用**</font>的关键，它表示把流转关系<font color='red'>转交</font>给<font color='gree'>**下一个中间件或路由**</font>。
 
 [![image-20221214154001061](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221214154001061.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221214154001061.png)
 
