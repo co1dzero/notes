@@ -2493,6 +2493,8 @@ router.post('/user/add', function (req, res) {
 
 // 向外导出路由对象
 module.exports = router;
+
+------------------------------------------------
 // webtest.js
 
 // 导入 express
@@ -2584,11 +2586,11 @@ Express 的中间件，<font color='red'>本质</font>上就是一个<font color
 
 ## 3.2 Express中间件的初体验
 
-### 3.2.1 定义中间件函数
+### 3.2.1 <font color='red'>定义</font>中间件函数
 
 可以通过如下的方式，定义一个最简单的中间件函数：
 
-```
+```js
 // 常量 mw 所指向的，就是一个中间件函数
 const mw = function (req, res, next) {
     console.log('这是一个最简单的中间件函数');
@@ -2598,13 +2600,13 @@ const mw = function (req, res, next) {
 };
 ```
 
-### 3.2.2 全局生效的中间件
+### 3.2.2 <font color='red'>全局生效</font>的中间件
 
-客户端发起的任何请求，到达服务器之后，都会触发的中间件，叫作全局生效的中间件。
+客户端发起的<font color='red'>任何请求</font>，到达服务器之后，<font color='gree'>都会触发的中间件</font>，叫作全局生效的中间件。
 
-通过调用 `app.use(中间件函数)`，即可定义一个全局生效的中间件，示例代码如下：
+通过调用 <font color='red'>`app.use(中间件函数)`</font>，即可定义一个<font color='red'>全局生效</font>的中间件，示例代码如下：
 
-```
+```js
 // 常量 mw 所指向的，就是一个中间件函数
 const mw = function (req, res, next) {
     console.log('这是一个最简单的中间件函数');
@@ -2617,7 +2619,7 @@ app.use(mw);
 
 测试代码：
 
-```
+```js
 const express = require('express');
 
 const app = express();
@@ -2633,6 +2635,7 @@ const mw = function (req, res, next) {
 app.use(mw);
 
 app.get('/', (req, res) => {
+    console.log('经过路由')
     res.send('Home page.');
 });
 
@@ -2647,13 +2650,17 @@ app.listen(80, () => {
 
 Apifox 测试：
 
+> <font color='red'>先过中间件，然后通过路由</font>
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-03-17_17-00-50.png)
+
 [![image-20221214212100951](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221214212100951.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221214212100951.png)
 
 [![image-20221214212139237](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221214212139237.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221214212139237.png)
 
-### 3.2.3 定义全局中间件的简化形式
+### 3.2.3 定义<font color='red'>全局中间件</font>的<font color='gree'>简化形式</font>
 
-```
+```js
 // 全局生效的中间件
 app.use(function (req, res, next) {
 	console.log('这是一个最简单的中间件函数');
@@ -2663,7 +2670,7 @@ app.use(function (req, res, next) {
 
 代码示例：
 
-```
+```js
 const express = require('express');
 
 const app = express();
@@ -2688,19 +2695,21 @@ app.listen(80, () => {
 });
 ```
 
-> 注意：对于一个请求，如果在全局中间件中 `res.send()` 过一次，那么后续，无论是全局中间件内，还是其他中间件或路由中的 `res.send()` 都会报错！
+> <font color='gree'>注意：对于一个请求，如果在全局中间件中 `res.send()` 过一次，那么后续，无论是全局中间件内，还是其他中间件或路由中的 `res.send()` 都会报错！</font>
 >
-> 即：一个请求，只对应一个 req 及 res ，也只能有一个 `res.send()`。
+> <font color='gree'>即：一个请求，只对应一个 req 及 res ，也只能有一个 `res.send()`。</font>
 
-### 3.2.4 中间件的作用
+### 3.2.4 中间件的<font color='red'>作用</font>
 
-多个中间件之间，**共享同一份** **req** **和** **res**。基于这样的特性，我们可以在上游的中间件中，统一为 req 或 res 对象添加自定义的属性或方法，供下游的中间件或路由进行使用。
+多个中间件之间，<font color='gree'>**共享同一份** **req** **和** **res**</font>。基于这样的特性，我们可以在<font color='gree'>上游</font>的中间件中，<font color='red'>统一</font>为 req 或 res 对象添加<font color='gree'>自定义的属性或方法</font>，供<font color='gree'>下游</font>的中间件或路由进行使用。
 
-[![image-20221214215443810](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221214215443810.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221214215443810.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-03-21_16-47-49.png)
+
+>就像小船带着数据传输
 
 代码示例：
 
-```
+```js
 const express = require('express');
 
 const app = express();
@@ -2732,11 +2741,11 @@ Apifox 测试：
 
 [![image-20221214215933674](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221214215933674.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221214215933674.png)
 
-### 3.2.5 定义多个全局中间件
+### 3.2.5 定义<font color='red'>多个</font>全局中间件
 
-可以使用 `app.use()` 连续定义多个全局中间件。客户端请求到达服务器之后，会按照中间件定义的先后顺序依次进行调用，示例代码如下：
+可以使用 `app.use()` <font color='gree'>连续定义多个</font>全局中间件。客户端请求到达服务器之后，会按照中间件<font color='gree'>**定义的先后顺序**</font>依次进行调用，示例代码如下：
 
-```
+```js
 // 第一个全局中间件
 app.use(function (req, res, next) {
     console.log('调用了第1个全局中间件');
@@ -2759,7 +2768,7 @@ app.get('/user', (req, res) => {
 
 不使用 `app.use()` 定义的中间件，叫做局部生效的中间件，示例代码如下：
 
-```
+```js
 // 定义中间件函数 mw1
 const mw1 = function (req, res, next) {
     console.log('这是中间件函数');
@@ -2779,7 +2788,7 @@ app.get('/user', function (req, res) {
 
 代码示例：
 
-```
+```js
 const express = require('express');
 
 const app = express();
