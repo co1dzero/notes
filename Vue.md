@@ -3750,7 +3750,7 @@ Vue.directive('color', (el, binding) => {
 
 ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2022-10-24_09-56-29.png)
 
-```
+```js
 // prettier 配置
 "eslint.alwaysShowStatus": true,
 "prettier.trailingComma": "none",
@@ -3777,7 +3777,7 @@ Vue.directive('color', (el, binding) => {
 }
 ```
 
-```
+```js
 //  EsLint 配置
 "editor.codeActionsOnSave": {
 "source.fixAll": true
@@ -3810,7 +3810,12 @@ Vue.directive('color', (el, binding) => {
 
 
 
+**vetur** 和 **Volar**
 
+> **在功能上 volar 和 vetur 是一致的，都是针对 vue 的插件，但是 volar 的功能却要强大得多
+> 可以这样说， volar 是 vue3 的配套，vetur 是 vue2 的配套，所以，建议大家在使用的时候依据自己使用的 vue 版本来选择。**
+>
+> 否则容易引起兼容问题
 
 ------
 

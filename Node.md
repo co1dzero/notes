@@ -2256,6 +2256,8 @@ Apifox 测试：
 
 ### 1.3.1 express.static()
 
+> express.static() 是 Express内置中间件 ，详见下
+
 express 提供了一个非常好用的函数，叫做<font color='red'> `express.static()`</font>，通过它，我们可以<font color='gree'>非常方便地创建一个静态资源服务器</font>！例如，通过如下代码就可以将 public 目录下的图片、CSS 文件、JavaScript 文件对外开放访问了：
 
 ```apl
@@ -2764,9 +2766,9 @@ app.get('/user', (req, res) => {
 });
 ```
 
-### 3.2.6 局部生效的中间件
+### 3.2.6 <font color='red'>局部生效</font>的中间件
 
-不使用 `app.use()` 定义的中间件，叫做局部生效的中间件，示例代码如下：
+<font color='red'>不使用</font><font color='gree'> `app.use()` </font>定义的中间件，叫做<font color='gree'>局部生效的中间件</font>，示例代码如下：
 
 ```js
 // 定义中间件函数 mw1
@@ -2820,63 +2822,67 @@ Apifox 测试：
 
 [![image-20221215094137553](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221215094137553.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221215094137553.png)
 
-### 3.2.7 定义多个局部中间件
+### 3.2.7 定义<font color='red'>多个</font>局部中间件
 
-可以在路由中，通过如下两种等价的方式，使用多个局部中间件，他们按照定义的先后顺序执行：
+可以在路由中，通过如下两种<font color='gree'>等价</font>的方式，<font color='gree'>使用多个局部中间件</font>，他们按照定义的先后顺序执行：
 
-```
+```js
 // 以下两种写法是“完全等价”的，可根据自己的喜好，选择任意一种方式进行使用
 app.get('/', mw1, mw2, (req, res) => {
     res.send('Home page.');
 });
 
+=====
+    
 app.get('/', [mw1, mw2], (req, res) => {
     res.send('Home page.');
 });
 ```
 
-### 3.2.8 了解中间件的5个使用注意事项
+### 3.2.8 了解中间件的<font color='red'> 5个使用注意事项 </font>
 
-1. **一定要在路由之前注册中间件！**
-2. 客户端发送过来的请求，可以连续调用多个中间件进行处理
-3. 执行完中间件的业务代码之后，不要忘记调用 next() 函数
-4. 为了防止代码逻辑混乱，调用 next() 函数后不要再写额外的代码
-5. 连续调用多个中间件时，多个中间件之间，共享 req 和 res 对象
+1. **一定要在<font color='red'>路由之前</font>注册中间件！**
+2. 客户端发送过来的请求，<font color='gree'>可以连续调用多个</font>中间件进行处理
+3. 执行完中间件的业务代码之后，<font color='gree'>不要忘记调用 next() 函数</font>
+4. 为了<font color='gree'>防止代码逻辑混乱</font>，调用 next() 函数后不要再写额外的代码
+5. 连续调用多个中间件时，多个中间件之间，<font color='red'>共享</font> req 和 res 对象
 
 ## 3.3 中间件的分类
 
-为了方便大家理解和记忆中间件的使用，Express 官方把常见的中间件用法，分成了 5 大类，分别是：
+为了方便大家<font color='red'>理解</font>和<font color='red'>记忆</font>中间件的使用，Express 官方把<font color='red'>常见的中间件用法</font>，分成了<font color='red'> 5 大类</font>，分别是：
 
-- 应用级别的中间件
-- 路由级别的中间件
-- 错误级别的中间件
-- Express 内置的中间件
-- 第三方的中间件
+- <font color='red'>应用级别</font>的中间件
+- <font color='red'>路由级别</font>的中间件
+- <font color='red'>错误级别</font>的中间件
+- <font color='red'>Express 内置</font>的中间件
+- <font color='red'>第三方</font>的中间件
 
-### 3.3.1 应用级别的中间件
+### 3.3.1 <font color='red'>应用级别</font>的中间件
 
-通过 `app.use()` 或 `app.get()` 或 `app.post()`，绑定到 app 实例上的中间件，都叫做应用级别的中间件，代码示例如下：
+> 就是一种叫法
 
-```
-// 应用级别的中间件（全局中间件）
+通过<font color='gree'> `app.use()` 或 `app.get()` 或 `app.post()`，绑定到 app 实例上的中间件</font>，都叫做应用级别的中间件，代码示例如下：
+
+```js
+// 应用级别的中间件    （全局中间件）
 app.use((req, res, next) => {
     // ...
     next();
 });
 
-// 应用级别的中间件（局部中间件）
+// 应用级别的中间件    （局部中间件）
 app.get('/', mw, (req, res) => {
     res.send('Home page.');
 });
 ```
 
-### 3.3.2 路由级别的中间件
+### 3.3.2 <font color='red'>路由级别</font>的中间件
 
-绑定到 `express.Router()` 实例上的中间件，叫做路由级别的中间件。它的用法和应用级别中间件没有任何区别。
+绑定到<font color='gree'> `express.Router()` </font>实例上的中间件，叫做路由级别的中间件。它的用法和应用级别中间件没有任何区别。
 
-只不过，应用级别中间件是绑定到 app 实例上，路由级别中间件绑定到 router 实例上，代码示例如下：
+只不过，<font color='gree'>应用级别中间件是绑定到 app 实例上，路由级别中间件绑定到 router 实例上</font>，代码示例如下：
 
-```
+```js
 var app = express();
 var router = express.Router();
 
@@ -2889,37 +2895,51 @@ router.use(function (req, res, next) {
 app.use('/', router);
 ```
 
-### 3.3.3 错误级别的中间件
+### 3.3.3 <font color='red'>错误级别</font>的中间件
 
-错误级别中间件的作用：专门用来捕获整个项目中发生的异常错误，从而防止项目异常崩溃的问题。
+错误级别中间件的<font color='red'>作用</font>：专门用来<font color='red'>捕获</font>整个项目中发生的异常错误，从而防止项目异常崩溃的问题。
 
-格式：错误级别中间件的 function 处理函数中，必须有 4 个形参，形参顺序从前到后，分别是 `err` 、`req`、 `res`、`next`。
+<font color='red'>格式</font>：错误级别中间件的 function 处理函数中，<font color='gree'>必须有 4 个形参</font>，形参顺序从前到后，<font color='gree'>分别是 `err` 、`req`、 `res`、`next`</font>。
 
-```
+> 多一个 `err`
+
+```js
 app.get('/', function (req, res) {				// 路由
     throw new Error('服务器内部发生了错误！');		 // 人为抛出一个自定义的错误  
     res.send('Home Page.');						
 });
 
-app.use(function (err, req, res, next) {		// 错误级别的中间件
+app.use(function (err, req, res, next) {		// 错误级别的中间件，捕获错误
     console.log('发生了错误：' + err.message);	// 在服务器打印错误消息
     res.send('Error!' + err.message);			// 向客户端响应错误相关的内容
 });
 ```
 
-> 注意：错误级别的中间件，必须注册在所有路由之后！同时，即便没有 next()，错误级别的中间件也会自动捕捉到错误后立马生效！
+> <font color='gree'>**注意：错误级别的中间件，必须注册在所有路由之后！同时，即便没有 next()，错误级别的中间件也会自动捕捉到错误后立马生效！**</font>
+
+若没有错误中间件：（崩溃了）
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-04-10_15-30-11.png)
+
+有错误中间件：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-04-10_15-31-11.png)
 
 [![image-20221215101926536](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221215101926536.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221215101926536.png)
 
-### 3.3.4 Express内置的中间件
+### 3.3.4 <font color='red'>Express内置</font>的中间件
 
-自 Express 4.16.0 版本开始，Express 内置了 3 个常用的中间件，极大的提高了 Express 项目的开发效率和体验：
+自 Express 4.16.0 版本开始，Express 内置了<font color='red'> 3 个</font>常用的中间件，极大的提高了 Express 项目的开发效率和体验：
 
-1. `express.static` 快速托管静态资源的内置中间件，例如：HTML 文件、图片、CSS 样式等（无兼容性）
-2. `express.json` 解析 JSON 格式的请求体数据（有兼容性，仅在 4.16.0+ 版本中可用）
-3. `express.urlencoded` 解析 URL-encoded 格式的请求体数据（有兼容性，仅在 4.16.0+ 版本中可用）
+1. <font color='red'>`express.static` </font>快速托管静态资源的内置中间件，例如：HTML 文件、图片、CSS 样式等（无兼容性）
+2. <font color='red'>`express.json` </font>解析 JSON 格式的请求体数据（<font color='gree'>有兼容性</font>，仅在 4.16.0+ 版本中可用）
+3. <font color='red'>`express.urlencoded` </font>解析 URL-encoded 格式的请求体数据（<font color='gree'>有兼容性</font>，仅在 4.16.0+ 版本中可用）
 
-```
+> 2和3也可以同时使用，会自动解析
+
+```js
+app.use('/public', express.static('public'))
+
 // 配置解析 application/json 格式数据的内置中间件
 app.use(express.json());
 // 配置解析 application/x-www-form-urlencoded 格式数据的内置中间件
@@ -2928,7 +2948,7 @@ app.use(express.urlencoded({ extended: false }));
 
 json 示例代码：
 
-```
+```js
 const express = require('express');
 
 const app = express();
@@ -2951,11 +2971,21 @@ app.listen(80, () => {
 
 Apifox 测试：
 
+若没有定义中间件
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-04-10_15-49-39.png)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-04-10_15-49-44.png)
+
+否则：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-04-10_15-51-26.png)
+
 [![image-20221215103931835](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221215103931835.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221215103931835.png)
 
 urlencoded 示例代码：
 
-```
+```js
 const express = require('express');
 
 const app = express();
@@ -2980,21 +3010,21 @@ Apifox 测试：
 
 [![image-20221215104727270](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221215104727270.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221215104727270.png)
 
-### 3.3.5 第三方的中间件
+### 3.3.5 <font color='red'>第三方</font>的中间件
 
-非 Express 官方内置的，而是由第三方开发出来的中间件，叫做第三方中间件。在项目中，大家可以按需下载并配置第三方中间件，从而提高项目的开发效率。
+非 Express 官方内置的，而是由第三方开发出来的中间件，叫做第三方中间件。在项目中，大家可以<font color='red'>按需下载</font>并<font color='red'>配置</font>第三方中间件，从而提高项目的开发效率。
 
 例如：在 express@4.16.0 之前的版本中，经常使用 body-parser 这个第三方中间件，来解析请求体数据。使用步骤如下：
 
-- 运行 `npm install body-parser` 安装中间件
-- 使用 `require` 导入中间件
-- 调用 `app.use()` 注册并使用中间件
+- 运行 <font color='red'>`npm install body-parser` </font>安装中间件
+- 使用 <font color='red'>`require`</font> 导入中间件
+- 调用 <font color='red'>`app.use()`</font> 注册并使用中间件
 
-注意：Express 内置的 express.urlencoded 中间件，就是基于 body-parser 这个第三方中间件进一步封装出来的。
+<font color='red'>注意</font>：Express 内置的 express.urlencoded 中间件，就是基于 body-parser 这个第三方中间件进一步封装出来的。所以现在不用了
 
 示例代码：
 
-```
+```js
 const express = require('express');
 
 const app = express();
@@ -3025,9 +3055,9 @@ Apifox 测试：
 
 ## 3.4 自定义中间件
 
-### 3.4.1 需求描述与实现步骤
+### 3.4.1 <font color='red'>需求描述</font>与<font color='red'>实现步骤</font>
 
-自己手动模拟一个类似于 express.urlencoded 这样的中间件，来解析 POST 提交到服务器的表单数据。
+自己<font color='red'>手动模拟</font>一个类似于 express.urlencoded 这样的中间件，来<font color='gree'>解析 POST 提交到服务器的表单数据</font>。
 
 实现步骤：
 
@@ -3042,19 +3072,19 @@ Apifox 测试：
 
 使用 `app.use()` 来定义全局生效的中间件，代码如下：
 
-```
+```js
 app.use(function (req, res, next) {
     // 中间件的业务逻辑
 });
 ```
 
-### 3.4.3 监听req的data事件
+### 3.4.3 监听 req 的 <font color='red'>data</font> 事件
 
 在中间件中，需要监听 req 对象的 data 事件，来获取客户端发送到服务器的数据。
 
-如果数据量比较大，无法一次性发送完毕，则客户端会把数据切割后，分批发送到服务器。所以 data 事件可能会触发多次，每一次触发 data 事件时，获取到数据只是完整数据的一部分，需要手动对接收到的数据进行拼接。
+如果数据量比较大，无法一次性发送完毕，则客户端会<font color='gree'>把数据切割后，分批发送到服务器</font>。所以 data 事件可能会触发多次，每一次触发 data 事件时，<font color='gree'>获取到数据只是完整数据的一部分</font>，需要手动对接收到的数据进行拼接。
 
-```
+```js
 // 定义变量，用来存储客户端发送过来的请求体数据
 let str = '';
 // 监听 req 对象的 data 事件（客户端发送过来的新的请求体数据）
@@ -3064,13 +3094,13 @@ req.on('data', chunk => {
 });
 ```
 
-### 3.4.4 监听req的end事件
+### 3.4.4 监听 req 的 <font color='red'>end</font> 事件
 
-当请求体数据接收完毕之后，会自动触发 req 的 end 事件。
+当请求体数据<font color='red'>接收完毕</font>之后，会自动触发 req 的 end 事件。
 
-因此，我们可以在 req 的 end 事件中，拿到并处理完整的请求体数据。示例代码如下：
+因此，我们可以在 req 的 end 事件中，<font color='gree'>拿到并处理完整的请求体数据</font>。示例代码如下：
 
-```
+```js
 // 监听 req 对象的 end 事件（请求体发送完毕后自动触发）
 req.on('end', () => {
     // 打印完整的请求体数据
@@ -3080,13 +3110,13 @@ req.on('end', () => {
 });
 ```
 
-### 3.4.5 使用querystring模块解析请求体数据
+### 3.4.5 使用 querystring 模块解析请求体数据
 
-Node.js 内置了一个 querystring 模块，专门用来处理查询字符串。
+Node.js 内置了一个<font color='red'> querystring </font>模块，<font color='gree'>专门用来处理查询字符串</font>。
 
-通过这个模块提供的 parse() 函数，可以轻松把查询字符串，解析成对象的格式。示例代码如下：
+通过这个模块提供的<font color='red'> parse() </font>函数，可以轻松把查询字符串，解析成对象的格式。示例代码如下：
 
-```
+```js
 // 导入处理 querystring 的 Node.js 内置模块
 const qs = require('querystring');
 
@@ -3094,11 +3124,11 @@ const qs = require('querystring');
 const body = qs.parse(str);
 ```
 
-### 3.4.6 将解析出来的数据对象挂载为req.body
+### 3.4.6 将解析出来的数据对象挂载为 <font color='red'>req.body</font>
 
-上游的中间件和下游的中间件及路由之间，**共享同一份** **req** **和** **res**。因此，我们可以将解析出来的数据，挂载为 req 的自定义属性，命名为 req.body，供下游使用。示例代码如下：
+<font color='red'>上游</font>的<font color='gree'>中间件</font>和<font color='red'>下游</font>的<font color='gree'>中间件及路由</font>之间，<font color='gree'>**共享同一份** **req** **和** **res**</font>。因此，我们可以将解析出来的数据，挂载为 req 的自定义属性，命名为<font color='red'> req.body</font>，供下游使用。示例代码如下：
 
-```
+```js
 req.on('end', () => {
     const body = qs.parse(str);	// 调用 qs.parse() 方法，把查询字符串解析为对象
     req.body = body;			// 将解析出来的请求体对象，挂载为 req.body 属性
@@ -3106,15 +3136,28 @@ req.on('end', () => {
 });
 ```
 
-### 3.4.7 将自定义中间件封装为模块
+### 3.4.7 将自定义中间件<font color='red'>封装</font>为模块
 
-为了优化代码的结构，我们可以把自定义的中间件函数，封装为独立的模块，示例代码如下：
+为了优化代码的结构，我们可以把自定义的中间件函数，<font color='red'>封装为独立的模块</font>，示例代码如下：
 
-```
-// custom-body-parser.js 模块中的代码
+```js
+// 新建文件custom-body-parser.js 模块中的代码
 const qs = require('querystring');
 function bodyParser(req, res, next) {
-    // ...
+    // 定义变量，用来存储客户端发送过来的请求体数据
+	let str = '';
+	// 监听 req 对象的 data 事件（客户端发送过来的新的请求体数据）
+	req.on('data', chunk => {
+    	// 拼接请求体数据，隐式转换为字符串
+    	str += chunk;
+	});
+    
+    // 监听 req 对象的 end 事件（请求体发送完毕后自动触发）
+	req.on('end', () => {
+    	const body = qs.parse(str);	// 调用 qs.parse() 方法，把查询字符串解析为对象
+    	req.body = body;			// 将解析出来的请求体对象，挂载为 req.body 属性
+    	next();						// 最后，一定要调用 next() 函数，执行后续的业务逻辑
+	});
 }
 module.exports = bodyParser;	// 向外导出解析请求体数据的中间件函数
 
@@ -3130,7 +3173,7 @@ app.use(myBodyParser);
 
 代码示例：
 
-```
+```js
 // custom-body-parser.js
 
 // 导入 Node.js 内置的 querystring 模块
@@ -3187,7 +3230,7 @@ Apifox 测试：
 
 ## 4.1 创建基本的服务器
 
-```
+```js
 // 导入 express 模块
 const express = require('express');
 // 创建 express 的服务器实例
@@ -3203,7 +3246,7 @@ app.listen(80, function () {
 
 ## 4.2 创建API路由模块
 
-```
+```js
 // apiRouter.js【路由模块】
 const express = require('express');
 const apiRouter = express.Router();
@@ -3222,7 +3265,7 @@ app.use('/api', apiRouter);
 
 ## 4.3 编写GET接口
 
-```
+```js
 apiRouter.get('/get', (req, res) => {
     // 获取到客户端通过查询字符串，发送到服务器的数据
     const query = req.query;
@@ -3237,7 +3280,7 @@ apiRouter.get('/get', (req, res) => {
 
 ## 4.4 编写POST接口
 
-```
+```js
 apiRouter.post('/post', (req, res) => {
     // 获取客户端通过请求体，发送到服务器的 URL-encoded 数据
     const body = req.body;
@@ -3256,7 +3299,7 @@ apiRouter.post('/post', (req, res) => {
 
 代码示例：
 
-```
+```js
 // apiRouter.js
 
 const express = require('express');
