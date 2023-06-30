@@ -3293,7 +3293,7 @@ apiRouter.post('/post', (req, res) => {
 });
 ```
 
-注意：如果要获取 URL-encoded 格式的请求体数据，必须配置中间件 `app.use(express.urlencoded({ extended: false }))`，JSON 格式数据，同理。
+注意：如果要获取<font color='red'> URL-encoded 格式</font>的请求体数据，必须配置中间件 `app.use(express.urlencoded({ extended: false }))`，JSON 格式数据，同理。
 
 ------
 
@@ -3361,9 +3361,21 @@ Apifox 测试：
 
 ## 4.5 CORS跨域资源共享
 
+> ## 什么是跨域？
+>
+> ## 一、为什么会出现[跨域](https://so.csdn.net/so/search?spm=1001.2014.3001.4498&q=跨域&t=&u=)问题
+>
+> 出于浏览器的同源策略限制。同源策略（Sameoriginpolicy）是一种约定，它是浏览器最核心也最基本的安全功能，如果缺少了同源策略，则浏览器的正常功能可能都会受到影响。可以说Web是构建在同源策略基础之上的，浏览器只是针对同源策略的一种实现。同源策略会阻止一个域的。javascript脚本和另外一个域的内容进行交互。所谓同源（即指在同一个域）就是两个页面具有相同的协议（protocol），主机（host）和端口号（port。
+>
+> ### 二、什么是跨域
+>
+> 1.当一个请求url的**[协议、域名、端口](https://so.csdn.net/so/search?spm=1001.2014.3001.4498&q=协议、域名、端口&t=&u=)**三者之间任意一个与当前页面url不同即为跨域。
+>
+> ![img](https://img-blog.csdnimg.cn/70e9de32598a4783acfafbf082ff3039.png)
+
 ### 4.5.1 接口的跨域问题
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -3415,30 +3427,30 @@ Apifox 测试：
 
 [![image-20221215130826990](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221215130826990.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221215130826990.png)
 
-刚才编写的 GET 和 POST 接口，存在一个很严重的问题：不支持跨域请求。
+刚才编写的 GET 和 POST 接口，存在一个很严重的问题：<font color='gree'>不支持跨域请求</font>。
 
-因为，HTML 所打开的链接为：http://127.0.0.1:5500/index.html，而请求的 API 为 http://127.0.0.1/api/get 及 http://127.0.0.1/api/post，我们知道，只要 **协议、域名、端口号** 有一个不同（此处端口号不同），那么就属于跨域，浏览器就会默认阻止这种请求（丢弃响应数据，并报错）！
+> 因为，HTML 所打开的链接为：http://127.0.0.1:5500/index.html，而请求的 API 为 http://127.0.0.1/api/get 及 http://127.0.0.1/api/post，我们知道，只要 **协议、域名、端口号** 有一个不同（此处端口号不同），那么就属于跨域，浏览器就会默认阻止这种请求（丢弃响应数据，并报错）！
 
 解决接口跨域问题的方案主要有两种：
 
-- CORS（主流的解决方案，推荐使用）
-- JSONP（有缺陷的解决方案：只支持 GET 请求）
+- <font color='red'>CORS</font>（主流的解决方案，<font color='gree'>推荐使用</font>）
+- <font color='red'>JSONP</font>（有缺陷的解决方案：只支持 GET 请求）
 
 > 注意：之前我们之所以没有遇到跨域问题，是因为 Apifox 是基于服务器而不是浏览器发送请求的，而服务器与服务器直接是不存在跨域的！
 
-### 4.5.2 使用cors中间件解决跨域问题
+### 4.5.2 使用<font color='red'> cors 中间件</font>解决跨域问题
 
 cors 是 Express 的一个第三方中间件。通过安装和配置 cors 中间件，可以很方便地解决跨域问题。
 
 使用步骤分为如下 3 步：
 
-- 运行 `npm install cors` 安装中间件
-- 使用 `const cors = require('cors')` 导入中间件
-- 在路由之前调用 `app.use(cors())` 配置中间件
+- 运行<font color='gree'> `npm install cors` 安装中间件</font>
+- 使用<font color='gree'> `const cors = require('cors')` 导入中间件</font>
+- 在路由之前调用<font color='gree'> `app.use(cors())` 配置中间件</font>
 
 示例代码：
 
-```
+```js
 // 导入 express
 const express = require('express');
 // 创建服务器实例
@@ -3469,48 +3481,48 @@ app.listen(80, () => {
 
 ### 4.5.3 什么是CORS
 
-CORS （Cross-Origin Resource Sharing，跨域资源共享）由一系列 HTTP 响应头组成，这些 HTTP 响应头决定浏览器是否阻止前端 JS 代码跨域获取资源。
+CORS （Cross-Origin Resource Sharing，跨域资源共享）由一系列<font color='red'> HTTP 响应头</font>组成，<font color='gree'>这些 HTTP 响应头决定浏览器是否阻止前端 JS 代码跨域获取资源</font>。
 
-浏览器的同源安全策略默认会阻止网页“跨域”获取资源。但如果接口服务器配置了 CORS 相关的 HTTP 响应头，就可以解除浏览器端的跨域访问限制。
+浏览器的<font color='gree'>同源安全策略</font>默认会阻止网页“跨域”获取资源。但如果接口服务器<font color='gree'>配置了 CORS 相关的 HTTP 响应头</font>，就可以<font color='gree'>解除浏览器端的跨域访问限制</font>。
 
-[![image-20221215114555175](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221215114555175.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221215114555175.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-07_11-04-22.png)
 
 ### 4.5.4 CORS的注意事项
 
-- CORS 主要在服务器端进行配置。客户端浏览器无须做任何额外的配置，即可请求开启了 CORS 的接口。
-- CORS 在浏览器中有兼容性。只有支持 XMLHttpRequest Level2 的浏览器，才能正常访问开启了 CORS 的服务端接口（例如：IE10+、Chrome4+、FireFox3.5+）。
+- CORS 主要在<font color='gree'>服务器端</font>进行配置。客户端浏览器<font color='gree'>无须做任何额外的配置</font>，即可请求开启了 CORS 的接口。
+- CORS 在浏览器中有<font color='gree'>兼容性</font>。只有支持 XMLHttpRequest Level2 的浏览器，才能正常访问开启了 CORS 的服务端接口（例如：IE10+、Chrome4+、FireFox3.5+）。
 
-### 4.5.5 CORS响应头部Access-Control-Allow-Origin
+### 4.5.5 CORS响应头部Access-Control-Allow-<font color='red'>Origin</font>
 
 响应头部中可以携带一个 **Access-Control-Allow-Origin** 字段，其语法如下:
 
-```
+```apl
 Access-Control-Allow-Origin: <origin> | *
 ```
 
-其中，origin 参数的值指定了允许访问该资源的外域 URL。
+其中，origin 参数的值指定了<font color='gree'>允许访问该资源的外域 URL</font>。
 
-例如，下面的字段值将只允许来自 [http://127.0.0.1:5500](http://127.0.0.1:5500/) 的请求：
+例如，下面的字段值将<font color='gree'>只允许</font>来自 [http://127.0.0.1:5500](http://127.0.0.1:5500/) 的请求：
 
 ```
 res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5500');
 ```
 
-如果指定了 Access-Control-Allow-Origin 字段的值为通配符 `*`，表示允许来自任何域的请求，示例代码如下：
+如果指定了 Access-Control-Allow-Origin 字段的值为<font color='gree'>通配符 `*`</font>，表示允许来自任何域的请求，示例代码如下：
 
 ```
 res.setHeader('Access-Control-Allow-Origin', '*');
 ```
 
-### 4.5.6 CORS响应头部Access-Control-Allow-Headers
+### 4.5.6 CORS响应头部Access-Control-Allow-<font color='red'>Headers</font>
 
-默认情况下，CORS 仅支持客户端向服务器发送如下的 9 个请求头：
+默认情况下，CORS <font color='red'>仅</font>支持<font color='gree'>客户端向服务器</font>发送如下的 9 个<font color='red'>请求头</font>：
 
 Accept、Accept-Language、Content-Language、DPR、Downlink、Save-Data、Viewport-Width、Width 、Content-Type （值仅限于 text/plain、multipart/form-data、application/x-www-form-urlencoded 三者之一）
 
-如果客户端向服务器发送了额外的请求头信息，则需要在服务器端，通过 Access-Control-Allow-Headers 对额外的请求头进行声明，否则这次请求会失败！
+如果客户端向服务器发送了<font color='gree'>额外的请求头信息</font>，则需要在<font color='gree'>服务器端</font>，通过 Access-Control-Allow-Headers <font color='gree'>对额外的请求头进行声明</font>，否则这次请求会失败！
 
-```
+```js
 // 允许客户端向服务器发送额外的 Content-Type 请求头和 X-Custom-Header 请求头
 // 注意：多个请求头之间使用英文的逗号进行分割
 res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Custom-header');
@@ -3520,11 +3532,11 @@ res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Custom-header');
 
 默认情况下，CORS 仅支持客户端发起 GET、POST、HEAD 请求。
 
-如果客户端希望通过 PUT、DELETE 等方式请求服务器的资源，则需要在服务器端，通过 Access-Control-Alow-Methods 来指明实际请求所允许使用的 HTTP 方法。
+如果客户端希望通过<font color='gree'> PUT、DELETE </font>等方式请求服务器的资源，则需要在服务器端，通过 Access-Control-Alow-Methods 来<font color='gree'>指明实际请求所允许使用的 HTTP 方法</font>。
 
 示例代码如下：
 
-```
+```js
 // 只允许 POST、GET、DELETE、HEAD 请求方法
 res.setHeader('Access-Control-Alow-Methods', 'POST, GET, DELETE, HEAD');
 // 允许所有的 HTTP 请求方法
@@ -3533,55 +3545,55 @@ res.setHeader('Access-Control-Alow-Methods', '*');
 
 ### 4.5.8 CORS请求的分类
 
-客户端在请求 CORS 接口时，根据请求方式和请求头的不同，可以将 CORS 的请求分为两大类，分别是：
+客户端在请求 CORS 接口时，根据<font color='gree'>请求方式</font>和<font color='gree'>请求头</font>的不同，可以将 CORS 的请求分为<font color='gree'>两大类</font>，分别是：
 
-- 简单请求
-- 预检请求
+- <font color='gree'>简单请求</font>
+- <font color='gree'>预检请求</font>
 
-### 4.5.9 简单请求
+### 4.5.9 <font color='red'>简单请求</font>
 
 同时满足以下两大条件的请求，就属于简单请求：
 
-- 请求方式：GET、POST、HEAD 三者之一
-- HTTP 头部信息不超过以下几种字段：无自定义头部字段、Accept、Accept-Language、Content-Language、DPR、Downlink、Save-Data、Viewport-Width、Width 、Content-Type（只限这三个值 application/x-www-form-urlencoded、multipart/form-data、text/plain）
+- <font color='gree'>请求方式</font>：GET、POST、HEAD 三者之一
+- <font color='gree'>HTTP 头部信息</font>不超过以下几种字段：<font color='gree'>无自定义头部字段</font>、Accept、Accept-Language、Content-Language、DPR、Downlink、Save-Data、Viewport-Width、Width 、Content-Type（只限这三个值 application/x-www-form-urlencoded、multipart/form-data、text/plain）
 
-### 4.5.10 预检请求
+### 4.5.10 <font color='red'>预检请求</font>
 
 只要符合以下任何一个条件的请求，都需要进行预检请求：
 
-- 请求方式为 GET、POST、HEAD 之外的请求 Method 类型
-- 请求头中包含自定义头部字段
-- 向服务器发送了 application/json 格式的数据
+- 请求方式为<font color='gree'> GET、POST、HEAD 之外的请求 Method 类型</font>
+- 请求头中<font color='gree'>包含自定义头部字段</font>
+- 向服务器发送了<font color='gree'> application/json 格式的数据</font>
 
-在浏览器与服务器正式通信之前，浏览器会先发送 OPTION 请求进行预检，以获知服务器是否允许该实际请求，所以这一次的 OPTION 请求称为 “预检请求”。服务器成功响应预检请求后，才会发送真正的请求，并且携带真实数据。
+在浏览器与服务器正式通信之前，浏览器<font color='gree'>会先发送 OPTION 请求进行预检，以获知服务器是否允许该实际请求</font>，所以这一次的 OPTION 请求称为 “预检请求”。<font color='gree'>服务器成功响应预检请求后，才会发送真正的请求，并且携带真实数据</font>。
 
 所以，如果浏览器向服务器请求的数据为 application/json 格式的，那么要在服务器设置 `res.setHeader('Access-Control-Allow-Headers', 'Content-Type');`，表示可以接收额外的 `Content-Type` 请求头（默认只接收 application/x-www-form-urlencoded、multipart/form-data、text/plain）
 
-### 4.5.11 简单请求和预检请求的区别
+### 4.5.11 <font color='red'>简单请求</font>和<font color='red'>预检请求</font>的区别
 
-**简单请求的特点：**客户端与服务器之间只会发生一次请求。
+**<font color='red'>简单请求的特点</font>：**客户端与服务器之间<font color='gree'>只会发生一次请求</font>。
 
-**预检请求的特点：**客户端与服务器之间会发生两次请求，OPTION 预检请求成功之后，才会发起真正的请求。
+<font color='red'>**预检请求的特点：**</font>客户端与服务器之间会发生两次请求，<font color='gree'>OPTION 预检请求成功之后，才会发起真正的请求</font>。
 
-[![image-20221215140358435](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221215140358435.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221215140358435.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-08_16-17-01.png)
 
 ## 4.6 JSONP接口（了解）
 
-### 4.6.1 回顾JSONP的概念与特点
+### 4.6.1 回顾JSONP的<font color='red'>概念</font>与<font color='red'>特点</font>
 
-概念：浏览器端通过 `<script>` 标签的 `src` 属性，请求服务器上的数据，同时，服务器返回一个函数的调用。这种请求数据的方式叫做 JSONP。
+<font color='red'>概念</font>：浏览器端通过 `<script>` 标签的 `src` 属性，请求服务器上的数据，同时，服务器返回一个函数的调用。这种请求数据的方式叫做 JSONP。
 
-特点：
+<font color='red'>特点</font>：
 
 - JSONP 不属于真正的 Ajax 请求，因为它没有使用 XMLHttpRequest 这个对象
-- JSONP 仅支持 GET 请求，不支持 POST、PUT、DELETE 等请求
+- <font color='gree'>JSONP 仅支持 GET 请求，不支持 POST、PUT、DELETE 等请求</font>
 
 ### 4.6.2 创建JSONP接口的注意事项
 
-如果项目中已经配置了 CORS 跨域资源共享，为了**防止冲突**，必须在配置 CORS 中间件之前声明 JSONP 的接口。否则 JSONP 接口会被处理成开启了 CORS 的接口。示例代码如下：
+如果项目中<font color='gree'>已经配置了 CORS 跨域资源共享</font>，为了**防止冲突**，<font color='gree'>必须在配置 CORS 中间件之前声明 JSONP 的接口</font>。否则 JSONP 接口会被处理成开启了 CORS 的接口。示例代码如下：
 
-```
-// 优先创建 JSONP 接口【这个接口不会被处理成 CORS 接口】
+```js
+// 优先创建 JSONP 接口【这个接口不会被处理成 CORS 接口】这里的/api是因为后买代码路由模块统一注册为了/api，随意这里手动加上
 app.get('/api/jsonp', (req, res) => { });
 
 // 再配置 CORS 中间件【后续的所有接口，都会被处理成 CORS 接口】
@@ -3593,14 +3605,14 @@ app.get('/api/get', (req, res) => { });
 
 ### 4.6.3 实现JSONP接口的步骤
 
-1. 获取客户端发送过来的回调函数的名字
-2. 得到要通过 JSONP 形式发送给客户端的数据
-3. 根据前两步得到的数据，拼接出一个函数调用的字符串
+1. <font color='gree'>获取</font>客户端发送过来的<font color='gree'>回调函数的名字</font>
+2. <font color='gree'>得到要</font>通过 JSONP 形式<font color='gree'>发送给客户端的数据</font>
+3. 根据前两步得到的数据，<font color='gree'>拼接出一个函数调用的字符串</font>
 4. 把上一步拼接得到的字符串，响应给客户端的 `<script>` 标签进行解析执行
 
 ### 4.6.4 实现JSONP接口的具体代码
 
-```
+```js
 app.get('/api/jsonp', (req, res) => {
     // 获取客户端发送过来的回调函数的名字
     const funcName = req.query.callback;
@@ -3613,5 +3625,1759 @@ app.get('/api/jsonp', (req, res) => {
 });
 ```
 
+### 5 在网页中使用 jqury 发起JSONP请求
+
+调用 @ajax() 函数，<font color='gree'>提供 JSONP 的配置选项</font>，从而发起JSONP请求，查看JSONP接口处理，：
+
+```js
+$('#btnJSONP').on('click', => {
+	$.ajax({
+    	method: 'GET',
+        url: 'http://127.0.0.1/api/jsonp',
+        dataType: 'jsonp', //表示发起jsonp请求
+        success: function(res){
+    		console.log(res)
+		}
+	})                  
+})
+```
 
 
+
+# 五、Express中使用async
+
+借助第三方库：[express-async-errors - npm (npmjs.com)](https://www.npmjs.com/package/express-async-errors)
+
+------
+
+[如何在 Express4.x 中愉快地使用 async - 掘金 (juejin.cn)](https://juejin.cn/post/6895888535301062670)
+
+## 【前言】
+
+为了能够更好地处理异步流程，一般开发者会选择 async 语法。
+
+在 express 框架中可以直接利用 async 来声明中间件方法，但是对于该中间件的错误，无法通过错误捕获中间件来劫持到。
+
+## 【错误处理中间件】
+
+```
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+    const message = doSomething();
+    res.send(message);
+});
+
+// 错误处理中间件
+app.use(function (err, req, res, next) {
+    return res.status(500).send('内部错误！');
+});
+
+app.listen(PORT, () => console.log(`app listening on port ${PORT}`));
+```
+
+
+
+以上述代码为例，中间件方法并没有通过 async 语法来声明，如果 doSomething 方法内部抛出异常，那么就可以在错误处理中间件中捕获到错误，从而进行相应地异常处理。
+
+```
+app.get('/', async (req, res) => {
+    const message = doSomething();
+    res.send(message);
+});
+```
+
+
+
+而采用 async 语法来声明中间件时，一旦 doSomething 内部抛出异常，则错误处理中间件无法捕获到。
+
+> 虽然可以利用 process 监听 unhandledRejection 事件来捕获，但是无法正确地处理后续流程。
+
+## 【try/catch】
+
+对于 async 声明的函数，可以通过 try/catch 来捕获其内部的错误，再使用 next 函数将错误递交给错误处理中间件，即可处理该场景：
+
+```
+app.get('/', async (req, res, next) => {
+    try {
+        const message = doSomething();
+        res.send(message);
+    } catch(err) {
+        next(err);
+    }
+});
+```
+
+
+
+> 这种写法简单易懂，但是满屏的 try/catch 语法，对代码结构具有入侵性，会显得非常繁琐且不优雅。
+
+## 【高阶函数】
+
+对于基础扎实的开发来说，都知道 async 函数最终返回一个 Promise 对象，而对于 Promsie 对象应该利用其提供的 catch 方法来捕获异常。
+
+那么在将 async 语法声明的中间件方法传入 use 之前，需要包裹一层 Promise 函数的异常处理逻辑，这时就需要利用高阶函数来完成这样的操作。
+
+```
+function asyncUtil(fn) {
+    return function asyncUtilWrap(...args) {
+        const fnReturn = fn(args);
+        const next = args[args.length - 1];
+        return Promise.resolve(fnReturn).catch(next);
+    }
+}
+
+app.use(asyncUtil(async (req, res, next) => {
+    const message = doSomething();
+    res.send(message);
+}));
+```
+
+
+
+> 相比较第一种方法，**「高阶函数减少了冗余代码，在一定程度上提高了代码的可读性。」**
+
+上述两种方案基于扎实的 JavaScript 基础以及 Express 框架的熟练使用，接下来从源码的角度思考合适的解决方案。
+
+## 【中间件机制】
+
+Express 中主要包含三种中间件：
+
+- 应用级别中间件
+- 路由级别中间件
+- 错误处理中间件
+
+```
+app.use = function use(fn) {
+    var path = '/';
+    
+    // 省略参数处理逻辑...
+
+    // 初始化内置中间件
+    this.lazyrouter();
+    var router = this._router;
+
+    fns.forEach(function (fn) {
+        // non-express app
+        if (!fn || !fn.handle || !fn.set) {
+            return router.use(path, fn);
+        }
+        
+        // ...
+    }, this);
+    
+    return this;
+};
+```
+
+
+
+应用级别中间件通过 app.use 方法注册，**「其本质上也是调用路由对象上的中间件注册方法，只不过其默认路由为 '/'」**。
+
+```
+proto.use = function use(fn) {
+    var offset = 0;
+    var path = '/';
+
+    // 省略参数处理逻辑...
+
+    var callbacks = flatten(slice.call(arguments, offset));
+
+    for (var i = 0; i < callbacks.length; i++) {
+        var fn = callbacks[i];
+        
+        // ...
+
+        // add the middleware
+        debug('use %o %s', path, fn.name || '<anonymous>')
+
+        var layer = new Layer(path, {
+            sensitive: this.caseSensitive,
+            strict: false,
+            end: false
+        }, fn);
+
+        layer.route = undefined;
+
+        this.stack.push(layer);
+    }
+
+    return this;
+};
+```
+
+
+
+中间件的所有注册方式最终会调用上述代码，根据 path 和中间件处理函数生成 layer 实例，再通过栈来维护这些 layer 实例。
+
+```
+// 部分核心代码
+proto.handle = function handle(req, res, out) {
+    var self = this;
+    var idx = 0;
+    var stack = self.stack;
+    
+    next();
+
+    function next(err) {
+        var layerError = err === 'route' ? null : err;
+    
+    if (idx >= stack.length) {
+        return;
+    }
+
+    var path = getPathname(req);
+
+    // find next matching layer
+    var layer;
+    var match;
+    var route;
+
+        while (match !== true && idx < stack.length) {
+            layer = stack[idx++];
+            match = matchLayer(layer, path);
+            route = layer.route;
+        
+            if (match !== true) {
+                continue;
+            }
+        }
+
+        // no match
+        if (match !== true) {
+            return done(layerError);
+        }
+
+        // this should be done for the layer
+        self.process_params(layer, paramcalled, req, res, function (err) {
+            if (err) {
+                return next(layerError || err);
+            }
+
+            if (route) {
+                return layer.handle_request(req, res, next);
+            }
+            
+            trim_prefix(layer, layerError, layerPath, path);
+        });
+    }
+    
+    function trim_prefix(layer, layerError, layerPath, path) {
+        if (layerError) {
+            layer.handle_error(layerError, req, res, next);
+        } else {
+            layer.handle_request(req, res, next);
+        }
+    }
+};
+```
+
+
+
+Express 内部通过 handle 方法来处理中间件执行逻辑，其利用**「闭包的特性」**缓存 idx 来记录当前遍历的状态。
+
+该方法内部又实现了 next 方法来匹配当前需要执行的中间件，从遍历的代码可以明白**「中间件注册的顺序是非常重要的」**。
+
+如果该流程存在异常，则调用 layer 实例的 handle.error 方法，这里仍然是**「遵循了 Node.js 错误优先的设计理念」**：
+
+```
+Layer.prototype.handle_error = function handle_error(error, req, res, next) {
+    var fn = this.handle;
+    
+    if (fn.length !== 4) {
+        // not a standard error handler
+        return next(error);
+    }
+
+    try {
+        fn(error, req, res, next);
+    } catch (err) {
+        next(err);
+    }
+};
+```
+
+
+
+**「内部通过判断函数的形参个数过滤掉非错误处理中间件」**。
+
+如果 next 函数内部没有异常情况，则调用 layer 实例的 handle_request 方法：
+
+```
+Layer.prototype.handle_request = function handle(req, res, next) {
+    var fn = this.handle;
+    
+    if (fn.length > 3) {
+        // not a standard request handler
+        return next();
+    }
+
+    try {
+        fn(req, res, next);
+    } catch (err) {
+        next(err);
+    }
+};
+```
+
+
+
+**「handle 方法初始化执行了一次 next 方法，但是该方法每次调用最多只能匹配一个中间件」**，所以在执行 handle_error 和 handle_request 方法时，会将 next 方法透传给中间件，这样开发者就可以通过手动调用 next 方法的方式来执行接下来的中间件。
+
+从上述中间件的执行流程中可以知晓，**「用户注册的中间件方法在执行的时候都会包裹一层 try/catch，但是 try/catch 无法捕获 async 函数内部的异常，这也就是为什么 Express 中无法通过注册错误处理中间件来拦截到 async 语法声明的中间件的异常的原因」**。
+
+【修改源码】
+
+找到本质原因之后，可以通过修改源码的方法来进行适配：
+
+```
+Layer.prototype.handle_request = function handle(req, res, next) {
+    var fn = this.handle;
+
+    if (fn.length > 3) {
+        // not a standard request handler
+        return next();
+    }
+    
+    // 针对 async 语法函数特殊处理
+    if (Object.prototype.toString.call(fn) === '[object AsyncFunction]') {
+        return fn(req, res, next).catch(next);
+    }
+
+    try {
+        fn(req, res, next);
+    } catch (err) {
+        next(err);
+    }
+};
+```
+
+
+
+上述代码在 handle_request 方法内部判断了中间件方法通过 async 语法声明的情况，从而采用 Promise 对象的 catch 方法来向下传递异常。
+
+**「这种方式可以减少上层冗余的代码，但是实现该方式，可能需要 fork 一份 Express4.x 的源码，然后发布一个修改之后的版本，后续还要跟进官方版本的新特性，相应的维护成本非常高。」**
+
+> express5.x 中将 router 部分剥离出了单独的路由库 —— router
+
+【AOP（面向切面编程）】
+
+为了解决上述方案存在的问题，我们可以尝试利用 AOP 技术在不修改源码的基础上对已有方法进行增强。
+
+```
+app.use(async function () {
+    const message = doSomething();
+    res.send(message);
+});
+```
+
+
+
+以注册应用级别中间件为例，可以对 app.use 方法进行 AOP 增强：
+
+```
+const originAppUseMethod = app.use.bind(app);
+app.use = function (fn) {
+    if (Object.prototype.toString.call(fn) === '[object AsyncFunction]') {
+        const asyncWrapper = function(req, res, next) {
+            fn(req, res, next).then(next).catch(next);
+        }
+        return originAppUseMethod(asyncWrapper);
+    }
+    return originAppUseMethod(fn);
+}
+```
+
+
+
+前面源码分析的过程中，app.use 内部是有 this 调用的，所以这里需要**「利用 bind 方法来避免后续调用过程中 this 指向出现问题。」**
+
+然后就是利用 AOP 的核心思想，重写原始的 app.use 方法，通过不同的分支逻辑代理到原始的 app.use 方法上。
+
+**「该方法相比较修改源码的方式，维护成本低。但是缺点也很明显，需要重写所有可以注册中间件的方法，不能够像修改源码那样一步到位。」**
+
+【写在最后】
+
+本文介绍了 Express 中使用 async 语法的四种解决方案：
+
+- try/catch
+- 高阶函数
+- 修改源码
+- AOP
+
+除了 try/catch 方法性价比比较低，其它三种方法都需要根据实际情况去取舍，举个栗子：
+
+如果你需要写一个 Express 中间件提供给各个团队使用，那么修改源码的方式肯定走不通，而 AOP 的方式对于你的风险太大，相比较下，第二种方案是最佳的实践方案。
+
+> 评论区补充：
+>
+> ```
+> npm i express-async-errors
+> ```
+>
+> 
+>
+> ```
+> const express = require('express')
+> // 异步异常捕获
+> require('express-async-errors');
+> 
+> // 后续无需任何操作，直接使用异步中间件即可！错误中间件能成功捕获异常
+> ```
+>
+> 
+>
+> 这个库的实现非常巧妙，结合了高阶函数和AOP！
+
+------
+
+[让 Express 支持 async/await | NiuNiu's Note (liu-xin.me)](https://liu-xin.me/2017/10/07/让Express支持async-await/)
+
+随着 Node.js v8 的发布，Node.js 已原生支持 async/await 函数，Web 框架 Koa 也随之发布了 Koa2 正式版，支持 async/await 中间件，为处理异步回调带来了极大的方便。
+
+既然 Koa2 已经支持 async/await 中间件了，为什么不直接用 Koa，而还要去改造 Express 让其支持 async/await 中间件呢？因为 Koa2 正式版发布才不久，而很多老项目用的都还是 Express，不可能将其推倒用 Koa 重写，这样成本太高，但又想用到新语法带来的便利，那就只能对 Express 进行改造了，而且这种改造必须是对业务无侵入的，不然会带来很多的麻烦。
+
+【直接使用 async/await】
+
+让我们先来看下在 Express 中直接使用 async/await 函数的情况。
+
+```
+const express = require('express');
+const app = express();
+const { promisify } = require('util');
+const { readFile } = require('fs');
+const readFileAsync = promisify(readFile);
+   
+app.get('/', async function (req, res, next) {
+    const data = await readFileAsync('./package.json');
+    res.send(data.toString());
+});
+
+// Error Handler
+app.use(function (err, req, res, next) {
+    console.error('Error:', err);
+    res.status(500).send('Service Error');
+});
+   
+app.listen(3000, '127.0.0.1', function () {
+    console.log(`Server running at http://${ this.address().address }:${ this.address().port }/`);
+});
+```
+
+
+
+上面是没有对 Express 进行改造，直接使用 async/await 函数来处理请求，当请求 `http://127.0.0.1:3000/` 时，发现请求能正常请求，响应也能正常响应。这样似乎不对 Express 做任何改造也能直接使用 async/await 函数，但如果 async/await 函数里发生了错误呢？这个错误能不能被我们的错误处理中间件处理呢？现在我们去读取一个不存在文件，例如将之前读取的 `package.json` 换成 `age.json`。
+
+```
+app.get('/', async function (req, res, next) {
+    const data = await readFileAsync('./age.json');
+    res.send(data.toString());
+});
+```
+
+
+
+现在我们去请求 `http://127.0.0.1:3000/` 时，发现请求迟迟不能响应，最终会超时。
+
+而在终端报了如下的错误：
+
+[![UnhandlerRejectionError](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/unhandlererror.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/unhandlererror.png) 发现错误并没有被错误处理中间件处理，而是抛出了一个 `unhandledRejection` 异常，现在如果我们用 try/catch 来手动捕获错误会是什么情况呢？
+
+```
+app.get('/', async function (req, res, next) {
+    try {
+        const data = await readFileAsync('./age.json');
+        res.send(datas.toString());
+    } catch(e) {
+        next(e);
+    }
+});
+```
+
+
+
+发现请求被错误处理中间件处理了，说明我们手动显式的来捕获错误是可以的，但是如果在每个中间件或请求处理函数里面加一个 try/catch 也太不优雅了，对业务代码有一定的侵入性，代码也显得难看。所以通过直接使用 async/await 函数的实验，我们发现对 Express 改造的方向就是能够接收 async/await 函数里面抛出的错误，又对业务代码没有侵入性。
+
+【改造 Express】
+
+在 Express 中有两种方式来处理路由和中间件，一种是通过 Express 创建的 app，直接在 app 上添加中间件和处理路由，像下面这样：
+
+```
+const express = require('express');
+const app = express();
+   
+app.use(function (req, res, next) {
+    next();
+});
+
+app.get('/', function (req, res, next) {
+    res.send('hello, world');
+});
+
+app.post('/', function (req, res, next) {
+    res.send('hello, world');
+});
+   
+app.listen(3000, '127.0.0.1', function () {
+    console.log(`Server running at http://${ this.address().address }:${ this.address().port }/`);
+});
+```
+
+
+
+另外一种是通过 Express 的 Router 创建的路由实例，直接在路由实例上添加中间件和处理路由，像下面这样：
+
+```
+const express = require('express');
+const app = express();
+const router = express.Router();
+app.use(router);
+   
+router.get('/', function (req, res, next) {
+    res.send('hello, world');
+});
+
+router.post('/', function (req, res, next) {
+    res.send('hello, world');
+});
+   
+app.listen(3000, '127.0.0.1', function () {
+    console.log(`Server running at http://${ this.address().address }:${ this.address().port }/`);
+});
+```
+
+
+
+这两种方法可以混合起来用，现在我们思考一下怎样才能让一个形如 `app.get('/', async function(req, res, next){})` 的函数，让里面的 async 函数抛出的错误能被统一处理呢？要让错误被统一的处理当然要调用 `next(err)` 来让错误被传递到错误处理中间件，又由于 async 函数返回的是 Promise，所以肯定是形如这样的 `asyncFn().then().catch(function(err){ next(err) })`，所以按这样改造一下就有如下的代码：
+
+```
+app.get = function (...data) {
+    const params = [];
+    for (let item of data) {
+        if (Object.prototype.toString.call(item) !== '[object AsyncFunction]') {
+            params.push(item);
+            continue;
+        }
+        const handle = function (...data) {
+            const [ req, res, next ] = data;
+            item(req, res, next).then(next).catch(next);
+        };
+        params.push(handle);
+    }
+    app.get(...params);
+}
+```
+
+
+
+上面的这段代码中，我们判断 `app.get()` 这个函数的参数中，若有 async 函数，就采用 `item(req, res, next).then(next).catch(next);` 来处理，这样就能捕获函数内抛出的错误，并传到错误处理中间件里面去。但是这段代码有一个明显的错误就是最后调用 app.get()，这样就递归了，破坏了 app.get 的功能，也根本处理不了请求，因此还需要继续改造。 我们之前说 Express 两种处理路由和中间件的方式可以混用，那么我们就混用这两种方式来避免递归，代码如下：
+
+```
+const express = require('express');
+const app = express();
+const router = new express.Router();
+app.use(router);
+    
+app.get = function (...data) {
+    const params = [];
+    for (let item of data) {
+        if (Object.prototype.toString.call(item) !== '[object AsyncFunction]') {
+            params.push(item);
+            continue;
+        }
+        const handle = function (...data) {
+            const [ req, res, next ] = data;
+            item(req, res, next).then(next).catch(next);
+        };
+        params.push(handle);
+    }
+    router.get(...params);
+}
+```
+
+
+
+像上面这样改造之后似乎一切都能正常工作了，能正常处理请求了。但通过查看 Express 的源码，发现这样破坏了 app.get() 这个方法，因为 app.get() 不仅能用来处理路由，而且还能用来获取应用的配置，在 Express 中对应的源码如下：
+
+```
+methods.forEach(function(method) {
+    app[method] = function(path) {
+        if (method === 'get' && arguments.length === 1) {
+            // app.get(setting)
+            return this.set(path);
+        }
+    
+        this.lazyrouter();
+        
+        var route = this._router.route(path);
+        route[method].apply(route, slice.call(arguments, 1));
+        return this;
+    };
+});
+```
+
+
+
+所以在改造时，我们也需要对 app.get 做特殊处理。在实际的应用中我们不仅有 get 请求，还有 post、put 和 delete 等请求，所以我们最终改造的代码如下：
+
+```
+const { promisify } = require('util');
+const { readFile } = require('fs');
+const readFileAsync = promisify(readFile);
+const express = require('express');
+const app = express();
+const router = new express.Router();
+const methods = [ 'get', 'post', 'put', 'delete' ];
+app.use(router);
+    
+for (let method of methods) {
+    app[method] = function (...data) {
+        if (method === 'get' && data.length === 1) return app.set(data[0]);
+        const params = [];
+        for (let item of data) {
+            if (Object.prototype.toString.call(item) !== '[object AsyncFunction]') {
+                params.push(item);
+                continue;
+            }
+            const handle = function (...data) {
+                const [ req, res, next ] = data;
+                item(req, res, next).then(next).catch(next);
+            };
+            params.push(handle);
+        }
+        router[method](...params);
+    };
+}
+      
+app.get('/', async function (req, res, next) {
+    const data = await readFileAsync('./package.json');
+    res.send(data.toString());
+});
+      
+app.post('/', async function (req, res, next) {
+    const data = await readFileAsync('./age.json');
+    res.send(data.toString());
+});
+    
+router.use(function (err, req, res, next) {
+    console.error('Error:', err);
+    res.status(500).send('Service Error');
+}); 
+     
+app.listen(3000, '127.0.0.1', function () {
+    console.log(`Server running at http://${ this.address().address }:${ this.address().port }/`);
+});
+```
+
+
+
+现在就改造完了，我们只需要加一小段代码，就可以直接用 async function 作为 handler 处理请求，对业务也毫无侵入性，抛出的错误也能传递到错误处理中间件。
+
+------
+
+# 【数据库】
+
+## 1.1数据库的概念
+
+自己上网搜
+
+## 1.2常见的数据库及种类
+
+数据库种类：
+
+- <font color='gree'>MySQL数据库（目前使用最广泛、流行度最高的开源免费数据库；Community 社区免费版 + Enterprise 收费版）</font>
+- Oracle 数据库（收费）
+- SQL Server 数据库（收费）
+- Mongodb 数据库（Community + Enterprise）
+
+其中 MySQL数据库、Oracle 数据库、SQL Server 数据库属于<font color='gree'>传统型数据库</font>（又叫做：<font color='gree'>关系型数据库</font>或<font color='gree'> SQL 数据库</font>），这三种理念相同。
+
+而 Mongodb 数据库属于<font color='gree'>新型数据库</font>（又叫做<font color='gree'>非关系型数据库</font>），他一定程度上弥补了SQL的不足。常见两种一同使用。
+
+## 1.3传统型数据库的<font color='red'>数据组织结构</font>
+
+数据的组织结构：指的就是数据以什么样的结构进行存储。
+
+ ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_10-16-09.png)
+
+传统型数据库的数据结构架构，与 Excel 中数据的结构结构比较类似。
+
+因此，我没可以对比着 Excel 来了解和学习传统型数据库的数据组织结构。
+
+### 1. Excel 的数据组织结构
+
+每个 Excel 中，数据的组织结构分别为工作簿、工作表、数据行、列这4部分
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_10-21-11.png)
+
+### 2. 传统型数据库的数据组织结构
+
+在传统型数据库中，数据的组织结构分为<font color='gree'>数据库(database)、数据表(table)、数据行(row)、字段(field)</font>这4部分组成
+
+1. <font color='red'>数据库</font>类似于 Excel 的<font color='pink'>工作簿</font>
+2. <font color='red'>数据表</font>类似于 Excel 的<font color='pink'>工作表</font>
+3. <font color='red'>数据行</font>类似于 Excel 的<font color='pink'>每一行数据</font>
+4. <font color='red'>字段</font>类似于 Excel 的<font color='pink'>列</font>
+5. 每个字段都有对应的数据类型
+
+### 3. 实际开发中库、表、行、字段的关系
+
+1. 在实际项目开发中，一般情况下，每个项目都对应<font color='gree'>独立的数据库</font>
+2. 不同的数据，要存储刀数据库的不同表中，例如：用户数据存储到 users 表中，图书数据存储到books表中
+3. 每个表中具体存储哪些信息，由字段来决定，例如：我们可以为 users 表设计 id、username、password 这3个字段。
+4. 表中的行，表示每一条具体的数据。
+
+------
+
+# 【MySQL】
+
+## 一、了解需要安装哪些MySQL相关软件
+
+对于开发人员来说，只需要安装<font color='gree'>`MySQL Server`</font>和<font color='gree'>`MySQL Workbench`</font>这两个软件，就能满足开发的需要了。
+
+- MySQL Server：<font color='gree'>专门用来提供数据存储和服务的软件</font>
+- MySQL Workbench：<font color='gree'>可视化的 MySQL 管理工具</font>，通过他，可以方便的呢操作存储在 MySQL Server 中的数据。
+
+## 二、MySQL 在windows 环境下的安装
+
+在 windows 环境下的安装，只需要运行 <font color='red'>`mysql-installer-community-8.0.19.0.msi`</font>这个安装包，就能一次性把<font color='gree'>`MySQL Server`</font>和<font color='gree'>`MySQL Workbench`</font>都安装上，无需像 Mac 一样分别安装
+
+> 若出现弹窗，是因为windows789系统缺少必要软件
+>
+> ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_15-36-19.png)
+>
+> ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_15-36-38.png)
+>
+> ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_15-41-47.png)
+>
+> ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_15-42-13.png)
+>
+> ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_15-42-28.png)
+>
+> ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_15-45-49.png)
+>
+>  ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_15-47-09.png)
+>
+> ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_15-47-34.png)
+>
+> ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_15-48-35.png)
+>
+> ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_15-49-19.png)
+>
+> ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_15-49-54.png)
+>
+> ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_15-51-59.png)
+>
+> ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_15-52-26.png)
+>
+> ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_15-56-08.png)
+>
+> ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_15-57-18.png)
+
+## 三、 使用 MySQL Workbench 管理数据库
+
+### 3.1 <font color='red'>连接</font>数据库
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_17-19-08.png)
+
+### 3.2 了解主界面的<font color='red'>组成部分</font>
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_17-23-27.png)
+
+### 3.3 创建数据库
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_17-32-26.png)
+
+> 命名，中文和空格非法
+
+
+
+
+
+------
+
+# 【MySQL模块】
+
+> 原创内容，转载请注明出处！
+
+# 一、在Node.js中操作MySQL
+
+## 1.1 在项目中操作MySQL的步骤
+
+- 安装操作 MySQL 数据库的第三方模块（mysql）
+- 通过 mysql 模块连接到 MySQL 数据库
+- 通过 mysql 模块执行 SQL 语句
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\image-20221215145012349.png)
+
+## 1.2 安装与配置mysql模块
+
+### 1.2.1 安装mysql模块
+
+mysql 模块是托管于 npm 上的第三方模块。它提供了在 Node.js 项目中连接和操作 MySQL 数据库的能力。
+
+想要在项目中使用它，需要先运行如下命令，将 mysql 安装为项目的依赖包：
+
+```
+npm install mysql
+```
+
+
+
+### 1.2.2 配置mysql模块
+
+在使用 mysql 模块操作 MySQL 数据库之前，必须先对 mysql 模块进行必要的配置，主要的配置步骤如下：
+
+```
+// 导入 mysql 模块
+const mysql = require('mysql');
+// 建立与 mysql 数据库的连接
+const db = mysql.createPool({
+    host: '127.0.0.1',		// MySQL IP 地址（Default: localhost）
+    port: '3306',           // MySQL 端口号（Default: 3306）
+    user: 'root',			// MySQL 账号
+    password: '123456',		// 登录数据库的密码
+    database: 'my_db_01'	// 目标数据库
+});
+```
+
+
+
+### 1.2.3 测试mysql模块能否正常工作
+
+调用 `db.query()` 函数，指定要执行的 SQL 语句，通过回调函数拿到执行的结果：
+
+```
+// 检测 mysql 模块能否正常工作
+db.query('SELECT 1', (err, results) => {
+    // 判断 err 是否为 null
+    if (err) {
+        return console.log(err.message);
+    }
+    // 只要能打印出 [ RowDataPacket { '1':1 } ] 的结果，就证明数据库连接正常
+    console.log(results);
+});
+```
+
+
+
+## 1.3 使用mysql模块操作MySQL数据库
+
+### 1.3.1 查询数据
+
+查询 users 表中所有的数据：
+
+```
+// 查询 users 表中的所有的用户数据
+db.query('SELECT * FROM users', (err, results) => {
+    // 查询失败
+    if (err) {
+        return console.log(err.message);
+    }
+    // SELECT 查询得到的 results 是一个数组
+    // 查询成功
+    console.log(results);
+});
+```
+
+
+
+[![image-20221215172223576](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/07-mysql%E6%A8%A1%E5%9D%97/mark-img/image-20221215172223576.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/07-mysql模块/mark-img/image-20221215172223576.png)
+
+### 1.3.2 插入数据
+
+向 users 表中新增数据， 其中 username 为 Spider-Man，password 为 pcc321。示例代码如下：
+
+```
+// 要插入到 users 表中的数据对象
+const user = {
+    username: 'Spider-Man',
+    password: 'pcc321'
+};
+
+// 待执行的 SQL 语句，其中英文的 ? 表示占位符
+const sqlStr = 'INSERT INTO users (username, password) VALUES (?, ?)';
+
+// 使用数组的形式，依次为 ? 占位符指定具体的值
+db.query(sqlStr, [user.username, user.password], (err, results) => {
+    if (err) {
+        return console.log(err.message);
+    }
+    // 注意：如果执行的是 INSERT INTO 插入语句，则 results 是一个对象
+    // 受到影响的行数 === 1
+    if (results.affectedRows === 1) {
+        console.log('插入数据成功');
+    }
+});
+```
+
+
+
+[![image-20221215180517971](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/07-mysql%E6%A8%A1%E5%9D%97/mark-img/image-20221215180517971.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/07-mysql模块/mark-img/image-20221215180517971.png)
+
+### 1.3.3 插入数据的便捷方式
+
+向表中新增数据时，如果数据对象的每个属性和数据表的**字段一一对应**，则可以通过如下方式快速插入数据：
+
+```
+// 要插入到 users 表中的数据对象
+const user = {
+    username: 'Super-Man', 
+    password: 'pcc123'
+};
+
+// 待执行的 SQL 语句，其中英文的 ? 表示占位符
+const sqlStr = 'INSERT INTO users SET ?';
+
+// 直接将数据对象当作占位符的值
+db.query(sqlStr, user, (err, results) => {
+    if (err) {
+        return console.log(err.message);
+    }
+    if (results.affectedRows === 1) {
+        console.log('插入数据成功');
+    }
+});
+```
+
+
+
+### 1.3.4 更新数据
+
+可以通过如下方式，更新表中的数据：
+
+```
+// 要更新的数据对象
+const user = {
+    id: 7,
+    username:'aaa',
+    password:'000'
+};
+
+// 要执行的 SQL 语句
+const sqlStr = 'UPDATE users SET username=?, password=? WHERE id=?';
+
+// 调用 db.query() 执行 SQL 语句的同时，使用数据依次为占位符指定具体的值
+db.query(sqlStr, [user.username, user.password, user.id], (err, results) => {
+    if (err) {
+        return console.log(err.message);
+    }
+    // results 是一个对象
+    if (results.affectedRows === 1) {
+        console.log('更新数据成功');
+    }
+});
+```
+
+
+
+[![image-20221215182505224](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/07-mysql%E6%A8%A1%E5%9D%97/mark-img/image-20221215182505224.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/07-mysql模块/mark-img/image-20221215182505224.png)
+
+### 1.3.5 更新数据的便捷方式
+
+```
+// 要更新的数据对象
+const user = {
+    id: 8,
+    username: 'aaaa', 
+    password: '0000'
+};
+
+// 要执行的 SQL 语句
+const sqlStr = 'UPDATE users SET ? WHERE id=?';
+
+// 调用 db.query() 执行 SQL 语句的同时，使用数据依次为占位符指定具体的值
+db.query(sqlStr, [user, user.id], (err, results) => {
+    if (err) {
+        console.log(err.message);
+    }
+    if (results.affectedRows === 1) {
+        console.log('更新数据成功');
+    }
+});
+```
+
+
+
+### 1.3.6 删除数据
+
+在删除数据时，推荐根据 id 这样的唯一标识，来删除对应的数据。实例如下：
+
+```
+// 要执行的 SQL 语句
+const sqlStr = 'DELETE FROM users WHERE id=?';
+
+// 调用 db.query() 执行 SQL 语句的同时，为占位符指定具体的值
+// 注意：如果 SQL 语句中有多个占位符，则必须使用数组为每个占位符指定具体的值
+//      如果 SQL 语句汇总只有一个占位符，则可以省略数组，直接写值
+db.query(sqlStr, 8, (err, results) => {
+    if (err) {
+        console.log(err.message);
+    }
+    if (results.affectedRows === 1) {
+        console.log('删除数据成功');
+    }
+});
+```
+
+
+
+[![image-20221215183134524](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/07-mysql%E6%A8%A1%E5%9D%97/mark-img/image-20221215183134524.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/07-mysql模块/mark-img/image-20221215183134524.png)
+
+### 1.3.7 标记删除
+
+使用 DELETE 语句，会把真正的把数据从表中删除掉。为了保险起见，推荐使用标记删除的形式，来模拟删除的动作。
+
+所谓的标记删除，就是在表中设置类似于 status 这样的状态字段，来标记当前这条数据是否被删除。
+
+当用户执行了删除的动作时，我们并没有执行 DELETE 语句把数据删除掉，而是执行了 UPDATE 语句，将这条数据对应的 status 字段标记为删除即可。
+
+```
+// 标记删除：使用 UPDATE 语句代替 DELETE 语句；只更新数据的状态，并没有真正删除
+db.query('UPDATE USERS SET status=1 WHERE id=?', 8, (err, results) => {
+    if (err) {
+        return console.log(err.message);
+    }
+    if (results.affectedRows === 1) {
+        console.log('删除数据成功');
+    }
+});
+```
+
+
+
+[![image-20221215183404453](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/07-mysql%E6%A8%A1%E5%9D%97/mark-img/image-20221215183404453.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/07-mysql模块/mark-img/image-20221215183404453.png)
+
+## 1.4 其他补充
+
+### 1.4.1 关于连接
+
+实际上我们之前使用的 `mysql.createPool` 是创建连接池的方式，如果我们不需要连接池，那么应该这样：
+
+首先，使用以下语句导入 mysql 模块：
+
+```
+const mysql = require('mysql');
+```
+
+
+
+其次，通过调用 createConnection() 方法并提供 MySQL 服务器上的详细信息（如主机，用户，密码和数据库），建立与 MySQL 数据库的连接，如下所示：
+
+```
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '123456',
+    database: 'test'
+});
+```
+
+
+
+然后，在连接对象上调用 connect() 方法连接到 MySQL 数据库服务器：
+
+connect() 方法接受一个具有 err 参数的回调函数，如果发生任何错误，它将提供详细的错误。
+
+```
+connection.connect(err => {
+  if (err) {
+    return console.error('error: ' + err.message);
+  }
+  console.log('Connected to the MySQL server.');
+});
+```
+
+
+
+完整的程序代码如下所示：
+
+```
+const mysql = require('mysql');
+
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '123456',
+    database: 'todoapp'
+});
+
+connection.connect(err => {
+  if (err) {
+    return console.error('error: ' + err.message);
+  }
+
+  console.log('Connected to the MySQL server.');
+});
+```
+
+
+
+我们来运行并测试一下：
+
+```
+F:\worksp\mysql\nodejs\nodejs-connect>node connect.js
+openssl config failed: error:02001003:system library:fopen:No such process
+Connected to the MySQL server.
+```
+
+
+
+如果看到如上所示的 “connected to the MySQL server” 的消息，那么恭喜，您已经从 Node.js 应用程序成功连接到 MySQL 数据库服务器。
+
+假设使用 MySQL 用户账号的密码有错，并尝试连接到数据，您将收到一条错误消息：
+
+```
+F:\worksp\mysql\nodejs\nodejs-connect>node connect.js
+openssl config failed: error:02001003:system library:fopen:No such process
+error: ER_ACCESS_DENIED_ERROR: Access denied for user 'root'@'localhost' (using password: YES)
+```
+
+
+
+请注意，今后你在 connection 对象上调用的每个方法都按顺序排队和执行。
+
+关闭 Node.js 与 MySQL 数据库连接
+
+要正常关闭数据库连接，请在 connection 对象上调用 end() 方法。
+
+end() 方法确保在数据库连接关闭之前始终执行所有剩余的查询。
+
+```
+connection.end(err => {
+  if (err) {
+    return console.log('error:' + err.message);
+  }
+  console.log('Close the database connection.');
+});
+```
+
+
+
+要立即强制连接，可以使用 destroy() 方法。 destroy() 方法保证不会再为连接触发回调或事件。
+
+```
+connection.destroy();
+```
+
+
+
+请注意，destroy() 方法不会像 end() 方法那样采取任何回调参数。
+
+使用举例：
+
+```
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '123456',
+  database: 'my_db'
+});
+ 
+connection.connect();
+ 
+connection.query('SELECT 1 + 1 AS solution', (error, results) => {
+  if (error) throw error;
+  console.log('The solution is: ', results[0].solution);
+});
+ 
+connection.end();
+```
+
+
+
+Node.js 模块的 MySQL 驱动程序提供了内置的连接池功能，假设您要创建一个具有 10 个连接的连接池：
+
+```
+const pool = mysql.createPool({
+    connectionLimit: 10,	// 如果没有配置 connectionLimit 那么它默认就是 10
+    host: 'localhost',
+    user: 'root',
+    password: '123456', 
+    database: 'test'
+});
+
+pool.query('SELECT 1 + 1 AS solution', (error, results) => {
+  if (error) throw error;
+  console.log('The solution is: ', results[0].solution);
+});
+```
+
+
+
+直接 pool.query() 的方式是 pool.getConnection() -> connection.query() -> connection.release() 代码流的快捷方式。
+
+要从池中获取连接，可以使用 getConnection() 方法：
+
+```
+pool.getConnection((err, connection) => {
+  // 执行查询
+  // ...
+});
+```
+
+
+
+要在完成连接后将其释放到池中，可以调用 connection.release()。 之后，连接将在池中可用，并可以由其他业务再次使用。
+
+```
+pool.getConnection((err, connection) => {
+  // 执行查询
+  // ...
+  connection.release();
+});
+```
+
+
+
+要关闭连接并将其从池中删除，请使用 connection.destroy() 方法。 如果下次需要，将在池中创建一个新的连接。
+
+```
+pool.getConnection((err, connection) => {
+  // 执行查询
+  // ...
+  connection.destroy();
+});
+```
+
+
+
+请注意，连接由池惰性创建。如果将池配置为允许最多 100 个连接，但同时只使用 5 个，则只会建立 5 个连接。
+
+连接也是循环使用的，连接从池的顶部取出，然后返回到池的底部。
+
+当从池中检索到以前的连接时，会向服务器发送一个 ping 包，以检查连接是否仍然正常。
+
+当你完成使用池，你必须结束所有的连接，否则 Node.js 事件循环将保持活动，直到连接被 MySQL 服务器关闭。
+
+如果在脚本中使用该池，或者需要优雅地关闭服务器时，通常会在结束前这样做。
+
+要关闭池中的所有连接，请使用 pool 对象的 end() 方法，如下所示：
+
+```
+pool.end(err => {
+  if (err) {
+    return console.log(err.message);
+  }
+  // 关闭所有连接
+});
+```
+
+
+
+注意：一旦执行了 pool.end()，那么 pool.getConnection 和其它操作将无法继续执行，如果已经在执行的任务那么会等待它执行完毕，新的任务则不再执行。
+
+使用 pool.getConnection() 可以为后续查询共享连接状态。而使用 pool.query() 的话，不同的两次调用可能使用的是两个不同的连接并行运行。
+
+```
+var mysql = require('mysql');
+var pool  = mysql.createPool(...);
+
+pool.getConnection((err, connection) => {
+  if (err) throw err;
+
+  // 使用连接
+  connection.query('SELECT something FROM sometable', (error, results) => {
+    // 完成连接后就释放它
+    connection.release();
+
+    // 在释放后处理错误
+    if (error) throw error;
+
+    // 不要在这里使用连接，它已经返回到池中
+  });
+});
+```
+
+
+
+### 1.4.2 SQL注入
+
+sql 语句中使用 `?` 作为查询参数占位符，值以数组的形式传入，那么这种方式默认就是防止 SQL 注入的！
+
+如果 sql 是直接拼接的字符串值，那么为了防止 SQL 注入，必须对参数值事先调用 `mysql.escape()` 来过滤：
+
+```
+status = mysql.escape(status);
+id = mysql.escape(id);
+connection.query(`update tbl_module set module_status = ${status} where id = ${id}`);
+```
+
+
+
+实际上，`?` 占位符在背后就是自动调用了 `mysql.escape()`。
+
+### 1.4.3 查询细节
+
+还是看文档吧：[[mysql - npm (npmjs.com)](https://www.npmjs.com/package/mysql)](https://github.com/mysqljs/mysql#readme)
+
+中文文档：[mysql - mysql中文文档翻译 - Breword 文档集合](https://www.breword.com/mysqljs-mysql)
+
+### 1.4.4 更优推荐
+
+- mysql2：[mysql2 - npm (npmjs.com)](https://www.npmjs.com/package/mysql2)，与 mysql 相同的 API，更快的性能，更多的功能，提供 Promise 封装！
+- sequelize：[sequelize - npm (npmjs.com)](https://www.npmjs.com/package/sequelize)，Node.js 的 ORM 工具，可以将关系型数据库表映射为 JS 对象，同时提供非常强大的功能！
+
+------
+
+# 前后端身份认证
+
+> 原创内容，转载请注明出处！
+
+# 一、Web开发模式
+
+目前主流的 Web 开发模式有两种，分别是：
+
+- 基于服务端渲染的传统 Web 开发模式
+- 基于前后端分离的新型 Web 开发模式
+
+## 1.1 服务端渲染的Web开发模式
+
+服务端渲染的概念：服务器发送给客户端的 HTML 页面，是在服务器通过字符串的拼接，动态生成的。因此，客户端不需要使用 Ajax 这样的技术额外请求页面的数据。
+
+代码示例如下：
+
+```
+app.get('/index.html', (req, res) => {
+    // 要渲染的数据
+    const user = {
+        name: 'zjr',
+        age: 18
+    };
+    // 服务端通过字符串的拼接，动态生成 HTML 内容
+    const html = `<h1>姓名：${user.name}，年龄：${user.age}</h1>`;
+    // 把生成好的 HTML 页面响应给客户端
+    res.send(html);
+});
+```
+
+
+
+## 1.2 服务端渲染的优缺点
+
+优点：
+
+- **前端耗时少！**因为服务器端负责动态生成 HTML 内容，浏览器只需要直接渲染页面即可。
+- **有利于 SEO！**因为服务器端响应的是完整的 HTML 页面内容，所以搜索引擎爬虫更容易爬取获得信息。
+
+缺点：
+
+- **占用服务器端资源！**由服务端完成 HTML 页面内容的生成，如果请求较多，会对服务器造成一定的访问压力。
+- **开发效率低！**使用服务器端渲染，则无法进行分工合作，尤其对于前端复杂度高的项目，不利于项目高效开发。
+
+## 1.3 前后端分离的Web开发模式
+
+前后端分离的概念：前后端分离的开发模式，依赖于 Ajax 技术的广泛应用。简而言之，前后端分离的 Web 开发模式，就是后端只负责提供 API 接口，前端使用 Ajax 调用接口的开发模式。
+
+## 1.4 前后端分离的优缺点
+
+优点：
+
+- **开发体验好！**前端专注于界面的开发，后端专注于 API 的开发，且前端有更多的选择性。
+- **用户体验好！**Ajax 技术的广泛应用，极大的提高了用户的体验，可以轻松实现页面的局部刷新。
+- **减轻了服务器端的渲染压力！**因为页面最终是在每个用户的浏览器中生成的。
+
+缺点：
+
+- **不利于 SEO！**。因为完整的 HTML 页面需要在客户端动态拼接完成，所以爬虫无法爬取页面的有效信息。（解决方案：利用 Vue、React 等前端框架的 SSR（server side render）技术能够很好的解决前后端分离下的 SEO 问题！）
+
+> SEO：搜索引擎优化！
+>
+> 前后端分离不利于 SEO，为什么？
+>
+> 搜索引擎的基础爬虫的原理就是抓取你的 url，然后获取你的 html 源代码并解析。 当的页面采用了 vue 等 js 的数据绑定机制来展示页面数据，爬虫获取到的 html 是你的模型页面而不是最终数据的渲染页面，所以说用 Ajax 来渲染数据对 SEO 并不友好。
+
+## 1.5 如何选择Web开发模式
+
+不谈业务场景而盲目选择使用何种开发模式都是耍流氓。
+
+- 比如企业级官网，主要功能是展示而没有复杂的交互，并且需要良好的 SEO，则这时我们就需要使用服务器端渲染。
+- 而类似后台管理项目，交互性比较强，不需要考虑 SEO，那么就可以使用前后端分离的开发模式。
+
+另外，具体使用何种开发模式并不是绝对的，为了同时兼顾首页的渲染速度和前后端分离的开发效率，一些网站采用了首屏服务端渲染 + 其他页面前后端分离的开发模式。
+
+# 二、身份认证
+
+## 2.1 什么是身份认证
+
+身份认证（Authentication）又称 “身份验证”、“鉴权”，是指通过一定的手段，完成对用户身份的确认。
+
+- 日常生活中的身份认证随处可见，例如：高铁的验票乘车，手机的密码或指纹解锁，支付宝或微信的支付密码等。
+- 在 Web 开发中，也涉及到用户身份的认证，例如：各大网站的手机验证码登录、邮箱密码登录、二维码登录等。
+
+## 2.2 为什么需要身份认证
+
+身份认证的目的，是为了确认当前所声称为某种身份的用户，确实是所声称的用户。例如，你去找快递员取快递，你要怎么证明这份快递是你的。
+
+在互联网项目开发中，如何对用户的身份进行认证，是一个值得深入探讨的问题。
+
+## 2.3 不同开发模式下的身份认证
+
+对于服务端渲染和前后端分离这两种开发模式来说，分别有着不同的身份认证方案：
+
+- 服务端渲染推荐使用 **Session** **认证机制**
+- 前后端分离推荐使用 **JWT** **认证机制**
+
+# 三、Session认证机制
+
+## 3.1 HTTP协议的无状态性
+
+了解 HTTP 协议的无状态性是进一步学习 Session 认证机制的必要前提。
+
+HTTP 协议的无状态性，指的是客户端的每次 HTTP 请求都是独立的，连续多个请求之间没有直接的关系，服务器不会主动保留每次 HTTP 请求的状态。
+
+[![image-20221215192855055](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215192855055.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215192855055.png)
+
+## 3.2 如何突破HTTP无状态的限制
+
+对于超市来说，为了方便收银员在进行结算时给 VIP 用户打折，超市可以为每个 VIP 用户发放会员卡。
+
+[![image-20221215192911804](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215192911804.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215192911804.png)
+
+注意：现实生活中的会员卡身份认证方式，在 Web 开发中的专业术语叫做 **Cookie**。
+
+## 3.3 什么是Cookie
+
+Cookie 是存储在用户浏览器中的一段不超过 4 KB 的字符串。它由一个名称（Name）、一个值（Value）和其它几个用于控制 Cookie 有效期、安全性、使用范围的可选属性组成。
+
+不同域名下的 Cookie 各自独立，每当客户端发起请求时，会自动把**当前域名下**所有未过期的 Cookie 一同发送到服务器。
+
+Cookie 的几大特性：
+
+- 自动发送
+- 域名独立
+- 过期时限
+- 4KB 限制
+
+## 3.4 Cookie在算法认证中的作用
+
+客户端第一次请求服务器的时候，服务器通过响应头的形式，向客户端发送一个身份认证的 Cookie，浏览器会自动将 Cookie 保存在浏览器中。
+
+随后，当浏览器每次请求服务器的时候，浏览器会自动将身份认证相关的 Cookie，通过请求头的形式发送给服务器，服务器即可验明客户端的身份。
+
+[![image-20221215194007711](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215194007711.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215194007711.png)
+
+## 3.5 Cookie不具有安全性
+
+由于 Cookie 是存储在浏览器中的，而且浏览器也提供了读写 Cookie 的 API，因此 Cookie 很容易被伪造，不具有安全性。因此不建议服务器将重要的隐私数据，通过 Cookie 的形式发送给浏览器。
+
+[![image-20221215194740416](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215194740416.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215194740416.png)
+
+注意：千万不要使用 Cookie 存储重要且隐私的数据！比如用户的身份信息、密码等。
+
+## 3.6 提高身份认证的安全性
+
+为了防止客户伪造会员卡，收银员在拿到客户出示的会员卡之后，可以在收银机上进行刷卡认证。只有收银机确认存在的会员卡，才能被正常使用。
+
+[![image-20221215194924023](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215194924023.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215194924023.png)
+
+这种 “会员卡 + 刷卡认证” 的设计理念，就是 Session 认证机制的精髓。
+
+## 3.7 Session的工作原理
+
+[![image-20221215195150951](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215195150951.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215195150951.png)
+
+# 四、在Express中使用Session认证
+
+## 4.1 安装express-session中间件
+
+在 Express 项目中，只需要安装 express-session 中间件，即可在项目中使用 Session 认证：
+
+```
+npm install express-session
+```
+
+
+
+## 4.2 配置express-session中间件
+
+express-session 中间件安装成功后，需要通过 app.use() 来注册 session 中间件，示例代码如下：
+
+```
+// 导入 Session 中间件
+const session = require('express-session');
+
+// 配置 Session 中间件
+app.use(session({
+    secret: 'keyboard cat',		// secret 属性的值可以为任意字符串
+    resave: false,				// 固定写法
+    saveUninitialized: true		// 固定写法
+}));
+```
+
+
+
+## 4.3 向session中存储数据
+
+当 express-session 中间件配置成功后，即可通过 req.session 来访问和使用 session 对象，从而存储用户的关键信息：
+
+```
+app.post('/api/login', (req, res) => {
+    // 判断用户提交的登录信息是否正确
+    if (req.body.username !== 'admin' || req.body.password !== '000000') {
+        return res.send({
+            status: 1, 
+            msg: '登录失败'
+        });
+    }
+    
+    req.session.user = req.body;	// 将用户的信息，存储到 Session 中
+    req.session.islogin = true;		// 将用户的登录状态，存储到 Session 中
+    
+    res.send({
+        status: 0,
+        msg: '登录成功'
+    });
+});
+```
+
+
+
+## 4.4 从session中取数据
+
+可以直接从 req.session 对象上获取之前存储的数据，示例代码如下：
+
+```
+// 获取用户姓名的接口
+app.get('/api/username', (req, res) => {
+    // 判断用户是否登录
+    if (!req.session.islogin) {
+        return res.send({
+            status: 1,
+            msg: 'fail'
+        });
+    }
+    
+    res.send({
+        status: 0,
+        msg: 'success',
+        username: req.session.user.username
+    });
+});
+```
+
+
+
+## 4.5 清空session
+
+调用 req.session.destroy() 函数，即可清空当前用户在服务器保存的 session 信息。
+
+```
+// 退出登录的接口
+app.post('/api/logout', (req, res) => {
+    // 清空当前客户端对应的 session 信息
+    req.session.destroy();
+    res.send({
+        status: 0,
+        msg: '退出登录成功'
+    });
+});
+```
+
+
+
+# 五、JWT认证机制
+
+## 5.1 了解Session认证的局限性
+
+Session 认证机制需要配合 Cookie 才能实现，由于 Cookie 默认不支持跨域访问，所以，当涉及到前端跨域请求后端接口的时候，需要做额外的配置，才能实现跨域 Session 认证。
+
+注意：
+
+- 当前端请求后端接口不存在跨域问题的时候，推荐使用 Session 身份认证机制。
+- 当前端需要跨域请求后端接口的时候，不推荐使用 Session 身份认证机制，推荐使用 JWT 认证机制。
+
+## 5.2 什么是JWT
+
+JWT（英文全称：JSON Web Token）是目前最流行的跨域认证解决方案。
+
+## 5.3 JWT的工作原理
+
+[![image-20221215204010879](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215204010879.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215204010879.png)
+
+总结：用户的信息通过 Token 字符串的形式，保存在客户端浏览器中。服务器通过还原 Token 字符串的形式来认证用户的身份。
+
+## 5.4 JWT的组成部分
+
+JWT 通常由三部分组成，分别是 Header（头部）、Payload（有效荷载）、Signature（签名）。
+
+三者之间使用英文的 `.` 分 隔，格式如下：
+
+```
+Header.Payload.Signature
+```
+
+
+
+下面是 JWT 字符串的示例：
+
+[![image-20221215204211017](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215204211017.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215204211017.png)
+
+## 5.5 JWT三个部分各自的含义
+
+JWT 的三个组成部分，从前到后分别是 Header、Payload、Signature。
+
+其中：
+
+- Payload 部分才是真正的用户信息，它是用户信息经过加密之后生成的字符串。
+- Header 和 Signature 是安全性相关的部分，只是为了保证 Token 的安全性。
+
+[![image-20221215204359726](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215204359726.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215204359726.png)
+
+## 5.6 JWT的使用方式
+
+客户端收到服务器返回的 JWT 之后，通常会将它储存在 localStorage 或 sessionStorage 中。
+
+此后，客户端每次与服务器通信，都要带上这个 JWT 的字符串，从而进行身份认证。推荐的做法是把 JWT 放在 HTTP 请求头的 Authorization 字段中，格式如下：
+
+```
+Authorization: Bearer <token>
+```
+
+
+
+# 六、在Express中使用JWT
+
+## 6.1 安装JWT相关包
+
+运行如下命令，安装如下两个 JWT 相关的包：
+
+```
+npm install jsonwebtoken express-jwt
+```
+
+
+
+其中：
+
+- jsonwebtoken 用于生成 JWT 字符串
+- express-jwt 用于将 JWT 字符串解析还原成 JSON 对象
+
+## 6.2 导入JWT相关包
+
+使用 require() 函数，分别导入 JWT 相关的两个包：
+
+```
+// 导入用于生成 JWT 字符串的包
+const jwt = require('jsonwebtoken');
+// 导入用于将客户端发送过来的 JWT 字符串，解析还原成 JSON 对象的包
+const expressJWT = require('express-jwt');
+```
+
+
+
+## 6.3 定义secret密钥
+
+为了保证 JWT 字符串的安全性，防止 JWT 字符串在网络传输过程中被别人破解，我们需要专门定义一个用于加密和解密的 secret 密钥：
+
+- 当生成 JWT 字符串的时候，需要使用 secret 密钥对用户的信息进行加密，最终得到加密好的 JWT 字符串
+- 当把 JWT 字符串解析还原成 JSON 对象的时候，需要使用 secret 密钥进行解密
+
+```
+// secret 密钥的本质：就是一个字符串
+const secretKey = 'I Love Node ^_^';
+```
+
+
+
+## 6.4 在登录成功后生成JWT字符串
+
+调用 jsonwebtoken 包提供的 `sign()` 方法，将用户的信息加密成 JWT 字符串，响应给客户端：
+
+```
+// 登录接口
+app.post('/api/login', function (req, res) => {
+         // ... 省略登录失败情况下的代码
+         
+         // 调用 jwt.sign() 生成 JWT 字符串，三个参数分别是：用户信息对象、加密密钥、配置对象
+         const tokenStr = jwt.sign({ username: userinfo.username }, secretKey, { expiresIn: '30s' });
+         // 用户登录成功之后，生成 JWT 字符串，通过 token 属性响应给客户端
+         res.send({
+         	status: 200,
+         	message: '登录成功！',
+         	token: tokenStr;
+         });
+});
+```
+
+
+
+## 6.5 将JWT字符串还原为JSON对象
+
+客户端每次在访问那些有权限接口的时候，都需要主动通过请求头中的 Authorization 字段，将 Token 字符串发送到服务器进行身份认证。
+
+此时，服务器可以通过 express-jwt 这个中间件，自动将客户端发送过来的 Token 解析还原成 JSON 对象：
+
+```
+// 使用 app.use() 来注册中间件
+// expressJWT( { secret: secretKey } ) 就是用来解析 Token 的中间件
+// .unless({ path: [/^\/api\//] }) 用来指定哪些接口不需要访问权限
+app.use(expressJWT({ secret: secretKey }).unless({ path: [/^\/api\//] }));
+```
+
+
+
+## 6.6 使用req.user获取用户信息
+
+当 express-jwt 这个中间件配置成功之后，即可在那些有权限的接口中，使用 req.user 对象，来访问从 JWT 字符串中解析出来的用户信息了，示例代码如下：
+
+```
+// 这是一个有权限的 API 接口
+app.get('/admin/getinfo', function(req, res) {
+    // 只要配置成功了 express-jwt 这个中间件，就会把解析出来的用户信息，自动挂载到 req.user 属性上
+    // 新版本把 req.user 被替换为了 req.auth
+    console.log(req.user);
+    res.send({
+        status: 200,
+        message: '获取用户信息成功',
+        data: req.user
+    });
+});
+```
+
+
+
+> 注意：千万不要把密码这种信息加密到 token 中！
+
+## 6.7 捕获解析JWT失败后产生的错误
+
+当使用 express-jwt 解析 Token 字符串时，如果客户端发送过来的 Token 字符串过期或不合法，会产生一个解析失败的错误（UnauthorizedError），影响项目的正常运行。我们可以通过 Express 的错误中间件，捕获这个错误并进行相关的处理，示例代码如下：
+
+```
+app.use((err, req, res, next) => {
+    // token 解析失败导致的错误
+    if (err.name === 'UnauthorizedError') {
+        return res.send({ status: 401, message: '无效的token' });
+    }
+    // 其它原因导致的错误
+    res.send({ status: 500, message: '未知错误' });
+});
+```
+
+
+
+## 6.8 JWT的优势与劣势
+
+【优势】
+
+1、更高的安全性！这个就不再叙述了，上文已经提到过。
+
+2、服务器集群模式下，更比 Session 更方面实现！
+
+[![image-20230207120123436](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20230207120123436.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20230207120123436.png)
+
+[![image-20230207120157947](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20230207120157947.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20230207120157947.png)
+
+这样一来，就不保存 session id 了，只是生成 token, 然后验证 token，用服务器 CPU 计算时间换取了 session 存储空间以及 session 同步所带来的设计成本！
+
+解除了 session id 这个负担，可以说是无事一身轻，机器集群现在可以轻松地做水平扩展，用户访问量增大，直接加机器就行，这种无状态的感觉实在是太好了！
+
+【劣势】
+
+1. 占带宽，正常情况下要比 session id 更大，需要消耗更多流量，挤占更多带宽，假如你的网站每月有 10 万次的浏览，就意味着要多开销几十兆的流量。听起来并不多，但日积月累也是不小一笔开销。实际上，许多人会在 JWT 中存储的信息会更多
+2. 无法在服务端注销，那么就很难解决劫持问题
+3. 性能问题，JWT 的卖点之一就是加密签名，由于这个特性，接收方得以验证 JWT 是否有效且被信任。对于有着严格性能要求的 Web 应用，这并不理想，尤其对于单线程环境，可能造成性能的大量消耗（Node.js 中可以用子进程来单独负责加密解密的部分，从而更好的利用 CPU 空闲资源）
+4. 同样不是绝对安全的！如果一个人的 token 被别人偷走了，那也没办法，服务器会认为小偷就是合法用户，这其实和一个人的 session id 被别人偷走是一样的
