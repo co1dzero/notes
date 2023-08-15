@@ -2570,7 +2570,7 @@ http://127.0.0.1/api/user/list
 
 当一个请求到达 Express 的服务器之后，可以连续调用多个中间件，从而对这次请求进行<font color='gree'>预处理</font>。
 
-[![image-20221214152006656](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/06-express/mark-img/image-20221214152006656.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/06-express/mark-img/image-20221214152006656.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\image-20221214152006656.png)
 
 ### 3.1.4 Express中间件的<font color='red'>格式</font>
 
@@ -4304,7 +4304,7 @@ app.listen(3000, '127.0.0.1', function () {
 
 传统型数据库的数据结构架构，与 Excel 中数据的结构结构比较类似。
 
-因此，我没可以对比着 Excel 来了解和学习传统型数据库的数据组织结构。
+因此，我们可以对比着 Excel 来了解和学习传统型数据库的数据组织结构。
 
 ### 1. Excel 的数据组织结构
 
@@ -4332,6 +4332,10 @@ app.listen(3000, '127.0.0.1', function () {
 ------
 
 # 【MySQL】
+
+> 用户名：root
+>
+> 密码：admin123
 
 ## 一、了解需要安装哪些MySQL相关软件
 
@@ -4378,6 +4382,8 @@ app.listen(3000, '127.0.0.1', function () {
 
 ## 三、 使用 MySQL Workbench 管理数据库
 
+>MySQL Workbench 可视化界面
+
 ### 3.1 <font color='red'>连接</font>数据库
 
 ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-06-09_17-19-08.png)
@@ -4394,21 +4400,286 @@ app.listen(3000, '127.0.0.1', function () {
 
 
 
+### 3.4 创建数据表
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_14-32-41.jpg)
+
+#### DataType 数据类型：
+
+1. <font color='red'>int</font> 整数
+2. <font color='red'>varchar</font>(<font color='gree'>len</font>) 字符串， len：最大长度
+3. <font color='red'>tinyint</font>(<font color='gree'>1</font>) 布尔值
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_14-48-26.jpg)
+
+#### 字段的特殊标识：
+
+1. <font color='red'>PK</font> (Primary Key) <font color='gree'>主键、唯一标识</font>
+2. <font color='red'>NN</font> (Nor Null) <font color='gree'>值不允许为空</font>
+3. <font color='red'>UQ </font>(Unique) <font color='gree'>值唯一</font>
+4. <font color='red'>AI </font>(Unique) <font color='gree'>值自动增长</font>
+
+> `Default/Expression`默认值
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_14-56-19.jpg)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_14-57-53.jpg)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_14-58-48.jpg)
+
+### 3.5 向表内写入数据
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_15-01-27.jpg)
+
+
+
+## 四、使用 SQL 管理数据库
+
+### 4.1 什么是SQL
+
+SQL（Structured Query Language）是<font color='gree'>结构化查询语言</font>，专门用来<font color='gree'>访问和处理数据库</font>的编程语言。能够让我们<font color='gree'>以编程的形式，操作数据库里面的数据</font>.
+
+
+
+三个关键点：
+
+1. SQL 是一门<font color='gree'>数据库编程语言</font>
+2. 使用 SQL 语言编写出来的代码，叫做 <font color='gree'>SQL 语句</font>
+3. SQL 语言<font color='gree'>只能在关系型数据库中使用</font>（MySQL、Oracle、SQL Serve）。非关系型数据库（Mongodb）不支持 SQL语言
+
+### 4.2 SQL 能做什么
+
+1. 从数据库中<font color='gree'>查询数据</font>
+2. 向数据库中<font color='gree'>插入新的数据</font>
+3. <font color='gree'>更新</font>数据库中的数据<font color='gree'>数据</font>
+4. 从数据库中<font color='gree'>删除数据</font>
+5. 可以创建新数据库
+6. 可在数据库中创建新表
+7. 可在数据库中创建存储过程、视图
+8. etc、
+
+
+
+### 4.3 SQL 的 SELECT 语句
+
+#### 4.3.1 语法
+
+SELECT 语句用于<font color='gree'>从表中查询数据</font>。执行的结果被存储在一个<font color='gree'>结果表</font>中（称为<font color='gree'>结果集</font>）。
+
+```mysql
+-- 这是注释
+-- 从 FROM 指定的【表中】，查询出【所有的】数据， * 表示【所有列】
+SELECT * FROM 表名;
+
+-- 从 FROM 指定的【表中】，查询出指定 列名称（字段） 的数据
+SELECT 列名称 FROM 表名; 
+```
+
+> 注意：SQL 语句中的<font color='gree'>关键字</font>对<font color='gree'>大小写不敏感</font>。SELECT 等效于 select，FROM等效于from
+
+#### 4.3.2 实例：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_15-34-07.jpg)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_15-34-38.jpg)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_15-34-54.jpg)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_15-35-41.jpg)
+
+
+
+###  4.4 SQL 的 INSERT INTO 语句
+
+#### 4.4.1 语法
+
+<font color='red'>INSERT INTO</font> 语句用于<font color='gree'>向数据表中插入新的数据行</font>，语法：
+
+```mysql
+-- 向指定的表中插入，列的值通过 values 一一指定
+-- 注意： 列和值要一一对应，多个列和多个值之间，使用英文的都好分隔
+INSERT INTO table_name (列1, 列2, ...) VALUES (值1, 值2, ...)
+```
+
+#### 4.4.2 实例：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_15-49-46.jpg)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_15-51-02.jpg)
+
+###  4.5 SQL 的 IUPDATE语句
+
+#### 4.5.1 语法
+
+<font color='red'>Update</font> 语句用于<font color='gree'>修改表中的数据</font>，语法：
+
+```mysql
+-- 语法：
+-- 1. 用 UPDATE 指定要更新的哪个表中的数据
+-- 2. 用 SET 指定列对应的新值
+-- 3. 用 WHERE 指定更新的条件
+UPDATE 表名称 SET 列名称 = 新值 WHERE 列名称 = 某值
+```
+
+#### 4.5.2 实例：
+
+更新某一行中的一个列：
+
+users中 把 id 为 4 的用户，密码改为 788887
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_16-05-27.jpg)
+
+更新某一行中的多个列：
+
+users中 把 id 为 2 的用户，密码改为 wocccccc 状态改为 1：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_16-08-05.jpg)
+
+
+
+###  4.6 SQL 的 IDELETE 语句
+
+#### 4.6.1 语法
+
+<font color='red'>DELETE</font> 语句用于<font color='gree'>删除表中的行</font>，语法：
+
+> <font color='gree'>`id`具有唯一性，若删除了` id = 2` 的数据，则再新增数据也不会有 `id = 2 `</font>
+
+```mysql
+-- 从指定的表中，根据 WHERE 条件，删除对应的数据行
+DELETE FROM 表名称 WHERE 列名称 = 值
+```
+
+#### 4.6.2 实例：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_16-14-48.jpg)
+
+
+
+### 4.7 SQL的 WHERE 子句
+
+#### 4.7.1 语法
+
+WHERE 用于<font color='gree'>限定选择的标准</font>
+
+```mysql
+-- 查询语句中的 WHERE 条件
+SELECT 列名称 FROM 表名称 WHERE 列 运算符 值
+-- 更新语句中的 WHERE 条件
+UPDATE 表名称 SET 列=新值 WHERE 列 运算符 值
+-- 删除语句中的 WHERE 条件
+SELECT FROM 表名称 WHERE 列 运算符 值
+```
+
+#### 4.7.2 可在 WHERE 子句中使用的<font color='red'>运算符</font>
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_16-21-49.jpg)
+
+> <font color='gree'>注意：在某些版本中，操作符 `<>` 可以写成 `!=`</font>
+
+#### 4.7.3 实例：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_16-24-15.jpg)
+
+
+
+### 4.8 SQL 中的 <font color='red'>AND</font>和<font color='red'>OR</font>运算符
+
+#### 4.8.1 语法
+
+AND 和 OR 可在<font color='gree'> WHERE 子语句中把两个或多个条件结合起来</font>。
+
+AND 表示<font color='gree'>必须同时满足多个条件</font>，相当于 JS 中的 && 运算符，例如 if (a !== 10 && a !== 20)
+
+OR 表示<font color='gree'>只要满足一个条件即可</font>，相当于 JS 中的 || 运算符，例如 if (a !== 10 || a !== 20)
+
+#### 4.8.2 实例：
+
+AND：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_16-32-20.jpg)
+
+OR：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_16-33-08.jpg)
+
+
+
+### 4.9 SQL 的 ORDER BY 子句
+
+#### 4.9.1 语法
+
+ORDER BY 语句用于<font color='gree'>根据指定的列对结果进行排序</font>
+
+ORDER BY 语句，<font color='gree'>默认</font>按照<font color='gree'>升序</font>对记录进行排序
+
+如果你希望按照<font color='gree'>降序</font>对记录进行排序，可以使用<font color='gree'> DESC </font>关键字
+
+#### 4.9.2 升序排序
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_17-05-22.jpg)
+
+
+
+#### 4.9.3 降序排序
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_17-06-37.jpg)
+
+
+
+#### 4.9.4 多重排序
+
+对 users 表中的数据，先按照<font color='red'> status </font>字段进行降序排序，再按照<font color='red'> username </font>的<font color='gree'>字母顺序</font>，进行<font color='gree'>升序排序</font>，：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_17-09-06.jpg)
+
+
+
+### 4.10 SQL 的 COUNT(*) 函数
+
+#### 4.10.1 语法
+
+<font color='red'>COUNT(*) </font>函数用于返回<font color='gree'>查询结果</font>的<font color='gree'>总数据条数</font>，：
+
+```mysql
+SELECT COUNT(*) FROM 表名称
+```
+
+#### 4.10.2 实例：
+
+查询 users 表中 status = 0 的数据总数
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_17-16-11.jpg)
+
+
+
+#### 4.10.3 使用 AS 为列设置别名
+
+如果希望给查询出来的列名称设置别名，可以使用 AS 关键字，实例如下：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_17-23-22.jpg)
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_17-26-41.jpg)
+
+
+
+### 4.11 打开 `.sql`文件
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-05_17-29-12.jpg)
+
 
 
 ------
 
 # 【MySQL模块】
 
-> 原创内容，转载请注明出处！
-
 # 一、在Node.js中操作MySQL
 
 ## 1.1 在项目中操作MySQL的步骤
 
-- 安装操作 MySQL 数据库的第三方模块（mysql）
-- 通过 mysql 模块连接到 MySQL 数据库
-- 通过 mysql 模块执行 SQL 语句
+- 安装操作 MySQL 数据库的第三方模块（<font color='red'>mysql</font>）
+- 通过 mysql 模块<font color='gree'>连接到 MySQL 数据库</font>
+- 通过 mysql 模块<font color='gree'>执行 SQL 语句</font>
 
 ![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\image-20221215145012349.png)
 
@@ -4416,11 +4687,11 @@ app.listen(3000, '127.0.0.1', function () {
 
 ### 1.2.1 安装mysql模块
 
-mysql 模块是托管于 npm 上的第三方模块。它提供了在 Node.js 项目中连接和操作 MySQL 数据库的能力。
+mysql 模块是托管于 npm 上的<font color='gree'>第三方模块</font>。它提供了在 Node.js 项目中<font color='red'>连接</font>和<font color='red'>操作</font> MySQL 数据库的能力。
 
 想要在项目中使用它，需要先运行如下命令，将 mysql 安装为项目的依赖包：
 
-```
+```apl
 npm install mysql
 ```
 
@@ -4428,9 +4699,9 @@ npm install mysql
 
 ### 1.2.2 配置mysql模块
 
-在使用 mysql 模块操作 MySQL 数据库之前，必须先对 mysql 模块进行必要的配置，主要的配置步骤如下：
+在使用 mysql 模块操作 MySQL 数据库之前，<font color='gree'>必须先对 mysql 模块进行必要的配置</font>，主要的配置步骤如下：
 
-```
+```js
 // 导入 mysql 模块
 const mysql = require('mysql');
 // 建立与 mysql 数据库的连接
@@ -4449,7 +4720,7 @@ const db = mysql.createPool({
 
 调用 `db.query()` 函数，指定要执行的 SQL 语句，通过回调函数拿到执行的结果：
 
-```
+```js
 // 检测 mysql 模块能否正常工作
 db.query('SELECT 1', (err, results) => {
     // 判断 err 是否为 null
@@ -4469,7 +4740,9 @@ db.query('SELECT 1', (err, results) => {
 
 查询 users 表中所有的数据：
 
-```
+> SELECT 查询得到的 results 是一个数组
+
+```js
 // 查询 users 表中的所有的用户数据
 db.query('SELECT * FROM users', (err, results) => {
     // 查询失败
@@ -4484,13 +4757,15 @@ db.query('SELECT * FROM users', (err, results) => {
 
 
 
-[![image-20221215172223576](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/07-mysql%E6%A8%A1%E5%9D%97/mark-img/image-20221215172223576.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/07-mysql模块/mark-img/image-20221215172223576.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-06_14-44-06.jpg)
 
 ### 1.3.2 插入数据
 
-向 users 表中新增数据， 其中 username 为 Spider-Man，password 为 pcc321。示例代码如下：
+向 users 表中新增数据， 其中<font color='gree'> username 为 Spider-Man，password 为 pcc321</font>。示例代码如下：
 
-```
+> <font color='gree'>`?`在 SQL 中作为占位符使用！后面通过 [ ] 向内一一赋值</font>
+
+```js
 // 要插入到 users 表中的数据对象
 const user = {
     username: 'Spider-Man',
@@ -4515,13 +4790,15 @@ db.query(sqlStr, [user.username, user.password], (err, results) => {
 
 
 
-[![image-20221215180517971](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/07-mysql%E6%A8%A1%E5%9D%97/mark-img/image-20221215180517971.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/07-mysql模块/mark-img/image-20221215180517971.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-06_15-23-22.jpg)
 
-### 1.3.3 插入数据的便捷方式
 
-向表中新增数据时，如果数据对象的每个属性和数据表的**字段一一对应**，则可以通过如下方式快速插入数据：
 
-```
+### 1.3.3 插入数据的<font color='red'>便捷方式</font>
+
+向表中新增数据时，如果<font color='gree'>数据对象的每个属性</font>和<font color='gree'>数据表的字段</font><font color='red'>**一一对应**</font>，则可以通过如下方式快速插入数据：
+
+```js
 // 要插入到 users 表中的数据对象
 const user = {
     username: 'Super-Man', 
@@ -4548,7 +4825,7 @@ db.query(sqlStr, user, (err, results) => {
 
 可以通过如下方式，更新表中的数据：
 
-```
+```js
 // 要更新的数据对象
 const user = {
     id: 7,
@@ -4573,11 +4850,11 @@ db.query(sqlStr, [user.username, user.password, user.id], (err, results) => {
 
 
 
-[![image-20221215182505224](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/07-mysql%E6%A8%A1%E5%9D%97/mark-img/image-20221215182505224.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/07-mysql模块/mark-img/image-20221215182505224.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-07-06_15-37-43.jpg)
 
-### 1.3.5 更新数据的便捷方式
+### 1.3.5 更新数据的<font color='red'>便捷方式</font>
 
-```
+```js
 // 要更新的数据对象
 const user = {
     id: 8,
@@ -4605,7 +4882,10 @@ db.query(sqlStr, [user, user.id], (err, results) => {
 
 在删除数据时，推荐根据 id 这样的唯一标识，来删除对应的数据。实例如下：
 
-```
+>注意：如果 SQL 语句中有多个占位符，则必须使用数组为每个占位符指定具体的值
+>		  如果 SQL 语句汇总只有一个占位符，则可以省略数组，直接写值
+
+```js
 // 要执行的 SQL 语句
 const sqlStr = 'DELETE FROM users WHERE id=?';
 
@@ -4624,17 +4904,17 @@ db.query(sqlStr, 8, (err, results) => {
 
 
 
-[![image-20221215183134524](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/07-mysql%E6%A8%A1%E5%9D%97/mark-img/image-20221215183134524.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/07-mysql模块/mark-img/image-20221215183134524.png)
 
-### 1.3.7 标记删除
 
-使用 DELETE 语句，会把真正的把数据从表中删除掉。为了保险起见，推荐使用标记删除的形式，来模拟删除的动作。
+### 1.3.7 <font color='red'>标记删除</font>
 
-所谓的标记删除，就是在表中设置类似于 status 这样的状态字段，来标记当前这条数据是否被删除。
+使用 DELETE 语句，会把真正的把数据从表中删除掉。为了保险起见，<font color='gree'>推荐使用标记删除</font>的形式，来<font color='gree'>模拟删除的动作</font>。
 
-当用户执行了删除的动作时，我们并没有执行 DELETE 语句把数据删除掉，而是执行了 UPDATE 语句，将这条数据对应的 status 字段标记为删除即可。
+所谓的标记删除，就是在表中设置类似于<font color='red'> status </font>这样的状态字段，来<font color='gree'>标记</font>当前这条数据是否被删除。
 
-```
+<font color='gree'>当用户执行了删除的动作时，我们并没有执行 DELETE 语句把数据删除掉，而是执行了 UPDATE 语句，将这条数据对应的 status 字段标记为删除即可</font>。
+
+```js
 // 标记删除：使用 UPDATE 语句代替 DELETE 语句；只更新数据的状态，并没有真正删除
 db.query('UPDATE USERS SET status=1 WHERE id=?', 8, (err, results) => {
     if (err) {
@@ -4656,9 +4936,11 @@ db.query('UPDATE USERS SET status=1 WHERE id=?', 8, (err, results) => {
 
 实际上我们之前使用的 `mysql.createPool` 是创建连接池的方式，如果我们不需要连接池，那么应该这样：
 
+[什么是连接池](https://blog.csdn.net/zsy3757486/article/details/121779679)
+
 首先，使用以下语句导入 mysql 模块：
 
-```
+```js
 const mysql = require('mysql');
 ```
 
@@ -4666,7 +4948,7 @@ const mysql = require('mysql');
 
 其次，通过调用 createConnection() 方法并提供 MySQL 服务器上的详细信息（如主机，用户，密码和数据库），建立与 MySQL 数据库的连接，如下所示：
 
-```
+```js
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -4681,7 +4963,7 @@ const connection = mysql.createConnection({
 
 connect() 方法接受一个具有 err 参数的回调函数，如果发生任何错误，它将提供详细的错误。
 
-```
+```js
 connection.connect(err => {
   if (err) {
     return console.error('error: ' + err.message);
@@ -4694,7 +4976,7 @@ connection.connect(err => {
 
 完整的程序代码如下所示：
 
-```
+```js
 const mysql = require('mysql');
 
 const connection = mysql.createConnection({
@@ -4717,7 +4999,7 @@ connection.connect(err => {
 
 我们来运行并测试一下：
 
-```
+```apl
 F:\worksp\mysql\nodejs\nodejs-connect>node connect.js
 openssl config failed: error:02001003:system library:fopen:No such process
 Connected to the MySQL server.
@@ -4745,7 +5027,7 @@ error: ER_ACCESS_DENIED_ERROR: Access denied for user 'root'@'localhost' (using 
 
 end() 方法确保在数据库连接关闭之前始终执行所有剩余的查询。
 
-```
+```js
 connection.end(err => {
   if (err) {
     return console.log('error:' + err.message);
@@ -4758,7 +5040,7 @@ connection.end(err => {
 
 要立即强制连接，可以使用 destroy() 方法。 destroy() 方法保证不会再为连接触发回调或事件。
 
-```
+```js
 connection.destroy();
 ```
 
@@ -4768,7 +5050,7 @@ connection.destroy();
 
 使用举例：
 
-```
+```js
 var mysql = require('mysql');
 var connection = mysql.createConnection({
   host: 'localhost',
@@ -4791,7 +5073,7 @@ connection.end();
 
 Node.js 模块的 MySQL 驱动程序提供了内置的连接池功能，假设您要创建一个具有 10 个连接的连接池：
 
-```
+```js
 const pool = mysql.createPool({
     connectionLimit: 10,	// 如果没有配置 connectionLimit 那么它默认就是 10
     host: 'localhost',
@@ -4812,7 +5094,7 @@ pool.query('SELECT 1 + 1 AS solution', (error, results) => {
 
 要从池中获取连接，可以使用 getConnection() 方法：
 
-```
+```js
 pool.getConnection((err, connection) => {
   // 执行查询
   // ...
@@ -4823,7 +5105,7 @@ pool.getConnection((err, connection) => {
 
 要在完成连接后将其释放到池中，可以调用 connection.release()。 之后，连接将在池中可用，并可以由其他业务再次使用。
 
-```
+```js
 pool.getConnection((err, connection) => {
   // 执行查询
   // ...
@@ -4835,7 +5117,7 @@ pool.getConnection((err, connection) => {
 
 要关闭连接并将其从池中删除，请使用 connection.destroy() 方法。 如果下次需要，将在池中创建一个新的连接。
 
-```
+```js
 pool.getConnection((err, connection) => {
   // 执行查询
   // ...
@@ -4857,7 +5139,7 @@ pool.getConnection((err, connection) => {
 
 要关闭池中的所有连接，请使用 pool 对象的 end() 方法，如下所示：
 
-```
+```js
 pool.end(err => {
   if (err) {
     return console.log(err.message);
@@ -4872,7 +5154,7 @@ pool.end(err => {
 
 使用 pool.getConnection() 可以为后续查询共享连接状态。而使用 pool.query() 的话，不同的两次调用可能使用的是两个不同的连接并行运行。
 
-```
+```js
 var mysql = require('mysql');
 var pool  = mysql.createPool(...);
 
@@ -4900,7 +5182,7 @@ sql 语句中使用 `?` 作为查询参数占位符，值以数组的形式传�
 
 如果 sql 是直接拼接的字符串值，那么为了防止 SQL 注入，必须对参数值事先调用 `mysql.escape()` 来过滤：
 
-```
+```js
 status = mysql.escape(status);
 id = mysql.escape(id);
 connection.query(`update tbl_module set module_status = ${status} where id = ${id}`);
@@ -4931,16 +5213,16 @@ connection.query(`update tbl_module set module_status = ${status} where id = ${i
 
 目前主流的 Web 开发模式有两种，分别是：
 
-- 基于服务端渲染的传统 Web 开发模式
-- 基于前后端分离的新型 Web 开发模式
+- 基于<font color='gree'>服务端渲染</font>的传统 Web 开发模式
+- 基于<font color='gree'>前后端分离</font>的新型 Web 开发模式
 
-## 1.1 服务端渲染的Web开发模式
+## 1.1 <font color='red'>服务端渲染</font>的Web开发模式
 
-服务端渲染的概念：服务器发送给客户端的 HTML 页面，是在服务器通过字符串的拼接，动态生成的。因此，客户端不需要使用 Ajax 这样的技术额外请求页面的数据。
+<font color='gree'>服务端渲染的概念</font>：服务器<font color='gree'>发送给客户端的 HTML 页面</font>，是<font color='gree'>在服务器通过字符串的拼接，动态生成的</font>。因此，客户端不需要使用 Ajax 这样的技术额外请求页面的数据。
 
 代码示例如下：
 
-```
+```js
 app.get('/index.html', (req, res) => {
     // 要渲染的数据
     const user = {
@@ -4960,29 +5242,29 @@ app.get('/index.html', (req, res) => {
 
 优点：
 
-- **前端耗时少！**因为服务器端负责动态生成 HTML 内容，浏览器只需要直接渲染页面即可。
-- **有利于 SEO！**因为服务器端响应的是完整的 HTML 页面内容，所以搜索引擎爬虫更容易爬取获得信息。
+- <font color='red'>**前端耗时少！**</font>因为服务器端负责动态生成 HTML 内容，浏览器只需要直接渲染页面即可。
+- <font color='red'>**有利于 SEO！**</font>因为服务器端响应的是完整的 HTML 页面内容，所以搜索引擎爬虫更容易爬取获得信息。
 
 缺点：
 
-- **占用服务器端资源！**由服务端完成 HTML 页面内容的生成，如果请求较多，会对服务器造成一定的访问压力。
-- **开发效率低！**使用服务器端渲染，则无法进行分工合作，尤其对于前端复杂度高的项目，不利于项目高效开发。
+- <font color='red'>**占用服务器端资源！**</font>由服务端完成 HTML 页面内容的生成，如果请求较多，会对服务器造成一定的访问压力。
+- <font color='red'>**开发效率低！**</font>使用服务器端渲染，则无法进行分工合作，尤其对于前端复杂度高的项目，不利于项目高效开发。
 
-## 1.3 前后端分离的Web开发模式
+## 1.3 <font color='red'>前后端分离</font>的Web开发模式
 
-前后端分离的概念：前后端分离的开发模式，依赖于 Ajax 技术的广泛应用。简而言之，前后端分离的 Web 开发模式，就是后端只负责提供 API 接口，前端使用 Ajax 调用接口的开发模式。
+前后端分离的概念：前后端分离的开发模式，<font color='gree'>依赖于 Ajax 技术的广泛应用</font>。简而言之，前后端分离的 Web 开发模式，就是<font color='gree'>后端只负责提供 API 接口，前端使用 Ajax 调用接口的开发模式</font>。
 
 ## 1.4 前后端分离的优缺点
 
 优点：
 
-- **开发体验好！**前端专注于界面的开发，后端专注于 API 的开发，且前端有更多的选择性。
-- **用户体验好！**Ajax 技术的广泛应用，极大的提高了用户的体验，可以轻松实现页面的局部刷新。
-- **减轻了服务器端的渲染压力！**因为页面最终是在每个用户的浏览器中生成的。
+- <font color='gree'>**开发体验好！**</font>前端专注于界面的开发，后端专注于 API 的开发，且前端有更多的选择性。
+- <font color='gree'>**用户体验好！**</font>Ajax 技术的广泛应用，极大的提高了用户的体验，可以轻松实现页面的局部刷新。
+- <font color='gree'>**减轻了服务器端的渲染压力！**</font>因为页面最终是在每个用户的浏览器中生成的。
 
 缺点：
 
-- **不利于 SEO！**。因为完整的 HTML 页面需要在客户端动态拼接完成，所以爬虫无法爬取页面的有效信息。（解决方案：利用 Vue、React 等前端框架的 SSR（server side render）技术能够很好的解决前后端分离下的 SEO 问题！）
+- <font color='gree'>**不利于 SEO！**</font>。因为完整的 HTML 页面需要在客户端动态拼接完成，所以爬虫无法爬取页面的有效信息。（解决方案：利用 Vue、React 等前端框架的 <font color='red'>SSR</font>（server side render）技术能够很好的解决前后端分离下的 SEO 问题！）
 
 > SEO：搜索引擎优化！
 >
@@ -4992,60 +5274,60 @@ app.get('/index.html', (req, res) => {
 
 ## 1.5 如何选择Web开发模式
 
-不谈业务场景而盲目选择使用何种开发模式都是耍流氓。
+<font color='gree'>不谈业务场景而盲目选择使用何种开发模式都是耍流氓</font>。
 
 - 比如企业级官网，主要功能是展示而没有复杂的交互，并且需要良好的 SEO，则这时我们就需要使用服务器端渲染。
 - 而类似后台管理项目，交互性比较强，不需要考虑 SEO，那么就可以使用前后端分离的开发模式。
 
-另外，具体使用何种开发模式并不是绝对的，为了同时兼顾首页的渲染速度和前后端分离的开发效率，一些网站采用了首屏服务端渲染 + 其他页面前后端分离的开发模式。
+另外，具体使用何种开发模式并不是绝对的，为了<font color='gree'>同时兼顾首页的渲染速度和前后端分离的开发效率</font>，一些网站采用了首屏服务端渲染 + 其他页面前后端分离的开发模式。
 
 # 二、身份认证
 
-## 2.1 什么是身份认证
+## 2.1 什么是<font color='red'>身份认证</font>
 
-身份认证（Authentication）又称 “身份验证”、“鉴权”，是指通过一定的手段，完成对用户身份的确认。
+<font color='gree'>身份认证</font>（Authentication）又称 “身份验证”、“鉴权”，是指<font color='gree'>通过一定的手段，完成对用户身份的确认</font>。
 
 - 日常生活中的身份认证随处可见，例如：高铁的验票乘车，手机的密码或指纹解锁，支付宝或微信的支付密码等。
-- 在 Web 开发中，也涉及到用户身份的认证，例如：各大网站的手机验证码登录、邮箱密码登录、二维码登录等。
+- 在 Web 开发中，也涉及到用户身份的认证，例如：各大网站的<font color='gree'>手机验证码登录、邮箱密码登录、二维码登录</font>等。
 
 ## 2.2 为什么需要身份认证
 
-身份认证的目的，是为了确认当前所声称为某种身份的用户，确实是所声称的用户。例如，你去找快递员取快递，你要怎么证明这份快递是你的。
+身份认证的目的，是为了<font color='gree'>确认当前所声称为某种身份的用户</font>，确实是所声称的用户。例如，你去找快递员取快递，你要怎么证明这份快递是你的。
 
 在互联网项目开发中，如何对用户的身份进行认证，是一个值得深入探讨的问题。
 
-## 2.3 不同开发模式下的身份认证
+## 2.3 不同开发模式下的<font color='red'>身份认证</font>
 
-对于服务端渲染和前后端分离这两种开发模式来说，分别有着不同的身份认证方案：
+对于<font color='gree'>服务端渲染</font>和<font color='gree'>前后端分离</font>这两种开发模式来说，分别有着不同的身份认证方案：
 
-- 服务端渲染推荐使用 **Session** **认证机制**
-- 前后端分离推荐使用 **JWT** **认证机制**
+- <font color='red'>服务端渲染</font>推荐使用<font color='gree'> **Session** **认证机制**</font>
+- <font color='red'>前后端分离</font>推荐使用<font color='gree'> **JWT** **认证机制**</font>
 
 # 三、Session认证机制
 
-## 3.1 HTTP协议的无状态性
+## 3.1 HTTP协议的<font color='red'>无状态性</font>
 
 了解 HTTP 协议的无状态性是进一步学习 Session 认证机制的必要前提。
 
-HTTP 协议的无状态性，指的是客户端的每次 HTTP 请求都是独立的，连续多个请求之间没有直接的关系，服务器不会主动保留每次 HTTP 请求的状态。
+HTTP 协议的无状态性，指的是客户端<font color='gree'>的每次 HTTP 请求都是独立的</font>，连续多个请求之间没有直接的关系，<font color='gree'>服务器不会主动保留每次 HTTP 请求的状态</font>。
 
-[![image-20221215192855055](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215192855055.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215192855055.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-08-08_15-50-10.jpg)
 
-## 3.2 如何突破HTTP无状态的限制
+## 3.2 <font color='red'>如何突破</font>HTTP无状态的限制
 
 对于超市来说，为了方便收银员在进行结算时给 VIP 用户打折，超市可以为每个 VIP 用户发放会员卡。
 
-[![image-20221215192911804](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215192911804.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215192911804.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-08-08_15-51-24.jpg)
 
-注意：现实生活中的会员卡身份认证方式，在 Web 开发中的专业术语叫做 **Cookie**。
+注意：现实生活中的<font color='gree'>会员卡身份认证方式</font>，在 Web 开发中的<font color='gree'>专业术语叫做 **Cookie**</font>。
 
-## 3.3 什么是Cookie
+## 3.3 什么是<font color='red'>Cookie</font>
 
-Cookie 是存储在用户浏览器中的一段不超过 4 KB 的字符串。它由一个名称（Name）、一个值（Value）和其它几个用于控制 Cookie 有效期、安全性、使用范围的可选属性组成。
+Cookie 是<font color='gree'>存储在用户浏览器中的一段不超过 4 KB 的字符串</font>。它由一个<font color='red'>名称</font>（Name）、一个<font color='red'>值</font>（Value）和其它几个用于控制 Cookie <font color='gree'>有效期、安全性、使用范围</font>的<font color='red'>可选属性</font>组成。
 
-不同域名下的 Cookie 各自独立，每当客户端发起请求时，会自动把**当前域名下**所有未过期的 Cookie 一同发送到服务器。
+不同域名下的 Cookie 各自独立，每当客户端发起请求时，会<font color='gree'>自动把**当前域名下**所有未过期</font>的 Cookie 一同发送到服务器。
 
-Cookie 的几大特性：
+<font color='red'>Cookie 的几大特性：</font>
 
 - 自动发送
 - 域名独立
@@ -5054,37 +5336,37 @@ Cookie 的几大特性：
 
 ## 3.4 Cookie在算法认证中的作用
 
-客户端第一次请求服务器的时候，服务器通过响应头的形式，向客户端发送一个身份认证的 Cookie，浏览器会自动将 Cookie 保存在浏览器中。
+客户端第一次请求服务器的时候，服务器<font color='gree'>通过响应头的形式</font>，向客户端发送一个身份认证的 Cookie，浏览器会自动将 Cookie 保存在浏览器中。
 
-随后，当浏览器每次请求服务器的时候，浏览器会自动将身份认证相关的 Cookie，通过请求头的形式发送给服务器，服务器即可验明客户端的身份。
+随后，当浏览器每次请求服务器的时候，浏览器会<font color='red'>自动</font>将身份认证相关的 Cookie，<font color='gree'>通过请求头的形式</font>发送给服务器，服务器即可验明客户端的身份。
 
-[![image-20221215194007711](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215194007711.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215194007711.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-08-08_16-03-39.jpg)
 
-## 3.5 Cookie不具有安全性
+## 3.5 Cookie<font color='red'>不具有</font>安全性
 
-由于 Cookie 是存储在浏览器中的，而且浏览器也提供了读写 Cookie 的 API，因此 Cookie 很容易被伪造，不具有安全性。因此不建议服务器将重要的隐私数据，通过 Cookie 的形式发送给浏览器。
+由于 Cookie 是存储在浏览器中的，而且<font color='gree'>浏览器也提供了读写 Cookie 的 API</font>，因此 <font color='gree'>Cookie 很容易被伪造</font>，不具有安全性。因此不建议服务器将重要的隐私数据，通过 Cookie 的形式发送给浏览器。
 
-[![image-20221215194740416](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215194740416.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215194740416.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-08-08_16-08-36.jpg)
 
-注意：千万不要使用 Cookie 存储重要且隐私的数据！比如用户的身份信息、密码等。
+> <font color='red'>注意</font>：<font color='gree'>千万不要使用 Cookie 存储重要且隐私的数据！</font>比如用户的身份信息、密码等。
 
-## 3.6 提高身份认证的安全性
+## 3.6 <font color='red'>提高</font>身份认证的<font color='red'>安全性</font>
 
-为了防止客户伪造会员卡，收银员在拿到客户出示的会员卡之后，可以在收银机上进行刷卡认证。只有收银机确认存在的会员卡，才能被正常使用。
+为了防止客户伪造会员卡，收银员在拿到客户出示的会员卡之后，可以在收银机上<font color='gree'>进行刷卡认证</font>。只有收银机确认存在的会员卡，才能被正常使用。
 
-[![image-20221215194924023](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215194924023.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215194924023.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-08-08_16-11-08.jpg)
 
-这种 “会员卡 + 刷卡认证” 的设计理念，就是 Session 认证机制的精髓。
+> 这种 “<font color='pink'>会员卡</font> + <font color='gree'>刷卡认证</font>” 的设计理念，就是 Session 认证机制的精髓。
 
-## 3.7 Session的工作原理
+## 3.7 <font color='red'>Session</font>的<font color='gree'>工作原理</font>
 
-[![image-20221215195150951](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215195150951.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215195150951.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\image-20221215195150951.png)
 
 # 四、在Express中使用Session认证
 
-## 4.1 安装express-session中间件
+## 4.1 <font color='red'>安装</font>express-session中间件
 
-在 Express 项目中，只需要安装 express-session 中间件，即可在项目中使用 Session 认证：
+在 Express 项目中，只需要安装<font color='gree'> express-session </font>中间件，即可在项目中使用 Session 认证：
 
 ```
 npm install express-session
@@ -5092,11 +5374,11 @@ npm install express-session
 
 
 
-## 4.2 配置express-session中间件
+## 4.2 <font color='red'>配置</font>express-session中间件
 
-express-session 中间件安装成功后，需要通过 app.use() 来注册 session 中间件，示例代码如下：
+express-session 中间件安装成功后，需要通过<font color='gree'> app.use() </font>来<font color='gree'>注册 session 中间件</font>，示例代码如下：
 
-```
+```js
 // 导入 Session 中间件
 const session = require('express-session');
 
@@ -5110,11 +5392,13 @@ app.use(session({
 
 
 
-## 4.3 向session中存储数据
+## 4.3 向session中<font color='red'>存储数据</font>
 
-当 express-session 中间件配置成功后，即可通过 req.session 来访问和使用 session 对象，从而存储用户的关键信息：
+当 express-session 中间件配置成功后，即可通过<font color='red'> req.session </font>来访问和使用 session 对象，从而存储用户的关键信息：
 
-```
+> 配置完中间件之后才有`req.session` 
+
+```js
 app.post('/api/login', (req, res) => {
     // 判断用户提交的登录信息是否正确
     if (req.body.username !== 'admin' || req.body.password !== '000000') {
@@ -5136,11 +5420,11 @@ app.post('/api/login', (req, res) => {
 
 
 
-## 4.4 从session中取数据
+## 4.4 从session中<font color='red'>取数据</font>
 
 可以直接从 req.session 对象上获取之前存储的数据，示例代码如下：
 
-```
+```js
 // 获取用户姓名的接口
 app.get('/api/username', (req, res) => {
     // 判断用户是否登录
@@ -5163,9 +5447,9 @@ app.get('/api/username', (req, res) => {
 
 ## 4.5 清空session
 
-调用 req.session.destroy() 函数，即可清空当前用户在服务器保存的 session 信息。
+调用<font color='red'> req.session.destroy() </font>函数，即可清空当前用户在服务器保存的 session 信息。
 
-```
+```js
 // 退出登录的接口
 app.post('/api/logout', (req, res) => {
     // 清空当前客户端对应的 session 信息
@@ -5181,28 +5465,28 @@ app.post('/api/logout', (req, res) => {
 
 # 五、JWT认证机制
 
-## 5.1 了解Session认证的局限性
+## 5.1 了解Session认证的<font color='red'>局限性</font>
 
-Session 认证机制需要配合 Cookie 才能实现，由于 Cookie 默认不支持跨域访问，所以，当涉及到前端跨域请求后端接口的时候，需要做额外的配置，才能实现跨域 Session 认证。
+Session 认证机制<font color='red'>需要配合 Cookie 才能实现</font>，由于 Cookie 默认不支持跨域访问，所以，当涉及到<font color='red'>前端跨域请求后端接口</font>的时候，<font color='red'>需要做额外的配置</font>，才能实现跨域 Session 认证。
 
 注意：
 
-- 当前端请求后端接口不存在跨域问题的时候，推荐使用 Session 身份认证机制。
+- 当前端请求后端接口<font color='red'>不存在跨域问题</font>的时候，<font color='red'>推荐使用 Session </font>身份认证机制。
 - 当前端需要跨域请求后端接口的时候，不推荐使用 Session 身份认证机制，推荐使用 JWT 认证机制。
 
 ## 5.2 什么是JWT
 
-JWT（英文全称：JSON Web Token）是目前最流行的跨域认证解决方案。
+JWT（英文全称：JSON Web Token）是目前<font color='red'>最流行</font>的<font color='gree'>跨域认证解决方案</font>。
 
 ## 5.3 JWT的工作原理
 
-[![image-20221215204010879](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215204010879.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215204010879.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\image-20221215204010879.png)
 
 总结：用户的信息通过 Token 字符串的形式，保存在客户端浏览器中。服务器通过还原 Token 字符串的形式来认证用户的身份。
 
-## 5.4 JWT的组成部分
+## 5.4 JWT的<font color='red'>组成部分</font>
 
-JWT 通常由三部分组成，分别是 Header（头部）、Payload（有效荷载）、Signature（签名）。
+JWT 通常由三部分组成，分别是<font color='red'> Header（头部）、Payload（有效荷载）、Signature（签名）</font>。
 
 三者之间使用英文的 `.` 分 隔，格式如下：
 
@@ -5216,22 +5500,26 @@ Header.Payload.Signature
 
 [![image-20221215204211017](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215204211017.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215204211017.png)
 
-## 5.5 JWT三个部分各自的含义
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-08-10_16-33-08.jpg)
+
+## 5.5 JWT<font color='red'>三个部分各自的含义</font>
 
 JWT 的三个组成部分，从前到后分别是 Header、Payload、Signature。
 
 其中：
 
-- Payload 部分才是真正的用户信息，它是用户信息经过加密之后生成的字符串。
-- Header 和 Signature 是安全性相关的部分，只是为了保证 Token 的安全性。
+- <font color='red'>Payload </font>部分<font color='red'>才是真正的用户信息</font>，它是用户信息经过加密之后生成的字符串。
+- Header 和 Signature 是<font color='gree'>安全性相关的部分</font>，只是为了保证 Token 的安全性。
 
 [![image-20221215204359726](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20221215204359726.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20221215204359726.png)
 
-## 5.6 JWT的使用方式
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-08-10_16-35-07.jpg)
 
-客户端收到服务器返回的 JWT 之后，通常会将它储存在 localStorage 或 sessionStorage 中。
+## 5.6 JWT的<font color='red'>使用方式</font>
 
-此后，客户端每次与服务器通信，都要带上这个 JWT 的字符串，从而进行身份认证。推荐的做法是把 JWT 放在 HTTP 请求头的 Authorization 字段中，格式如下：
+客户端收到服务器返回的 JWT 之后，通常会将它储存在<font color='gree'> localStorage 或 sessionStorage 中</font>。
+
+此后，客户端每次与服务器通信，都要带上这个 JWT 的字符串，从而进行身份认证。推荐的做法是<font color='gree'>把 JWT 放在 HTTP 请求头的 Authorization 字段中</font>，格式如下：
 
 ```
 Authorization: Bearer <token>
@@ -5241,7 +5529,7 @@ Authorization: Bearer <token>
 
 # 六、在Express中使用JWT
 
-## 6.1 安装JWT相关包
+## 6.1 <font color='red'>安装</font>JWT相关包
 
 运行如下命令，安装如下两个 JWT 相关的包：
 
@@ -5253,14 +5541,14 @@ npm install jsonwebtoken express-jwt
 
 其中：
 
-- jsonwebtoken 用于生成 JWT 字符串
-- express-jwt 用于将 JWT 字符串解析还原成 JSON 对象
+- <font color='red'>jsonwebtoken </font>用于<font color='gree'>生成 JWT 字符串</font>
+- <font color='red'>express-jwt </font>用于<font color='gree'>将 JWT 字符串解析还原成 JSON 对象</font>
 
-## 6.2 导入JWT相关包
+## 6.2 <font color='red'>导入</font>JWT相关包
 
-使用 require() 函数，分别导入 JWT 相关的两个包：
+使用<font color='red'> require() </font>函数，分别导入 JWT 相关的两个包：
 
-```
+```js
 // 导入用于生成 JWT 字符串的包
 const jwt = require('jsonwebtoken');
 // 导入用于将客户端发送过来的 JWT 字符串，解析还原成 JSON 对象的包
@@ -5271,23 +5559,25 @@ const expressJWT = require('express-jwt');
 
 ## 6.3 定义secret密钥
 
-为了保证 JWT 字符串的安全性，防止 JWT 字符串在网络传输过程中被别人破解，我们需要专门定义一个用于加密和解密的 secret 密钥：
+为了<font color='gree'>保证 JWT 字符串的安全性</font>，防止 JWT 字符串在网络传输过程中被别人破解，我们需要专门定义一个用于<font color='gree'>加密和解密</font>的 secret 密钥：
 
-- 当生成 JWT 字符串的时候，需要使用 secret 密钥对用户的信息进行加密，最终得到加密好的 JWT 字符串
-- 当把 JWT 字符串解析还原成 JSON 对象的时候，需要使用 secret 密钥进行解密
+- 当生成 JWT 字符串的时候，需要使用 secret 密钥对用户的信息<font color='red'>进行加密</font>，最终得到加密好的 JWT 字符串
+- 当把 JWT 字符串解析还原成 JSON 对象的时候，需要使用 secret 密钥<font color='red'>进行解密</font>
 
-```
+```js
 // secret 密钥的本质：就是一个字符串
 const secretKey = 'I Love Node ^_^';
 ```
 
 
 
-## 6.4 在登录成功后生成JWT字符串
+## 6.4 在登录成功<font color='red'>后生成JWT字符串</font>
 
-调用 jsonwebtoken 包提供的 `sign()` 方法，将用户的信息加密成 JWT 字符串，响应给客户端：
+调用<font color='gree'> jsonwebtoken 包提供的 `sign()` 方法</font>，将用户的信息加密成 JWT 字符串，响应给客户端：
 
-```
+> 最好不要传输密码 
+
+```js
 // 登录接口
 app.post('/api/login', function (req, res) => {
          // ... 省略登录失败情况下的代码
@@ -5298,20 +5588,22 @@ app.post('/api/login', function (req, res) => {
          res.send({
          	status: 200,
          	message: '登录成功！',
-         	token: tokenStr;
+         	token: tokenStr; // 要发给客户端的token字符串
          });
 });
 ```
 
 
 
-## 6.5 将JWT字符串还原为JSON对象
+## 6.5 将<font color='gree'>JWT字符串</font><font color='red'>还原为</font><font color='gree'>JSON对象</font>
 
-客户端每次在访问那些有权限接口的时候，都需要主动通过请求头中的 Authorization 字段，将 Token 字符串发送到服务器进行身份认证。
+客户端每次在访问那些有权限接口的时候，都需要主动通过<font color='gree'>请求头中的 Authorization 字段</font>，将 Token 字符串发送到服务器进行身份认证。
 
-此时，服务器可以通过 express-jwt 这个中间件，自动将客户端发送过来的 Token 解析还原成 JSON 对象：
+此时，服务器可以通过<font color='red'> express-jwt </font>这个中间件，自动将客户端发送过来的 Token 解析还原成 JSON 对象：
 
-```
+> unless 是指定 不需要 访问权限的
+
+```js
 // 使用 app.use() 来注册中间件
 // expressJWT( { secret: secretKey } ) 就是用来解析 Token 的中间件
 // .unless({ path: [/^\/api\//] }) 用来指定哪些接口不需要访问权限
@@ -5322,9 +5614,11 @@ app.use(expressJWT({ secret: secretKey }).unless({ path: [/^\/api\//] }));
 
 ## 6.6 使用req.user获取用户信息
 
-当 express-jwt 这个中间件配置成功之后，即可在那些有权限的接口中，使用 req.user 对象，来访问从 JWT 字符串中解析出来的用户信息了，示例代码如下：
+> <font color='gree'>目前最新变成了req.auth 具体以官方文档为准</font>
 
-```
+当 express-jwt 这个中间件配置成功之后，即可在那些有权限的接口中，使用<font color='red'> req.user </font>对象，来访问从 JWT 字符串中解析出来的用户信息了，示例代码如下：
+
+```js
 // 这是一个有权限的 API 接口
 app.get('/admin/getinfo', function(req, res) {
     // 只要配置成功了 express-jwt 这个中间件，就会把解析出来的用户信息，自动挂载到 req.user 属性上
@@ -5338,15 +5632,15 @@ app.get('/admin/getinfo', function(req, res) {
 });
 ```
 
+> 报错需要在secret后面加加algorithm:['HS256']
 
-
-> 注意：千万不要把密码这种信息加密到 token 中！
+> <font color='red'>注意：千万不要把密码这种信息加密到 token 中！</font>
 
 ## 6.7 捕获解析JWT失败后产生的错误
 
-当使用 express-jwt 解析 Token 字符串时，如果客户端发送过来的 Token 字符串过期或不合法，会产生一个解析失败的错误（UnauthorizedError），影响项目的正常运行。我们可以通过 Express 的错误中间件，捕获这个错误并进行相关的处理，示例代码如下：
+当使用 express-jwt 解析 Token 字符串时，如果客户端发送过来的 Token 字符串<font color='red'>过期或不合法</font>，会产生一个<font color='red'>解析失败的错误（UnauthorizedError）</font>，影响项目的正常运行。我们可以通过<font color='red'> Express 的错误中间件</font>，捕获这个错误并进行相关的处理，示例代码如下：
 
-```
+```js
 app.use((err, req, res, next) => {
     // token 解析失败导致的错误
     if (err.name === 'UnauthorizedError') {
@@ -5367,9 +5661,9 @@ app.use((err, req, res, next) => {
 
 2、服务器集群模式下，更比 Session 更方面实现！
 
-[![image-20230207120123436](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20230207120123436.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20230207120123436.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\image-20230207120123436.png)
 
-[![image-20230207120157947](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/08-%E5%89%8D%E5%90%8E%E7%AB%AF%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/mark-img/image-20230207120157947.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/08-前后端身份认证/mark-img/image-20230207120157947.png)
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\image-20230207120157947.png)
 
 这样一来，就不保存 session id 了，只是生成 token, 然后验证 token，用服务器 CPU 计算时间换取了 session 存储空间以及 session 同步所带来的设计成本！
 
@@ -5381,3 +5675,2592 @@ app.use((err, req, res, next) => {
 2. 无法在服务端注销，那么就很难解决劫持问题
 3. 性能问题，JWT 的卖点之一就是加密签名，由于这个特性，接收方得以验证 JWT 是否有效且被信任。对于有着严格性能要求的 Web 应用，这并不理想，尤其对于单线程环境，可能造成性能的大量消耗（Node.js 中可以用子进程来单独负责加密解密的部分，从而更好的利用 CPU 空闲资源）
 4. 同样不是绝对安全的！如果一个人的 token 被别人偷走了，那也没办法，服务器会认为小偷就是合法用户，这其实和一个人的 session id 被别人偷走是一样的
+
+# 【api接口项目案例】
+
+> 本项目的 API 文档：[https://5fb05ilz4j.apifox.cn](https://5fb05ilz4j.apifox.cn/)
+>
+> 提示：请配合 API 文档进行学习！
+
+# 一、初始化
+
+## 1.1 创建项目
+
+1. 新建 `api_server` 文件夹作为项目根目录，并在项目根目录中运行如下的命令，初始化包管理配置文件：
+
+```
+npm init -y
+```
+
+
+
+1. 运行如下的命令，安装特定版本的 `express`：
+
+```
+npm i express@4.17.1
+```
+
+
+
+1. 在项目根目录中新建 `app.js` 作为整个项目的入口文件，并初始化如下的代码：
+
+```js
+// 导入 express 模块
+const express = require('express');
+// 创建 express 的服务器实例
+const app = express();
+
+// write your code here...
+
+// 调用 app.listen 方法，指定端口号并启动 web 服务器
+app.listen(8080, function () {
+  console.log('api server running at http://127.0.0.1:8080');
+});
+```
+
+>端口号于数据库的端口保持一致
+
+
+
+## 1.2 配置cors跨域
+
+1. 运行如下的命令，安装 `cors` 中间件：
+
+```js
+npm i cors@2.8.5
+```
+
+
+
+1. 在 `app.js` 中导入并配置 `cors` 中间件：
+
+```js
+// 导入 cors 中间件
+const cors = require('cors');
+// 将 cors 注册为全局中间件
+app.use(cors());
+```
+
+
+
+## 1.3 配置解析表单数据的中间件
+
+通过如下的代码，配置解析 `application/x-www-form-urlencoded` 格式的表单数据的中间件：
+
+```js
+app.use(express.urlencoded({ extended: false }));
+```
+
+
+
+该项目中没有涉及对于 `application/json` 格式请求数据的处理，但是这也是非常重要的！如果你要使用，那么你应该在 app.js 中加上：
+
+```js
+app.use(express.json());
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+```
+
+
+
+由于后续 JWT 的处理需要读取 Authorization 请求头，所以我们顺便把 Authorization 也加上：
+
+```js
+app.use(express.json());
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+    next();
+});
+```
+
+
+
+cors 包是支持配置的，我们可以直接对 cors 包进行配置，而不用去手动修改。
+
+具体配置文档：[cors - npm (npmjs.com)](https://www.npmjs.com/package/cors)
+
+例如：
+
+```js
+const corsOptions = {
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type,Authorization',
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
+```
+
+
+
+## 1.4 初始化路由相关的文件夹
+
+1. 在项目根目录中，新建 `router` 文件夹，用来存放所有的 `路由模块`
+
+   > 路由模块中，只存放客户端的请求与处理函数之间的映射关系
+
+2. 在项目根目录中，新建 `router_handler` 文件夹，用来存放所有的 `路由处理函数模块`
+
+   > 路由处理函数模块中，专门负责存放每个路由对应的处理函数
+
+## 1.5 初始化用户路由模块
+
+1. 在 `router` 文件夹中，新建 `user.js` 文件，作为用户的路由模块，并初始化代码如下：
+
+```js
+const express = require('express');
+// 创建路由对象
+const router = express.Router();
+
+// 注册新用户
+router.post('/reguser', (req, res) => {
+  res.send('reguser OK');
+});
+
+// 登录
+router.post('/login', (req, res) => {
+  res.send('login OK');
+});
+
+// 将路由对象共享出去
+module.exports = router;
+```
+
+
+
+1. 在 `app.js` 中，导入并使用用户路由模块：
+
+> <font color='gree'>**路由记得定义在中间件之后**</font>
+
+```js
+// 导入并注册用户路由模块
+const userRouter = require('./router/user');
+app.use('/api', userRouter); // 增加/api前缀
+```
+
+
+
+## 1.6 抽离用户路由模块中的处理函数
+
+> 目的：为了保证 `路由模块` 的纯粹性，所有的 `路由处理函数`，必须抽离到对应的 `路由处理函数模块` 中
+
+1. 在 `/router_handler/user.js` 中，使用 `exports` 对象，分别向外共享如下两个 `路由处理函数` ：
+
+```js
+/**
+ * 在这里定义和用户相关的路由处理函数，供 /router/user.js 模块进行调用
+ */
+
+// 注册用户的处理函数
+exports.regUser = (req, res) => {
+  res.send('reguser OK');
+};
+
+// 登录的处理函数
+exports.login = (req, res) => {
+  res.send('login OK');
+};
+```
+
+
+
+1. 将 `/router/user.js` 中的代码修改为如下结构：
+
+```js
+const express = require('express');
+const router = express.Router();
+
+// 导入用户路由处理函数模块
+const userHandler = require('../router_handler/user');
+
+// 注册新用户
+router.post('/reguser', userHandler.regUser);
+// 登录
+router.post('/login', userHandler.login);
+
+module.exports = router;
+```
+
+
+
+# 二、登录注册
+
+## 2.1 新建ev_users表
+
+在 `api_server` 数据库中，新建 `ev_users` 表如下：
+
+> TEXT长度可以很长
+
+[![ev_users表结构](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/09-api%E6%8E%A5%E5%8F%A3%E9%A1%B9%E7%9B%AE%E6%A1%88%E4%BE%8B/mark-img/1.jpg)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/09-api接口项目案例/mark-img/1.jpg)
+
+## 2.2 安装并配置mysql模块
+
+> 在 API 接口项目中，需要安装并配置 `mysql` 这个第三方模块，来连接和操作 MySQL 数据库
+
+1. 运行如下命令，安装 `mysql` 模块：
+
+```
+npm i mysql@2.18.1
+```
+
+
+
+1. 在项目根目录中新建 `/db/connect.js` 文件，在此自定义模块中创建数据库的连接对象：
+
+   > 方便在需要时只要导入 `/db/connect.js` 文件，就可以操作数据库
+
+```js
+// 导入 mysql 模块
+const mysql = require('mysql');
+
+// 创建数据库连接对象
+const db = mysql.createPool({
+  host: '127.0.0.1',
+  user: 'root',
+  password: '123456',
+  database: 'api_server',
+});
+
+// 向外共享 db 数据库连接对象
+module.exports = db;
+```
+
+
+
+## 2.3 注册
+
+### 2.3.1 实现步骤
+
+1. 检测表单数据是否合法
+2. 检测用户名是否被占用
+3. 对密码进行加密处理
+4. 插入新用户
+
+> 通常都是前后端均做校验，前端校验容易有安全性问题，如果没有前端校验频繁请求也不行，所以前端校验完再推给后端校验
+
+### 2.3.2 检测表单数据是否合法
+
+判断用户名和密码是否为空
+
+> 在`/router_handler/user.js`的处理函数中增加
+>
+>加`return`是为了跳出，因为`res.rend()`后会继续执行，运行两个`res.rend()`进而报错
+
+```js
+// 接收表单数据
+const userinfo = req.body;
+// 判断数据是否合法
+if (!userinfo.username || !userinfo.password) {
+  return res.send({ status: 'no', message: '用户名或密码不能为空！' });
+}
+```
+
+全部：
+
+```js
+exports.regUser = (req, res) => {
+  // 接收表单数据
+  const userinfo = req.body;
+  // 判断数据是否合法
+  if (!userinfo.username || !userinfo.password) {
+    return res.send({ status: 'no', message: '用户名或密码不能为空！' });
+  }
+  res.send('reguser OK');
+};
+```
+
+
+
+### 2.3.3 检测用户名是否被占用
+
+1. 导入数据库操作模块：
+
+```js
+const db = require('../db/connect');
+```
+
+
+
+1. 定义 SQL 语句：
+
+```js
+const sql = 'SELECT * FROM ev_users WHERE username=?';
+```
+
+
+
+1. 执行 SQL 语句并根据结果判断用户名是否被占用：
+
+```
+db.query(sql, userinfo.username, function (err, results) {
+  // 执行 SQL 语句失败
+  if (err) {
+    return res.send({ status: 'no', message: err.message });
+  }
+  // 用户名被占用
+  if (results.length === 1) {
+    return res.send({ status: 'no', message: '用户名被占用，请更换其他用户名！' });
+  } else if (results.length !== 0) {
+    return res.send({ status: 'no', message: '注册异常，请稍后再试！' });
+  }
+  // 用户名可用，继续后续流程...
+});
+```
+
+
+
+### 2.3.4 对密码进行加密处理
+
+> 为了保证密码的安全性，不建议在数据库以 `明文` 的形式保存用户密码，推荐对密码进行 `加密存储`
+
+------
+
+在当前项目中，使用 `bcryptjs` 对用户密码进行加密，优点：
+
+- 加密之后的密码，无法被逆向破解
+- 同一明文密码多次加密，得到的加密结果各不相同，保证了安全性
+
+------
+
+1. 运行如下命令，安装指定版本的 `bcryptjs` ：
+
+```
+npm i bcryptjs@2.4.3
+```
+
+
+
+1. 在 `/router_handler/user.js` 中，导入 `bcryptjs` ：
+
+```
+const bcrypt = require('bcryptjs');
+```
+
+
+
+1. 在注册用户的处理函数中，确认用户名可用之后，调用 `bcrypt.hashSync(明文密码, 随机盐的长度)` 方法，对用户的密码进行加密处理：
+
+```
+// 对用户的密码，进行 bcrypt 加密，返回值是加密之后的密码字符串
+userinfo.password = bcrypt.hashSync(userinfo.password, 6);
+```
+
+
+
+### 2.3.5 插入新用户
+
+1. 定义插入用户的 SQL 语句：
+
+```
+const sql = 'INSERT INTO ev_users SET ?';
+```
+
+
+
+1. 调用 `db.query()` 执行 SQL 语句，插入新用户：
+
+```
+db.query(sql, userinfo, (err, results) => {
+  // 执行 SQL 语句失败
+  if (err) {
+      return res.send({ status: 'no', message: err.message });
+  }
+  // SQL 语句执行成功，但影响行数不为 1
+  if (results.affectedRows !== 1) {
+    return res.send({ status: 'no', message: '注册异常，请稍后再试！' });
+  }
+  // 注册成功
+  res.send({ status: 'ok', message: '注册成功！' });
+});
+```
+
+
+
+## 2.4 优化res.send()代码
+
+> 在处理函数中，需要多次调用 `res.send()` 向客户端响应 `处理失败` 的结果，为了简化代码，可以手动封装一个 `res.fastSend()` 函数
+
+在 `app.js` 中，所有路由之前，声明一个全局中间件，为 res 对象挂载一个 `res.fastSend()` 函数：
+
+```
+// 快速响应状态中间件
+app.use((req, res, next) => {
+    // status = 'ok' 成功状态
+    // status = 'no' 失败状态（默认）
+    res.fastSend = (info, status = 'no') => {
+        res.send({
+            status,
+            // 判断 info 是否为一个 Error 对象，如果是返回 Error.message，否则返回 info
+            message: info instanceof Error ? info.message : info
+        });
+    };
+    next();
+});
+```
+
+
+
+将之前用 `res.send()` 返回状态及状态信息的方法都可以替换为 `res.fastSend()`：
+
+- `res.fastSend('用户名已存在');`
+- `res.fastSend(err);`
+- `res.fastSend('注册成功', 'ok');`
+
+## 2.5 优化表单数据验证
+
+> 表单验证的原则：前端验证为辅，后端验证为主，后端**永远不要相信**前端提交过来的**任何内容**
+
+在实际开发中，前后端都需要对表单的数据进行合法性的验证，而且**后端作为数据合法性验证的最后一个关口**，在拦截非法数据方面，起到了至关重要的作用。
+
+单纯的使用 `if...else...` 的形式对数据合法性进行验证，效率低下、出错率高、维护性差。因此，推荐使用**第三方数据验证模块**，来降低出错率、提高验证的效率与可维护性，**让后端程序员把更多的精力放在核心业务逻辑的处理上**。
+
+1. 安装 `joi` 包，为表单中携带的每个数据项，定义验证规则：
+
+```
+npm i joi@17.4.0
+```
+
+
+
+1. 安装 `@escook/express-joi` 中间件，来实现自动对表单数据进行验证的功能：
+
+```
+npm i @escook/express-joi
+```
+
+
+
+1. 新建 `/schema/user.js` 用户信息验证规则模块，并初始化代码如下：
+
+```
+const joi = require('joi');
+
+// string()         值必须是字符串
+// alphanum()       值只能是包含 a-zA-Z0-9 的字符串
+// min(length)      最小长度
+// max(length)      最大长度
+// required()       值是必填项，不能为 undefined
+// pattern(RegExp)  值必须符合正则表达式的规则
+
+// 用户名的验证规则
+const username = joi.string().alphanum().min(1).max(10).required();
+// 密码的验证规则（6-15位非空字符序列）
+const password = joi
+    .string()
+    .pattern(/^[\S]{6,15}$/)
+    .required();
+
+// 注册和登录的验证规则对象
+exports.reg_login_schema = {
+    // 对 req.body 中的数据进行验证
+    body: {
+        username,
+        password
+    }
+};
+```
+
+
+
+1. 修改 `/router/user.js` 中的代码如下：
+
+```
+const express = require('express');
+const router = express.Router();
+
+// 导入用户路由处理函数模块
+const userHandler = require('../router_handler/user');
+
+// 导入验证表单数据的中间件
+const expressJoi = require('@escook/express-joi');
+// 导入需要的验证规则对象
+const { reg_login_schema } = require('../schema/user');
+
+// 注册新用户
+// 在注册新用户的路由中，声明局部中间件，对当前请求中携带的数据进行验证
+// 数据验证通过后，会把这次请求流转给后面的路由处理函数
+// 数据验证失败后，终止后续代码的执行，并抛出一个全局的 Error 错误，进入全局错误级别中间件中进行处理
+router.post('/reguser', expressJoi(reg_login_schema), userHandler.regUser);
+// 用户登录
+router.post('/login', userHandler.login);
+
+module.exports = router;
+```
+
+
+
+1. 在 `app.js` 的全局错误级别中间件中，捕获验证失败的错误，并把验证失败的结果响应给客户端：
+
+```
+const joi = require('joi');
+
+// 放在最后
+// 错误处理中间件
+app.use(function (err, req, res, next) {
+  // 数据验证失败
+  if (err instanceof joi.ValidationError) return res.fastSend(err);
+  // 未知错误
+  res.fastSend(err);
+});
+```
+
+
+
+## 2.6 登录
+
+### 2.6.1 实现步骤
+
+1. 检测表单数据是否合法
+2. 根据用户名查询用户的数据
+3. 判断用户输入的密码是否正确
+4. 生成 JWT 的 Token 字符串
+
+### 2.6.2 检测登录表单的数据是否合法
+
+1. 将 `/router/user.js` 中 `登录` 的路由代码修改如下：
+
+```
+// 登录的路由
+router.post('/login', expressJoi(reg_login_schema), userHandler.login);
+```
+
+
+
+### 2.6.3 根据用户名查询用户的数据
+
+1. 接收表单数据：
+
+```
+const userinfo = req.body;
+```
+
+
+
+1. 定义 SQL 语句：
+
+```
+const sql = 'SELECT * FROM ev_users WHERE username=?';
+```
+
+
+
+1. 执行 SQL 语句，查询用户的数据：
+
+```
+db.query(sql, userinfo.username, function (err, results) {
+  // 执行 SQL 语句失败
+  if (err) {
+      return res.fastSend(err);
+  }
+  // 执行 SQL 语句成功，但是查询到数据条数不等于 1
+  if (results.length === 0) {
+      return res.fastSend('用户名不存在！');
+  } else if (results.length !== 1) {
+      return res.fastSend('登录异常，请稍后再试！');
+  }
+  // 判断用户输入的登录密码是否和数据库中的密码一致
+});
+```
+
+
+
+### 2.6.4 判断用户输入的密码是否正确
+
+> 核心实现思路：调用 `bcrypt.compareSync(用户提交的密码, 数据库中的密码)` 方法比较密码是否一致
+
+> 返回值是布尔值（true 一致、false 不一致）
+
+具体的实现代码如下：
+
+```
+// 拿着用户输入的密码,和数据库中存储的密码进行对比
+const compareResult = bcrypt.compareSync(userinfo.password, results[0].password);
+
+// 如果对比的结果等于 false, 则证明用户输入的密码错误
+if (!compareResult) {
+  return res.fastSend('密码错误！');
+}
+
+// 登录成功，生成 Token 字符串
+```
+
+
+
+### 2.6.5 生成JWT的Token字符串
+
+> 核心注意点：在生成 Token 字符串的时候，一定要剔除 **密码** 和 **头像** 的值，Token 不能包含敏感信息和过长的无用信息。
+
+1. 通过 ES6 的高级语法，快速剔除 `密码` 和 `头像` 的值：
+
+```
+// 剔除完毕之后，user 中只保留了用户的 id, username, nickname, email 这四个属性的值
+const user = { ...results[0], password: '', user_pic: '' };
+```
+
+
+
+1. 运行如下的命令，安装生成 Token 字符串的包：
+
+```
+npm i jsonwebtoken@8.5.1
+```
+
+
+
+1. 在 `/router_handler/user.js` 模块的头部区域，导入 `jsonwebtoken` 包：
+
+```
+// 用这个包来生成 Token 字符串
+const jwt = require('jsonwebtoken');
+```
+
+
+
+1. 创建 `config.js` 文件，并向外共享 **加密** 和 **还原** Token 的 `jwtSecretKey` 字符串：
+
+```
+module.exports = {
+  jwtSecretKey: 'I Love Node. ^_^',
+};
+```
+
+
+
+1. 将用户信息对象加密成 Token 字符串：
+
+```
+// 导入配置文件
+const config = require('../config');
+
+// 生成 Token 字符串
+const tokenStr = jwt.sign(user, config.jwtSecretKey, {
+  expiresIn: '10h', // token 有效期为 10 个小时
+});
+```
+
+
+
+1. 将生成的 Token 字符串响应给客户端：
+
+```
+res.send({
+  status: 'ok',
+  message: '登录成功！',
+  // 为了方便客户端使用 Token，在服务器端直接拼接上 Bearer 的前缀
+  // 客户端拿到 token 后直接保存到 Storage 中，下次请求时放在请求头中的 Authorization 字段中发送
+  token: 'Bearer ' + tokenStr,
+});
+```
+
+
+
+## 2.7 配置解析Token的中间件
+
+1. 运行如下的命令，安装解析 Token 的中间件：
+
+```
+npm i express-jwt@5.3.3
+```
+
+
+
+1. 在 `app.js` 中注册路由之前，配置解析 Token 的中间件：
+
+```
+// 导入配置文件
+const config = require('./config');
+
+// 解析 token 的中间件
+const expressJWT = require('express-jwt');
+
+// 使用 .unless({ path: [/^\/api\//] }) 指定哪些接口不需要进行 Token 的身份认证
+app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api\//] }));
+```
+
+
+
+1. 在 `app.js` 中的 `错误级别中间件` 里面，捕获并处理 Token 认证失败后的错误：
+
+```
+// 错误中间件
+app.use(function (err, req, res, next) {
+  // 省略其它代码...
+
+  // 捕获身份认证失败的错误
+  if (err.name === 'UnauthorizedError') return res.fastSend('身份认证失败！');
+
+  // 未知错误...
+});
+```
+
+
+
+# 三、个人中心
+
+## 3.1 获取用户的基本信息
+
+### 3.1.1 实现步骤
+
+1. 初始化路由模块
+2. 初始化路由处理函数模块
+3. 获取用户的基本信息
+
+### 3.1.2 初始化路由模块
+
+1. 创建 `/router/userinfo.js` 路由模块，并初始化如下的代码结构：
+
+```
+// 导入 express
+const express = require('express');
+// 创建路由对象
+const router = express.Router();
+
+// 获取用户的基本信息
+router.get('/userinfo', (req, res) => {
+  res.send('ok');
+});
+
+// 向外共享路由对象
+module.exports = router;
+```
+
+
+
+1. 在 `app.js` 中导入并使用个人中心的路由模块：
+
+```
+// 导入并使用用户信息路由模块
+const userinfoRouter = require('./router/userinfo');
+// 注意：以 /my 开头的接口，都是有权限的接口，需要进行 Token 身份认证
+app.use('/my', userinfoRouter);
+```
+
+
+
+### 3.1.3 初始化路由处理函数模块
+
+1. 创建 `/router_handler/userinfo.js` 路由处理函数模块，并初始化如下的代码结构：
+
+```
+// 获取用户基本信息的处理函数
+exports.getUserInfo = (req, res) => {
+  res.send('ok');
+};
+```
+
+
+
+1. 修改 `/router/userinfo.js` 中的代码如下：
+
+```
+const express = require('express');
+const router = express.Router();
+
+// 导入用户信息的处理函数模块
+const userinfo_handler = require('../router_handler/userinfo');
+
+// 获取用户的基本信息
+router.get('/userinfo', userinfo_handler.getUserInfo);
+
+module.exports = router;
+```
+
+
+
+### 3.1.4 获取用户的基本信息
+
+1. 在 `/router_handler/userinfo.js` 头部导入数据库操作模块：
+
+```
+// 导入数据库操作模块
+const db = require('../db/connect');
+```
+
+
+
+1. 定义 SQL 语句：
+
+```
+// 根据用户的 id，查询用户的基本信息
+// 注意：为了防止用户的密码泄露，需要排除 password 字段
+const sql = 'SELECT id, username, nickname, email, user_pic FROM ev_users WHERE id=?';
+```
+
+
+
+1. 调用 `db.query()` 执行 SQL 语句：
+
+```
+// 注意：req 对象上的 user 属性，是 Token 解析成功，express-jwt 中间件帮我们挂载上去的
+// 附：最新的 express-jwt 中间件，Token 解析结果是挂载到 auth 属性上的
+// Token 生成时包含了哪些数据，Token 解析后 user 属性中也就有那些数据
+db.query(sql, req.user.id, (err, results) => {
+  // 执行 SQL 语句失败
+  if (err) {
+      return res.fastSend(err);
+  } 
+
+  // 执行 SQL 语句成功，但是查询到的数据条数不等于 1
+  if (results.length !== 1) {
+      return res.fastSend('获取用户信息失败，请稍后再试！');
+  } 
+
+  // 将用户信息响应给客户端
+  res.send({
+    status: 'ok',
+    message: '获取用户基本信息成功！',
+    data: results[0],
+  });
+});
+```
+
+
+
+## 3.2 更新用户的基本信息
+
+### 3.2.1 实现步骤
+
+1. 定义路由和处理函数
+2. 验证表单数据
+3. 实现更新用户基本信息的功能
+
+### 3.2.2 定义路由和处理函数
+
+1. 在 `/router/userinfo.js` 模块中，新增 `更新用户基本信息` 的路由：
+
+```
+// 更新用户的基本信息
+router.post('/userinfo', userinfo_handler.updateUserInfo);
+```
+
+
+
+1. 在 `/router_handler/userinfo.js` 模块中，定义并向外共享 `更新用户基本信息` 的路由处理函数：
+
+```
+// 更新用户基本信息的处理函数
+exports.updateUserInfo = (req, res) => {
+  res.send('ok');
+};
+```
+
+
+
+### 3.2.3 验证表单数据
+
+1. 在 `/schema/user.js` 验证规则模块中，定义 `id`，`nickname`，`email` 的验证规则如下：
+
+```
+// 定义 id, nickname, email 的验证规则
+const id = joi.number().integer().min(1).required();
+const nickname = joi.string().required();
+const email = joi.string().email();
+```
+
+
+
+1. 并使用 `exports` 向外共享如下的 `验证规则对象`：
+
+```
+// 验证规则对象 - 更新用户基本信息
+exports.update_userinfo_schema = {
+  body: {
+    id,
+    nickname,
+    email,
+  },
+};
+```
+
+
+
+1. 在 `/router/userinfo.js` 模块中，导入验证数据合法性的中间件：
+
+```
+// 导入验证数据合法性的中间件
+const expressJoi = require('@escook/express-joi');
+```
+
+
+
+1. 在 `/router/userinfo.js` 模块中，导入需要的验证规则对象：
+
+```
+// 导入需要的验证规则对象
+const { update_userinfo_schema } = require('../schema/user');
+```
+
+
+
+1. 在 `/router/userinfo.js` 模块中，修改 `更新用户的基本信息` 的路由如下：
+
+```
+// 更新用户的基本信息
+router.post('/userinfo', expressJoi(update_userinfo_schema), userinfo_handler.updateUserInfo);
+```
+
+
+
+### 3.2.4 实现更新用户基本信息的功能
+
+1. 定义待执行的 SQL 语句：
+
+```
+const sql = 'UPDATE ev_users SET ? WHERE id=?';
+```
+
+
+
+1. 调用 `db.query()` 执行 SQL 语句并传参：
+
+```
+db.query(sql, [req.body, req.body.id], (err, results) => {
+  // 执行 SQL 语句失败
+  if (err) {
+      return res.fastSend(err);
+  }
+
+  // 执行 SQL 语句成功，但影响行数不为 1
+  if (results.affectedRows !== 1) {
+      return res.fastSend('修改用户基本信息失败！');
+  }
+
+  // 修改用户信息成功
+  res.fastSend('修改用户基本信息成功！', 'ok');
+});
+```
+
+
+
+## 3.3 重置密码
+
+### 3.3.1 实现步骤
+
+1. 定义路由和处理函数
+2. 验证表单数据
+3. 实现重置密码的功能
+
+### 3.3.2 定义路由和处理函数
+
+1. 在 `/router/userinfo.js` 模块中，新增 `重置密码` 的路由：
+
+```
+// 重置密码的路由
+router.post('/updatepwd', userinfo_handler.updatePassword);
+```
+
+
+
+1. 在 `/router_handler/userinfo.js` 模块中，定义并向外共享 `重置密码` 的路由处理函数：
+
+```
+// 重置密码的处理函数
+exports.updatePassword = (req, res) => {
+  res.send('ok');
+};
+```
+
+
+
+### 3.3.3 验证表单数据
+
+> 核心验证思路：旧密码与新密码，必须符合密码的验证规则，并且新密码不能与旧密码一致！
+
+1. 在 `/schema/user.js` 模块中，使用 `exports` 向外共享如下的 `验证规则对象`：
+
+```
+// 验证规则对象 - 重置密码
+exports.update_password_schema = {
+  body: {
+    // 使用 password 这个规则，验证 req.body.oldPwd 的值
+    oldPwd: password,
+    // 使用 joi.not(joi.ref('oldPwd')).concat(password) 规则，验证 req.body.newPwd 的值
+    // 解读：
+    // joi.ref('oldPwd') 表示 newPwd 的值必须和 oldPwd 的值保持一致
+    // joi.not(joi.ref('oldPwd')) 表示 newPwd 的值不能等于 oldPwd 的值
+    // .concat() 用于合并 joi.not(joi.ref('oldPwd')) 和 password 这两条验证规则
+    newPwd: joi.not(joi.ref('oldPwd')).concat(password),
+  },
+};
+```
+
+
+
+1. 在 `/router/userinfo.js` 模块中，导入需要的验证规则对象：
+
+```
+// 导入需要的验证规则对象
+const { update_password_schema } = require('../schema/user');
+```
+
+
+
+1. 并在 `重置密码的路由` 中，使用 `update_password_schema` 规则验证表单的数据，示例代码如下：
+
+```
+router.post('/updatepwd', expressJoi(update_password_schema), userinfo_handler.updatePassword);
+```
+
+
+
+### 3.3.4 实现重置密码的功能
+
+1. 根据 `id` 查询用户是否存在：
+
+```
+// 定义根据 id 查询用户数据的 SQL 语句
+const sql = 'SELECT * FROM ev_users WHERE id=?';;
+
+// 执行 SQL 语句查询用户是否存在
+db.query(sql, req.user.id, (err, results) => {
+  // 执行 SQL 语句失败
+  if (err) {
+      return res.fastSend(err);
+  } 
+
+  // 检查指定 id 的用户是否存在
+  if (results.length !== 1) {
+      return res.fastSend('用户状态异常！');
+  }
+
+  // 判断提交的旧密码是否正确
+});
+```
+
+
+
+1. 判断提交的旧密码是否正确：
+
+```
+// 在头部区域导入 bcryptjs 后，
+// 即可使用 bcrypt.compareSync(提交的密码，数据库中的密码) 方法验证密码是否正确
+// compareSync() 函数的返回值为布尔值，true 表示密码正确，false 表示密码错误
+const bcrypt = require('bcryptjs');
+
+// 判断提交的旧密码是否正确
+const compareResult = bcrypt.compareSync(req.body.oldPwd, results[0].password);
+if (!compareResult) return res.fastSend('原密码错误！');
+```
+
+
+
+1. 对新密码进行 `bcrypt` 加密之后，更新到数据库中：
+
+```
+// 定义更新用户密码的 SQL 语句
+const sql2 = 'UPDATE ev_users SET password=? WHERE id=?';
+
+// 对新密码进行 bcrypt 加密处理
+const newPwd = bcrypt.hashSync(req.body.newPwd, 6);
+
+// 执行 SQL 语句，根据 id 更新用户的密码
+db.query(sql2, [newPwd, req.user.id], (err, results) => {
+  // SQL 语句执行失败
+  if (err) {
+      return res.fastSend(err);
+  }
+
+  // SQL 语句执行成功，但是影响行数不等于 1
+  if (results.affectedRows !== 1) {
+      return res.fastSend('更新密码异常，请稍后再试！');
+  }
+
+  // 更新密码成功
+  res.fastSend('更新密码成功！', 'ok');
+});
+```
+
+
+
+## 3.4 更新用户头像
+
+### 3.4.1 实现步骤
+
+1. 定义路由和处理函数
+2. 验证表单数据
+3. 实现更新用户头像的功能
+
+### 3.4.2 定义路由和处理函数
+
+1. 在 `/router/userinfo.js` 模块中，新增 `更新用户头像` 的路由：
+
+```
+// 更新用户头像的路由
+router.post('/update/avatar', userinfo_handler.updateAvatar);
+```
+
+
+
+1. 在 `/router_handler/userinfo.js` 模块中，定义并向外共享 `更新用户头像` 的路由处理函数：
+
+```
+// 更新用户头像的处理函数
+exports.updateAvatar = (req, res) => {
+  res.send('ok');
+};
+```
+
+
+
+### 3.4.3 验证表单数据
+
+1. 在 `/schema/user.js` 验证规则模块中，定义 `avatar` 的验证规则如下：
+
+```
+// dataUri() 指的是如下格式的字符串数据：
+// data:image/png;base64,VE9PTUFOWVNFQ1JFVFM=
+const avatar = joi.string().dataUri().required();
+```
+
+
+
+1. 并使用 `exports` 向外共享如下的 `验证规则对象`：
+
+```
+// 验证规则对象 - 更新头像
+exports.update_avatar_schema = {
+  body: {
+    avatar,
+  },
+};
+```
+
+
+
+1. 在 `/router/userinfo.js` 模块中，导入需要的验证规则对象：
+
+```
+const { update_avatar_schema } = require('../schema/user');
+```
+
+
+
+1. 在 `/router/userinfo.js` 模块中，修改 `更新用户头像` 的路由如下：
+
+```
+router.post('/update/avatar', expressJoi(update_avatar_schema), userinfo_handler.updateAvatar);
+```
+
+
+
+### 3.4.4 实现更新用户头像的功能
+
+1. 定义更新用户头像的 SQL 语句：
+
+```
+const sql = 'UPDATE ev_users SET user_pic=? WHERE id=?';
+```
+
+
+
+1. 调用 `db.query()` 执行 SQL 语句，更新对应用户的头像：
+
+```
+db.query(sql, [req.body.avatar, req.user.id], (err, results) => {
+  // 执行 SQL 语句失败
+  if (err) {
+      return res.fastSend(err);
+  }
+
+  // 执行 SQL 语句成功，但是影响行数不等于 1
+  if (results.affectedRows !== 1) {
+      return res.fastSend('更新头像异常，请稍后再试！');
+  }
+
+  // 更新用户头像成功
+  res.fastSend('更新头像成功！', 'ok');
+});
+```
+
+
+
+# 四、文章分类管理
+
+## 4.1 新建ev_article_cate表
+
+### 4.1.1 创建表结构
+
+[![文章分类表结构](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/09-api%E6%8E%A5%E5%8F%A3%E9%A1%B9%E7%9B%AE%E6%A1%88%E4%BE%8B/mark-img/2.jpg)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/09-api接口项目案例/mark-img/2.jpg)
+
+### 4.1.2 新增两条初始数据
+
+[![文章分类表结构](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/09-api%E6%8E%A5%E5%8F%A3%E9%A1%B9%E7%9B%AE%E6%A1%88%E4%BE%8B/mark-img/3.jpg)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/09-api接口项目案例/mark-img/3.jpg)
+
+## 4.2 获取文章分类列表
+
+### 4.2.1 实现步骤
+
+1. 初始化路由模块
+2. 初始化路由处理函数模块
+3. 获取文章分类列表数据
+
+### 4.2.2 初始化路由模块
+
+1. 创建 `/router/artcate.js` 路由模块，并初始化如下的代码结构：
+
+```
+// 导入 express
+const express = require('express');
+// 创建路由对象
+const router = express.Router();
+
+// 获取文章分类的列表数据
+router.get('/cates', (req, res) => {
+  res.send('ok');
+});
+
+// 向外共享路由对象
+module.exports = router;
+```
+
+
+
+1. 在 `app.js` 中导入并使用文章分类的路由模块：
+
+```
+// 导入并使用文章分类路由模块
+const artCateRouter = require('./router/artcate');
+// 为文章分类的路由挂载统一的访问前缀 /my/artcate
+app.use('/my/artcate', artCateRouter);
+```
+
+
+
+### 4.2.3 初始化路由处理函数模块
+
+1. 创建 `/router_handler/artcate.js` 路由处理函数模块，并初始化如下的代码结构：
+
+```
+// 获取文章分类列表数据的处理函数
+exports.getArticleCates = (req, res) => {
+  res.send('ok');
+};
+```
+
+
+
+1. 修改 `/router/artcate.js` 中的代码如下：
+
+```
+const express = require('express');
+const router = express.Router();
+
+// 导入文章分类的路由处理函数模块
+const artcate_handler = require('../router_handler/artcate');
+
+// 获取文章分类的列表数据
+router.get('/cates', artcate_handler.getArticleCates);
+
+module.exports = router;
+```
+
+
+
+### 4.2.4 获取文章分类列表数据
+
+1. 在 `/router_handler/artcate.js` 头部导入数据库操作模块：
+
+```
+// 导入数据库操作模块
+const db = require('../db/connect');
+```
+
+
+
+1. 定义 SQL 语句：
+
+```
+// 根据分类的状态，获取所有未被删除的分类列表数据
+// is_delete 为 0 表示没有被标记为删除的数据
+const sql = 'SELECT * FROM ev_article_cate WHERE is_delete=0 ORDER BY id ASC';
+```
+
+
+
+1. 调用 `db.query()` 执行 SQL 语句：
+
+```
+db.query(sql, (err, results) => {
+  // 执行 SQL 语句失败
+  if (err) {
+      return res.fastSend(err);
+  }
+
+  // 执行 SQL 语句成功
+  res.send({
+    status: 'ok',
+    message: '获取文章分类列表成功！',
+    data: results,
+  });
+});
+```
+
+
+
+## 4.3 新增文章分类
+
+### 4.3.1 实现步骤
+
+1. 定义路由和处理函数
+2. 验证表单数据
+3. 查询 `分类名称` 与 `分类别名` 是否被占用
+4. 实现新增文章分类的功能
+
+### 4.3.2 定义路由和处理函数
+
+1. 在 `/router/artcate.js` 模块中，添加 `新增文章分类` 的路由：
+
+```
+// 新增文章分类的路由
+router.post('/addcates', artcate_handler.addArticleCates);
+```
+
+
+
+1. 在 `/router_handler/artcate.js` 模块中，定义并向外共享 `新增文章分类` 的路由处理函数：
+
+```
+// 新增文章分类的处理函数
+exports.addArticleCates = (req, res) => {
+  res.send('ok');
+};
+```
+
+
+
+### 4.3.3 验证表单数据
+
+1. 创建 `/schema/artcate.js` 文章分类数据验证模块，并定义如下的验证规则：
+
+```
+// 导入定义验证规则的模块
+const joi = require('joi');
+
+// 定义 分类名称 和 分类别名 的校验规则
+const name = joi.string().required();
+const alias = joi.string().alphanum().required();
+
+// 校验规则对象 - 添加分类
+exports.add_cate_schema = {
+  body: {
+    name,
+    alias,
+  },
+};
+```
+
+
+
+1. 在 `/router/artcate.js` 模块中，使用 `add_cate_schema` 对数据进行验证：
+
+```
+// 导入验证数据的中间件
+const expressJoi = require('@escook/express-joi');
+// 导入文章分类的验证模块
+const { add_cate_schema } = require('../schema/artcate');
+
+// 新增文章分类的路由
+router.post('/addcates', expressJoi(add_cate_schema), artcate_handler.addArticleCates);
+```
+
+
+
+### 4.3.4 查询分类名称与别名是否被占用
+
+1. 定义查重的 SQL 语句：
+
+```
+// 定义查询 分类名称 与 分类别名 是否被占用的 SQL 语句
+const sql = 'SELECT * FROM ev_article_cate WHERE name=? OR alias=?';
+```
+
+
+
+1. 调用 `db.query()` 执行查重的操作：
+
+```
+// 执行查重操作
+db.query(sql, [req.body.name, req.body.alias], (err, results) => {
+  // 执行 SQL 语句失败
+  if (err) {
+      return res.fastSend(err);
+  }
+
+  // 判断 分类名称 和 分类别名 是否被占用
+  if (results.length === 2) {
+      return res.fastSend('分类名称与别名被占用，请更换后重试！');
+  }
+  // 分别判断 分类名称 和 分类别名 是否被占用
+  if (results.length === 1 && results[0].name === req.body.name) {
+      return res.fastSend('分类名称均被占用，请更换后重试！');
+  }
+  if (results.length === 1 && results[0].alias === req.body.alias) {
+      return res.fastSend('分类别名被占用，请更换后重试！');
+  }
+
+  // 新增文章分类
+});
+```
+
+
+
+### 4.3.5 实现新增文章分类的功能
+
+1. 定义新增文章分类的 SQL 语句：
+
+```
+const sql = 'INSERT INTO ev_article_cate SET ?';
+```
+
+
+
+1. 调用 `db.query()` 执行新增文章分类的 SQL 语句：
+
+```
+db.query(sql, req.body, (err, results) => {
+  // SQL 语句执行失败
+  if (err) {
+      return res.fastSend(err);
+  }
+
+  // SQL 语句执行成功，但是影响行数不等于 1
+  if (results.affectedRows !== 1) {
+      return res.fastSend('新增文章分类异常，请稍后再试！');
+  }
+
+  // 新增文章分类成功
+  res.fastSend('新增文章分类成功！', 'ok');
+});
+```
+
+
+
+## 4.4 根据id删除文章分类
+
+### 4.4.1 实现步骤
+
+1. 定义路由和处理函数
+2. 验证表单数据
+3. 实现删除文章分类的功能
+
+### 4.4.2 定义路由和处理函数
+
+1. 在 `/router/artcate.js` 模块中，添加 `删除文章分类` 的路由：
+
+```
+// 删除文章分类的路由
+router.get('/deletecate/:id', artcate_handler.deleteCateById);
+```
+
+
+
+1. 在 `/router_handler/artcate.js` 模块中，定义并向外共享 `删除文章分类` 的路由处理函数：
+
+```
+// 删除文章分类的处理函数
+exports.deleteCateById = (req, res) => {
+  res.send('ok');
+};
+```
+
+
+
+### 4.4.3 验证表单数据
+
+1. 在 `/schema/artcate.js` 验证规则模块中，定义 id 的验证规则如下：
+
+```
+// 定义 分类Id 的校验规则
+const id = joi.number().integer().min(1).required();
+```
+
+
+
+1. 并使用 `exports` 向外共享如下的 `验证规则对象`：
+
+```
+// 校验规则对象 - 删除分类
+exports.delete_cate_schema = {
+  params: {
+    id,
+  },
+};
+```
+
+
+
+1. 在 `/router/artcate.js` 模块中，导入需要的验证规则对象，并在路由中使用：
+
+```
+// 导入删除分类的验证规则对象
+const { delete_cate_schema } = require('../schema/artcate');
+
+// 删除文章分类的路由
+router.get('/deletecate/:id', expressJoi(delete_cate_schema), artcate_handler.deleteCateById);
+```
+
+
+
+### 4.4.4 实现删除文章分类的功能
+
+1. 定义删除文章分类的 SQL 语句：
+
+```
+const sql = 'UPDATE ev_article_cate SET is_delete=1 WHERE id=?';;
+```
+
+
+
+1. 调用 `db.query()` 执行删除文章分类的 SQL 语句：
+
+```
+db.query(sql, req.params.id, (err, results) => {
+  // 执行 SQL 语句失败
+  if (err) {
+      return res.fastSend(err);
+  }
+
+  // SQL 语句执行成功，但是影响行数不等于 1
+  if (results.affectedRows !== 1) {
+      return res.fastSend('删除文章分类失败，请稍后再试！');
+  } else if (results.affectedRows !== 1) {
+      return res.fastSend('删除文章分类异常，请稍后再试！');
+  }
+
+  // 删除文章分类成功
+  res.fastSend('删除文章分类成功！', 'ok');
+});
+```
+
+
+
+## 4.5 根据id获取文章分类数据
+
+### 4.5.1 实现步骤
+
+1. 定义路由和处理函数
+2. 验证表单数据
+3. 实现获取文章分类的功能
+
+### 4.5.2 定义路由和处理函数
+
+1. 在 `/router/artcate.js` 模块中，添加 `根据 Id 获取文章分类` 的路由：
+
+```
+router.get('/cates/:id', artcate_handler.getArticleById);
+```
+
+
+
+1. 在 `/router_handler/artcate.js` 模块中，定义并向外共享 `根据 Id 获取文章分类` 的路由处理函数：
+
+```
+// 根据 Id 获取文章分类的处理函数
+exports.getArticleById = (req, res) => {
+  res.send('ok');
+};
+```
+
+
+
+### 4.5.3 验证表单数据
+
+1. 在 `/schema/artcate.js` 验证规则模块中，使用 `exports` 向外共享如下的 `验证规则对象`：
+
+```
+// 校验规则对象 - 根据 Id 获取分类
+exports.get_cate_schema = {
+  params: {
+    id,
+  },
+};
+```
+
+
+
+1. 在 `/router/artcate.js` 模块中，导入需要的验证规则对象，并在路由中使用：
+
+```
+// 导入根据 Id 获取分类的验证规则对象
+const { get_cate_schema } = require('../schema/artcate');
+
+// 根据 Id 获取文章分类的路由
+router.get('/cates/:id', expressJoi(get_cate_schema), artcate_handler.getArticleById);
+```
+
+
+
+### 4.5.4 实现获取文章分类的功能
+
+1. 定义根据 Id 获取文章分类的 SQL 语句：
+
+```
+const sql = `select * from ev_article_cate where id=?`;
+```
+
+
+
+1. 调用 `db.query()` 执行 SQL 语句：
+
+```
+db.query(sql, req.params.id, (err, results) => {
+  // 执行 SQL 语句失败
+  if (err) {
+      return res.fastSend(err);
+  }
+
+  // SQL 语句执行成功，但是没有查询到任何数据
+  if (results.length === 0) {
+      return res.fastSend('文章分类不存在！');
+  } else if (results.length !== 1) {
+      return res.fastSend('获取文章分类数据异常，请稍后再试！');
+  }
+
+  // 把数据响应给客户端
+  res.send({
+    status: 'ok',
+    message: '获取文章分类数据成功！',
+    data: results[0],
+  });
+});
+```
+
+
+
+## 4.6 根据id更新文章分类数据
+
+### 4.6.1 实现步骤
+
+1. 定义路由和处理函数
+2. 验证表单数据
+3. 查询 `分类名称` 与 `分类别名` 是否被占用
+4. 实现更新文章分类的功能
+
+### 4.6.2 定义路由和处理函数
+
+1. 在 `/router/artcate.js` 模块中，添加 `更新文章分类` 的路由：
+
+```
+// 更新文章分类的路由
+router.post('/updatecate', artcate_handler.updateCateById);
+```
+
+
+
+1. 在 `/router_handler/artcate.js` 模块中，定义并向外共享 `更新文章分类` 的路由处理函数：
+
+```
+// 更新文章分类的处理函数
+exports.updateCateById = (req, res) => {
+  res.send('ok');
+};
+```
+
+
+
+### 4.6.3 验证表单数据
+
+1. 在 `/schema/artcate.js` 验证规则模块中，使用 `exports` 向外共享如下的 `验证规则对象`：
+
+```
+// 校验规则对象 - 更新分类
+exports.update_cate_schema = {
+  body: {
+    id,
+    name,
+    alias,
+  },
+};
+```
+
+
+
+1. 在 `/router/artcate.js` 模块中，导入需要的验证规则对象，并在路由中使用：
+
+```
+// 导入更新文章分类的验证规则对象
+const { update_cate_schema } = require('../schema/artcate');
+
+// 更新文章分类的路由
+router.post('/updatecate', expressJoi(update_cate_schema), artcate_handler.updateCateById);
+```
+
+
+
+### 4.5.4 查询分类名称与别名是否被占用
+
+1. 定义查重的 SQL 语句：
+
+```
+// 定义查询 分类名称 与 分类别名 是否被占用的 SQL 语句
+const sql = `select * from ev_article_cate where id<>? and (name=? or alias=?)`;
+```
+
+
+
+1. 调用 `db.query()` 执行查重的操作：
+
+```
+// 执行查重操作
+db.query(sql, [req.body.id, req.body.name, req.body.alias], (err, results) => {
+  // 执行 SQL 语句失败
+  if (err) return res.fastSend(err);
+
+  // 判断 分类名称 和 分类别名 是否被占用
+  if (results.length === 2) {
+      return res.fastSend('分类名称与别名被占用，请更换后重试！');
+  }
+  if (results.length === 1 && results[0].name === req.body.name) {
+      return res.fastSend('分类名称被占用，请更换后重试！');
+  }
+  if (results.length === 1 && results[0].alias === req.body.alias) {
+      return res.fastSend('分类别名被占用，请更换后重试！');
+  }
+
+  // 更新文章分类
+});
+```
+
+
+
+### 4.5.5 实现更新文章分类的功能
+
+1. 定义更新文章分类的 SQL 语句：
+
+```
+const sql = `update ev_article_cate set ? where id=?`;
+```
+
+
+
+1. 调用 `db.query()` 执行 SQL 语句：
+
+```
+db.query(sql, [req.body, req.body.id], (err, results) => {
+  // 执行 SQL 语句失败
+  if (err) return res.fastSend(err);
+
+  // SQL 语句执行成功，但是影响行数不等于 1
+  if (results.affectedRows !== 1) {
+      return res.fastSend('更新文章分类异常，请稍后再试！');
+  }
+
+  // 更新文章分类成功
+  res.fastSend('更新文章分类成功！', 'ok');
+});
+```
+
+
+
+# 五、文章管理
+
+## 5.1 新建ev_articles表
+
+[![ev_articles表结构](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/09-api%E6%8E%A5%E5%8F%A3%E9%A1%B9%E7%9B%AE%E6%A1%88%E4%BE%8B/mark-img/4.jpg)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/09-api接口项目案例/mark-img/4.jpg)
+
+## 5.2 发布新文章
+
+### 5.2.1 实现步骤
+
+1. 初始化路由模块
+2. 初始化路由处理函数模块
+3. 使用 multer 解析表单数据
+4. 验证表单数据
+5. 实现发布文章的功能
+
+### 5.2.2 初始化路由模块
+
+1. 创建 `/router/article.js` 路由模块，并初始化如下的代码结构：
+
+```
+// 导入 express
+const express = require('express');
+// 创建路由对象
+const router = express.Router();
+
+// 发布新文章
+router.post('/add', (req, res) => {
+  res.send('ok');
+});
+
+// 向外共享路由对象
+module.exports = router;
+```
+
+
+
+1. 在 `app.js` 中导入并使用文章的路由模块：
+
+```
+// 导入并使用文章路由模块
+const articleRouter = require('./router/article');
+// 为文章的路由挂载统一的访问前缀 /my/article
+app.use('/my/article', articleRouter);
+```
+
+
+
+### 5.2.3 初始化路由处理函数模块
+
+1. 创建 `/router_handler/article.js` 路由处理函数模块，并初始化如下的代码结构：
+
+```
+// 发布新文章的处理函数
+exports.addArticle = (req, res) => {
+  res.send('ok');
+};
+```
+
+
+
+1. 修改 `/router/article.js` 中的代码如下：
+
+```
+const express = require('express');
+const router = express.Router();
+
+// 导入文章的路由处理函数模块
+const article_handler = require('../router_handler/article');
+
+// 发布新文章
+router.post('/add', article_handler.addArticle);
+
+module.exports = router;
+```
+
+
+
+### 5.2.4 使用multer解析表单数据
+
+> 注意：使用 `express.urlencoded()` 中间件无法解析 `multipart/form-data` 格式的请求体数据。由于此接口涉及到文件上传的功能，因此提交的请求体，必须是 `FormData` 格式！
+
+> 推荐使用 multer 来解析 `multipart/form-data` 格式的表单数据。
+>
+> multer：https://www.npmjs.com/package/multer
+
+> Multer 是一个 node.js 中间件，用于处理 `multipart/form-data` 类型的表单数据，它主要用于上传文件。它是写在 [busboy](https://github.com/mscdex/busboy) 之上非常高效。
+>
+> **注意**: Multer 不会处理任何非 `multipart/form-data` 类型的表单数据！
+
+1. 运行如下的终端命令，在项目中安装 `multer`：
+
+```
+npm i multer@1.4.2
+```
+
+
+
+1. 在 `/router/article.js` 模块中导入并配置 `multer`：
+
+```
+// 导入解析 formdata 格式表单数据的包
+const multer = require('multer');
+// 导入处理路径的核心模块
+const path = require('path');
+// 导入 uuid(v4) 库 npm i uuid
+const { v4: uuidv4 } = require('uuid');
+
+// multer 配置
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        // 图片存放路径
+        cb(null, path.join(__dirname, '../uploads'));
+    },
+    filename: function (req, file, cb) {
+        // 图片重命名：uuid值.png
+        cb(null, uuidv4() + '.png');
+    }
+});
+
+var upload = multer({ storage: storage });
+```
+
+
+
+1. 修改 `发布新文章` 的路由如下：
+
+```
+// 发布新文章的路由
+// upload.single() 是一个局部生效的中间件，用来解析 FormData 格式的表单数据
+// 将文本类型的数据，解析并挂载到 req.body 属性中
+// 将文件类型的数据，解析并挂载到 req.file 属性中
+router.post('/add', upload.single('cover_img'), article_handler.addArticle);
+```
+
+
+
+1. 在 `/router_handler/article.js` 模块中的 `addArticle` 处理函数中，将 `multer` 解析出来的数据进行打印：
+
+```
+// 发布新文章的处理函数
+exports.addArticle = (req, res) => {
+  console.log(req.body); // 文本类型的数据
+  console.log('----------分割线----------');
+  console.log(req.file); // 文件类型的数据
+
+  res.send('ok');
+};
+```
+
+
+
+### 5.2.5 验证表单数据
+
+> 实现思路：通过 express-joi **自动验证** req.body 中的文本数据；通过 if 判断**手动验证** req.file 中的文件数据；
+
+1. 创建 `/schema/article.js` 验证规则模块，并初始化如下的代码结构：
+
+```
+// 导入定义验证规则的模块
+const joi = require('joi');
+
+// 定义 标题、分类Id、内容、发布状态 的验证规则
+const title = joi.string().required();
+const cate_id = joi.number().integer().min(1).required();
+const content = joi.string().required().allow('');
+const state = joi.string().valid('已发布', '草稿').required();
+
+// 验证规则对象 - 发布文章
+exports.add_article_schema = {
+  body: {
+    title,
+    cate_id,
+    content,
+    state,
+  },
+};
+```
+
+
+
+1. 在 `/router/article.js` 模块中，导入需要的验证规则对象，并在路由中使用：
+
+```
+// 导入验证数据的中间件
+const expressJoi = require('@escook/express-joi');
+// 导入文章的验证模块
+const { add_article_schema } = require('../schema/article');
+
+// 发布新文章的路由
+// 注意：在当前的路由中，先后使用了两个中间件：
+//       先使用 multer 解析表单数据
+//       再使用 expressJoi 对解析的表单数据进行验证
+router.post('/add', upload.single('cover_img'), expressJoi(add_article_schema), article_handler.addArticle);
+```
+
+
+
+1. 在 `/router_handler/article.js` 模块中的 `addArticle` 处理函数中，通过 `if` 判断客户端是否提交了 `封面图片`：
+
+```
+// 发布新文章的处理函数
+exports.addArticle = (req, res) => {
+  // 手动判断是否上传了文章封面
+  if (!req.file || req.file.fieldname !== 'cover_img') return res.fastSend('文章封面是必选参数！');
+
+  // 表单数据合法，继续后面的处理流程...
+});
+```
+
+
+
+### 5.2.6 实现发布文章的功能
+
+1. 整理要插入数据库的文章信息对象：
+
+```
+// 导入处理路径的 path 核心模块
+const path = require('path');
+
+const articleInfo = {
+  // 标题、内容、状态、所属的分类Id
+  ...req.body,
+  // 文章封面在服务器端的存放路径
+  cover_img: req.file.filename,
+  // 文章发布时间
+  pub_date: new Date(),
+  // 文章作者的Id
+  author_id: req.user.id,
+};
+```
+
+
+
+1. 定义发布文章的 SQL 语句：
+
+```
+const sql = 'INSERT INTO ev_articles SET ?';
+```
+
+
+
+1. 调用 `db.query()` 执行发布文章的 SQL 语句：
+
+```
+// 导入数据库操作模块
+const db = require('../db/connect');
+
+// 执行 SQL 语句
+db.query(sql, articleInfo, (err, results) => {
+  // 执行 SQL 语句失败
+  if (err) {
+      return res.fastSend(err);
+  }
+
+  // 执行 SQL 语句成功，但是影响行数不等于 1
+  if (results.affectedRows !== 1) {
+      return res.fastSend('发布文章异常，请稍后再试！');
+  }
+
+  // 发布文章成功
+  res.fastSend('发布文章成功', 'ok');
+});
+```
+
+
+
+1. 在 `app.js` 中，使用 `express.static()` 中间件，将 `uploads` 目录中的图片托管为静态资源：
+
+```
+// 托管静态资源文件
+app.use('/uploads', express.static('./uploads'));
+```
+
+
+
+## 5.3 获取文章的列表数据
+
+- schema\article.js
+
+```
+// 每页显示条数、页码值 验证规则
+const pagesize = joi.number().integer().min(1).required();
+const pagenum = joi.number().integer().min(1).required();
+
+// 获取文章列表数据验证规则对象
+exports.article_list_schema = {
+    query: {
+        pagesize,
+        pagenum,
+        cate_id: joi.number().integer().min(1),
+        state: joi.string().valid('已发布', '草稿')
+    }
+};
+```
+
+
+
+- router\article.js
+
+```
+const { article_list_schema } = require('../schema/article');
+
+// 获取文章的列表数据
+router.get('/list', expressJoi(article_list_schema), article_handler.articleList);
+```
+
+
+
+- router_handler\article.js
+
+```
+// 获取文章的列表数据处理函数
+exports.articleList = (req, res) => {
+    // 判断是否指定了文章分类
+    if (req.query.cate_id) {
+        // 指定了文章分类
+        let artcate = {};
+        let flag = true;
+        // 查询文章分类是否可用
+        const sql = 'SELECT * FROM ev_article_cate WHERE id=?';
+        db.query(sql, req.query.cate_id, (err, results) => {
+            if (err) {
+                flag = false;
+                return res.fastSend(err);
+            }
+            if (results.length === 0) {
+                flag = false;
+                return res.fastSend('文章分类不存在！');
+            }
+            if (results.length === 1) {
+                if (results[0].is_delete === 1) {
+                    flag = false;
+                    return res.fastSend('文章分类不可用！');
+                }
+                artcate = results[0];
+            } else {
+                flag = false;
+                return res.fastSend('处理异常，请稍后再试！');
+            }
+        });
+
+        if (!flag) {
+            return;
+        }
+
+        // 判断是否指定了文章发布状态
+        if (req.query.state) {
+            // 指定了文章发布状态
+            if (req.query.state === '已发布') {
+                // 分页查询目标类别已发布文章
+                const sql1 = 'SELECT * FROM ev_articles WHERE cate_id=? AND state="已发布" ORDER BY pub_date ASC LIMIT ?,?';
+                // 查询目标类别已发布文章总数
+                const sql2 = 'SELECT COUNT(*) AS total FROM ev_articles WHERE cate_id=? AND state="已发布"';
+                db.query(sql1, [req.query.cate_id, (req.query.pagenum - 1) * req.query.pagesize, req.query.pagesize], (err, results) => {
+                    if (err) {
+                        return res.fastSend(err);
+                    }
+                    const __results = results;
+                    db.query(sql2, req.query.cate_id, (err, results) => {
+                        if (err) {
+                            return res.fastSend(err);
+                        }
+                        const data = [];
+                        for (let i = 0; i < __results.length; i++) {
+                            data.push({
+                                id: __results[i].id,
+                                title: __results[i].title,
+                                pub_date: __results[i].pub_date,
+                                state: __results[i].state,
+                                cate_name: artcate.name,
+                                cate_alias: artcate.alias
+                            });
+                        }
+                        return res.send({
+                            status: 'ok',
+                            message: '获取文章列表成功！',
+                            total: results[0].total,
+                            data
+                        });
+                    });
+                });
+            } else if (req.query.state === '草稿') {
+                // 分页查询目标类别草稿文章
+                const sql1 = 'SELECT * FROM ev_articles WHERE cate_id=? AND state="草稿" ORDER BY pub_date ASC LIMIT ?,?';
+                // 查询目标类别已发布文章总数
+                const sql2 = 'SELECT COUNT(*) AS total FROM ev_articles WHERE cate_id=? AND state="草稿"';
+                db.query(sql1, [req.query.cate_id, (req.query.pagenum - 1) * req.query.pagesize, req.query.pagesize], (err, results) => {
+                    if (err) {
+                        return res.fastSend(err);
+                    }
+                    const __results = results;
+                    db.query(sql2, req.query.cate_id, (err, results) => {
+                        if (err) {
+                            return res.fastSend(err);
+                        }
+                        const data = [];
+                        for (let i = 0; i < __results.length; i++) {
+                            data.push({
+                                id: __results[i].id,
+                                title: __results[i].title,
+                                pub_date: __results[i].pub_date,
+                                state: __results[i].state,
+                                cate_name: artcate.name,
+                                cate_alias: artcate.alias
+                            });
+                        }
+                        return res.send({
+                            status: 'ok',
+                            message: '获取文章列表成功！',
+                            total: results[0].total,
+                            data
+                        });
+                    });
+                });
+            } else {
+                return res.fastSend('文章发布状态错误，请修改后重试！');
+            }
+        } else {
+            // 未指定文章发布状态
+            // 分页查询目标类别文章
+            const sql1 = 'SELECT * FROM ev_articles WHERE cate_id=? ORDER BY pub_date ASC LIMIT ?,?';
+            const sql2 = 'SELECT COUNT(*) AS total FROM ev_articles WHERE cate_id=?';
+            db.query(sql1, [req.query.cate_id, (req.query.pagenum - 1) * req.query.pagesize, req.query.pagesize], (err, results) => {
+                if (err) {
+                    return res.fastSend(err);
+                }
+                const __results = results;
+                db.query(sql2, req.query.cate_id, (err, results) => {
+                    if (err) {
+                        return res.fastSend(err);
+                    }
+                    const data = [];
+                    for (let i = 0; i < __results.length; i++) {
+                        data.push({
+                            id: __results[i].id,
+                            title: __results[i].title,
+                            pub_date: __results[i].pub_date,
+                            state: __results[i].state,
+                            cate_name: artcate.name,
+                            cate_alias: artcate.alias
+                        });
+                    }
+                    return res.send({
+                        status: 'ok',
+                        message: '获取文章列表成功！',
+                        total: results[0].total,
+                        data
+                    });
+                });
+            });
+        }
+    } else {
+        // 未指定文章分类
+        // 判断是否指定了文章发布状态
+        if (req.query.state) {
+            // 指定了文章发布状态
+            if (req.query.state === '已发布') {
+                const sql1 = 'SELECT * FROM ev_articles WHERE state="已发布" ORDER BY pub_date ASC LIMIT ?,?';
+                const sql2 = 'SELECT COUNT(*) AS total FROM ev_articles WHERE state="已发布"';
+                db.query(sql1, [(req.query.pagenum - 1) * req.query.pagesize, req.query.pagesize], (err, results) => {
+                    if (err) {
+                        return res.fastSend(err);
+                    }
+                    const __results = results;
+                    db.query(sql2, req.query.cate_id, (err, results) => {
+                        if (err) {
+                            return res.fastSend(err);
+                        }
+                        const data = [];
+                        for (let i = 0; i < __results.length; i++) {
+                            data.push({
+                                id: __results[i].id,
+                                title: __results[i].title,
+                                pub_date: __results[i].pub_date,
+                                state: __results[i].state
+                            });
+                        }
+                        return res.send({
+                            status: 'ok',
+                            message: '获取文章列表成功！',
+                            total: results[0].total,
+                            data
+                        });
+                    });
+                });
+            } else if (req.query.state === '草稿') {
+                const sql1 = 'SELECT * FROM ev_articles WHERE state="草稿" ORDER BY pub_date ASC LIMIT ?,?';
+                const sql2 = 'SELECT COUNT(*) AS total FROM ev_articles WHERE state="草稿"';
+                db.query(sql1, [(req.query.pagenum - 1) * req.query.pagesize, req.query.pagesize], (err, results) => {
+                    if (err) {
+                        return res.fastSend(err);
+                    }
+                    const __results = results;
+                    db.query(sql2, req.query.cate_id, (err, results) => {
+                        if (err) {
+                            return res.fastSend(err);
+                        }
+                        const data = [];
+                        for (let i = 0; i < __results.length; i++) {
+                            data.push({
+                                id: __results[i].id,
+                                title: __results[i].title,
+                                pub_date: __results[i].pub_date,
+                                state: __results[i].state
+                            });
+                        }
+                        return res.send({
+                            status: 'ok',
+                            message: '获取文章列表成功！',
+                            total: results[0].total,
+                            data
+                        });
+                    });
+                });
+            } else {
+                return res.fastSend('文章发布状态错误，请修改后重试！');
+            }
+        } else {
+            // 未指定文章发布状态
+            const sql1 = 'SELECT * FROM ev_articles ORDER BY pub_date ASC LIMIT ?,?';
+            const sql2 = 'SELECT COUNT(*) AS total FROM ev_articles';
+            db.query(sql1, [(req.query.pagenum - 1) * req.query.pagesize, req.query.pagesize], (err, results) => {
+                if (err) {
+                    return res.fastSend(err);
+                }
+                const __results = results;
+                db.query(sql2, req.query.cate_id, (err, results) => {
+                    if (err) {
+                        return res.fastSend(err);
+                    }
+                    const data = [];
+                    for (let i = 0; i < __results.length; i++) {
+                        data.push({
+                            id: __results[i].id,
+                            title: __results[i].title,
+                            pub_date: __results[i].pub_date,
+                            state: __results[i].state
+                        });
+                    }
+                    return res.send({
+                        status: 'ok',
+                        message: '获取文章列表成功！',
+                        total: results[0].total,
+                        data
+                    });
+                });
+            });
+        }
+    }
+};
+```
+
+
+
+## 5.4 根据id获取文章详情
+
+- schema\article.js
+
+```
+// 文章分类 id 校验规则
+const id = joi.number().integer().min(1).required();
+
+// 根据 id 获取分类校验规则对象
+exports.get_article_schema = {
+    params: {
+        id
+    }
+};
+```
+
+
+
+- router\article.js
+
+```
+const { get_article_schema } = require('../schema/article');
+// 获取文章详情
+router.get('/:id', expressJoi(get_article_schema), article_handler.getArticle);
+```
+
+
+
+- router_handler\article.js
+
+```
+// 根据 id 获取文章详情处理函数
+exports.getArticle = (req, res) => {
+    const sql = 'SELECT * FROM ev_articles WHERE id=?';
+    db.query(sql, req.params.id, (err, results) => {
+        if (err) {
+            res.fastSend(err);
+        }
+        if (results.length === 0) {
+            res.fastSend('文章不存在！');
+        } else if (results.length !== 1) {
+            res.fastSend('处理异常，请稍后再试！');
+        }
+
+        return res.send({
+            status: 'ok',
+            message: '获取文章详情成功！',
+            data: {
+                id: results[0].id,
+                title: results[0].title,
+                content: results[0].content,
+                cover_img: '/uploads/' + results[0].cover_img,
+                pub_date: results[0].pub_date,
+                state: results[0].state,
+                is_delete: results[0].is_delete,
+                cate_id: results[0].cate_id,
+                author_id: results[0].author_id
+            }
+        });
+    });
+};
+```
+
+
+
+## 5.5 根据id更新文章信息
+
+- schema\article.js
+
+```
+// 根据 id 更新文章信息验证规则对象
+exports.edit_article_schema = {
+    body: {
+        id,
+        title,
+        cate_id,
+        content,
+        state
+    }
+};
+```
+
+
+
+- router\article.js
+
+```
+const { edit_article_schema } = require('../schema/article');
+// 根据 id 更新文章信息
+router.post('/edit', upload.single('cover_img'), expressJoi(edit_article_schema), article_handler.editArticle);
+```
+
+
+
+- router_handler\article.js
+
+```
+const fs = require('fs');
+// 根据 id 更新文章信息处理函数
+exports.editArticle = (req, res) => {
+    // 根据 id 获取原图片数据
+    const sql = 'SELECT cover_img FROM ev_articles WHERE id=?';
+    db.query(sql, req.body.id, (err, results) => {
+        if (err) {
+            return res.fastSend(err);
+        }
+        if (results.length === 0) {
+            return res.fastSend('文章不存在！');
+        }
+        if (results.length !== 1) {
+            return res.fastSend('处理异常，请稍后再试！');
+        }
+
+        // 是否处理图片
+        let flag = false;
+        let oldImg = '';
+        // 判断是否上传了文章封面
+        if (req.file && req.file.fieldname === 'cover_img') {
+            flag = true;
+            // 保存原图片文件名
+            oldImg = results[0].cover_img;
+        }
+
+        // 更新文章信息
+        const sql = 'UPDATE ev_articles SET ? WHERE id=?';
+        if (flag === true) {
+            const articleInfo = {
+                // 标题、内容、状态、分类id
+                ...req.body,
+                // 文章封面在服务器端的存放路径
+                cover_img: req.file.filename,
+                // 文章发布时间
+                pub_date: new Date()
+            };
+            db.query(sql, [articleInfo, req.body.id], (err, results) => {
+                if (err) {
+                    // 原则上，此处应该把新存入的图片删除……
+                    return res.fastSend(err);
+                }
+                if (results.affectedRows !== 1) {
+                    return res.fastSend('处理异常，请稍后再试！----');
+                }
+                // 删除原图片
+                const filepath = path.join(__dirname, '../uploads', oldImg);
+                fs.unlink(filepath, err => {
+                    if (err) {
+                        return res.fastSend('文章已更新，但图片清理失败！');
+                    }
+                    return res.fastSend('文章更新成功！', 'ok');
+                });
+            });
+        } else {
+            const articleInfo = {
+                // 标题、内容、状态、分类id
+                ...req.body,
+                // 文章发布时间
+                pub_date: new Date()
+            };
+            db.query(sql, [articleInfo, req.body.id], (err, results) => {
+                if (err) {
+                    return res.fastSend(err);
+                }
+                if (results.affectedRows !== 1) {
+                    return res.fastSend('处理异常，请稍后再试！');
+                }
+                return res.fastSend('文章更新成功！', 'ok');
+            });
+        }
+    });
+};
+```
+
+
+
+## 5.6 根据id删除文章数据
+
+- schema\article.js
+
+```
+// 根据 id 删除文章校验规则对象
+exports.delete_article_schema = {
+    params: {
+        id
+    }
+};
+```
+
+
+
+- router\article.js
+
+```
+const { delete_article_schema } = require('../schema/article');
+// 获取文章详情
+router.get('/delete/:id', expressJoi(delete_article_schema), article_handler.deleteArticle);
+```
+
+
+
+- router_handler\article.js
+
+```
+// 根据 id 删除文章数据处理函数
+exports.deleteArticle = (req, res) => {
+    // 更新文章分类 is_delete 字段
+    const sql = 'UPDATE ev_articles SET is_delete=1 WHERE id=?';
+    db.query(sql, req.params.id, (err, results) => {
+        if (err) {
+            return res.fastSend(err);
+        }
+        if (results.affectedRows === 0) {
+            return res.fastSend('文章不存在！');
+        } else if (results.affectedRows !== 1) {
+            return res.fastSend('删除文章异常，请稍后再试！');
+        }
+
+        res.fastSend('删除文章成功！', 'ok');
+    });
+};
+```
+
+
+
+# 六、其他
+
+我们之前在响应状态时是直接以字符串 `ok` 和 `no` 的形式来返回，实际上我们应该构建一个 “状态结构体” 来约束一系列的状态，例如：
+
+```
+// status.js
+exports.resStatus = {
+    success: 'ok',	// 成功处理
+    refuse: 'no',	// 拒绝处理
+    error: 'err'	// 处理失败
+}
+```
+
+
+
+```
+const resStatus = require('../status');
+//...
+res.fastSend('数据', resStatus.success);
+```
+
+
+
+其次，我们之前的业务结构虽然已经把处理逻辑拆分为了 router 和 router_handler，但实际上还不够！
+
+我们可以把数据库的增删查改进行再拆分，也就是把 router_handler 中 SQL 查询业务的部分单独拆分到 model 中，并把 router_handler 改名为 controller，这就是 MVC 架构！
+
+[![image-20230207163824542](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Node/09-api%E6%8E%A5%E5%8F%A3%E9%A1%B9%E7%9B%AE%E6%A1%88%E4%BE%8B/mark-img/image-20230207163824542.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Node/09-api接口项目案例/mark-img/image-20230207163824542.png)
