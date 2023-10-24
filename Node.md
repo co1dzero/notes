@@ -5997,7 +5997,7 @@ const sql = 'SELECT * FROM ev_users WHERE username=?';
 
 1. 执行 SQL 语句并根据结果判断用户名是否被占用：
 
-```
+```js
 db.query(sql, userinfo.username, function (err, results) {
   // 执行 SQL 语句失败
   if (err) {
@@ -6038,7 +6038,7 @@ npm i bcryptjs@2.4.3
 
 1. 在 `/router_handler/user.js` 中，导入 `bcryptjs` ：
 
-```
+```js
 const bcrypt = require('bcryptjs');
 ```
 
@@ -6051,13 +6051,17 @@ const bcrypt = require('bcryptjs');
 userinfo.password = bcrypt.hashSync(userinfo.password, 6);
 ```
 
+密码样式：
+
+![](C:\Users\shizeyu\Desktop\notes\Ajax-vue\Snipaste_2023-08-16_14-45-34.jpg)
+
 
 
 ### 2.3.5 插入新用户
 
 1. 定义插入用户的 SQL 语句：
 
-```
+```js
 const sql = 'INSERT INTO ev_users SET ?';
 ```
 
@@ -6065,7 +6069,7 @@ const sql = 'INSERT INTO ev_users SET ?';
 
 1. 调用 `db.query()` 执行 SQL 语句，插入新用户：
 
-```
+```js
 db.query(sql, userinfo, (err, results) => {
   // 执行 SQL 语句失败
   if (err) {
@@ -6088,7 +6092,7 @@ db.query(sql, userinfo, (err, results) => {
 
 在 `app.js` 中，所有路由之前，声明一个全局中间件，为 res 对象挂载一个 `res.fastSend()` 函数：
 
-```
+```js
 // 快速响应状态中间件
 app.use((req, res, next) => {
     // status = 'ok' 成功状态
@@ -6114,7 +6118,7 @@ app.use((req, res, next) => {
 
 ## 2.5 优化表单数据验证
 
-> 表单验证的原则：前端验证为辅，后端验证为主，后端**永远不要相信**前端提交过来的**任何内容**
+> <font color='gree'>表单验证的原则：前端验证为辅，后端验证为主，后端**永远不要相信**前端提交过来的**任何内容**</font>
 
 在实际开发中，前后端都需要对表单的数据进行合法性的验证，而且**后端作为数据合法性验证的最后一个关口**，在拦截非法数据方面，起到了至关重要的作用。
 
@@ -6138,7 +6142,7 @@ npm i @escook/express-joi
 
 1. 新建 `/schema/user.js` 用户信息验证规则模块，并初始化代码如下：
 
-```
+```js
 const joi = require('joi');
 
 // string()         值必须是字符串
@@ -6170,7 +6174,7 @@ exports.reg_login_schema = {
 
 1. 修改 `/router/user.js` 中的代码如下：
 
-```
+```js
 const express = require('express');
 const router = express.Router();
 
@@ -6197,7 +6201,7 @@ module.exports = router;
 
 1. 在 `app.js` 的全局错误级别中间件中，捕获验证失败的错误，并把验证失败的结果响应给客户端：
 
-```
+```js
 const joi = require('joi');
 
 // 放在最后
@@ -6225,7 +6229,7 @@ app.use(function (err, req, res, next) {
 
 1. 将 `/router/user.js` 中 `登录` 的路由代码修改如下：
 
-```
+```js
 // 登录的路由
 router.post('/login', expressJoi(reg_login_schema), userHandler.login);
 ```
@@ -6236,7 +6240,7 @@ router.post('/login', expressJoi(reg_login_schema), userHandler.login);
 
 1. 接收表单数据：
 
-```
+```js
 const userinfo = req.body;
 ```
 
@@ -6244,7 +6248,7 @@ const userinfo = req.body;
 
 1. 定义 SQL 语句：
 
-```
+```js
 const sql = 'SELECT * FROM ev_users WHERE username=?';
 ```
 
@@ -6252,7 +6256,7 @@ const sql = 'SELECT * FROM ev_users WHERE username=?';
 
 1. 执行 SQL 语句，查询用户的数据：
 
-```
+```js
 db.query(sql, userinfo.username, function (err, results) {
   // 执行 SQL 语句失败
   if (err) {
@@ -6278,7 +6282,9 @@ db.query(sql, userinfo.username, function (err, results) {
 
 具体的实现代码如下：
 
-```
+> results:查询完的数组信息
+
+```js
 // 拿着用户输入的密码,和数据库中存储的密码进行对比
 const compareResult = bcrypt.compareSync(userinfo.password, results[0].password);
 
@@ -6298,7 +6304,7 @@ if (!compareResult) {
 
 1. 通过 ES6 的高级语法，快速剔除 `密码` 和 `头像` 的值：
 
-```
+```js
 // 剔除完毕之后，user 中只保留了用户的 id, username, nickname, email 这四个属性的值
 const user = { ...results[0], password: '', user_pic: '' };
 ```
@@ -6315,7 +6321,7 @@ npm i jsonwebtoken@8.5.1
 
 1. 在 `/router_handler/user.js` 模块的头部区域，导入 `jsonwebtoken` 包：
 
-```
+```js
 // 用这个包来生成 Token 字符串
 const jwt = require('jsonwebtoken');
 ```
@@ -6324,7 +6330,7 @@ const jwt = require('jsonwebtoken');
 
 1. 创建 `config.js` 文件，并向外共享 **加密** 和 **还原** Token 的 `jwtSecretKey` 字符串：
 
-```
+```js
 module.exports = {
   jwtSecretKey: 'I Love Node. ^_^',
 };
@@ -6334,7 +6340,7 @@ module.exports = {
 
 1. 将用户信息对象加密成 Token 字符串：
 
-```
+```js
 // 导入配置文件
 const config = require('../config');
 
@@ -6348,7 +6354,7 @@ const tokenStr = jwt.sign(user, config.jwtSecretKey, {
 
 1. 将生成的 Token 字符串响应给客户端：
 
-```
+```js
 res.send({
   status: 'ok',
   message: '登录成功！',
@@ -6372,7 +6378,7 @@ npm i express-jwt@5.3.3
 
 1. 在 `app.js` 中注册路由之前，配置解析 Token 的中间件：
 
-```
+```js
 // 导入配置文件
 const config = require('./config');
 
@@ -6387,7 +6393,7 @@ app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api\//] 
 
 1. 在 `app.js` 中的 `错误级别中间件` 里面，捕获并处理 Token 认证失败后的错误：
 
-```
+```js
 // 错误中间件
 app.use(function (err, req, res, next) {
   // 省略其它代码...
@@ -6415,7 +6421,7 @@ app.use(function (err, req, res, next) {
 
 1. 创建 `/router/userinfo.js` 路由模块，并初始化如下的代码结构：
 
-```
+```js
 // 导入 express
 const express = require('express');
 // 创建路由对象
@@ -6434,7 +6440,7 @@ module.exports = router;
 
 1. 在 `app.js` 中导入并使用个人中心的路由模块：
 
-```
+```js
 // 导入并使用用户信息路由模块
 const userinfoRouter = require('./router/userinfo');
 // 注意：以 /my 开头的接口，都是有权限的接口，需要进行 Token 身份认证
@@ -6447,7 +6453,7 @@ app.use('/my', userinfoRouter);
 
 1. 创建 `/router_handler/userinfo.js` 路由处理函数模块，并初始化如下的代码结构：
 
-```
+```js
 // 获取用户基本信息的处理函数
 exports.getUserInfo = (req, res) => {
   res.send('ok');
@@ -6458,7 +6464,7 @@ exports.getUserInfo = (req, res) => {
 
 1. 修改 `/router/userinfo.js` 中的代码如下：
 
-```
+```js
 const express = require('express');
 const router = express.Router();
 
@@ -6477,7 +6483,7 @@ module.exports = router;
 
 1. 在 `/router_handler/userinfo.js` 头部导入数据库操作模块：
 
-```
+```js
 // 导入数据库操作模块
 const db = require('../db/connect');
 ```
@@ -6486,7 +6492,7 @@ const db = require('../db/connect');
 
 1. 定义 SQL 语句：
 
-```
+```js
 // 根据用户的 id，查询用户的基本信息
 // 注意：为了防止用户的密码泄露，需要排除 password 字段
 const sql = 'SELECT id, username, nickname, email, user_pic FROM ev_users WHERE id=?';
@@ -6496,7 +6502,11 @@ const sql = 'SELECT id, username, nickname, email, user_pic FROM ev_users WHERE 
 
 1. 调用 `db.query()` 执行 SQL 语句：
 
-```
+   > req 对象上的 user 属性，是 Token 解析成功，express-jwt 中间件帮我们挂载上去的
+   >
+   > Token 生成时包含了哪些数据，Token 解析后 user 属性中也就有那些数据
+
+```js
 // 注意：req 对象上的 user 属性，是 Token 解析成功，express-jwt 中间件帮我们挂载上去的
 // 附：最新的 express-jwt 中间件，Token 解析结果是挂载到 auth 属性上的
 // Token 生成时包含了哪些数据，Token 解析后 user 属性中也就有那些数据
@@ -6534,7 +6544,7 @@ db.query(sql, req.user.id, (err, results) => {
 
 1. 在 `/router/userinfo.js` 模块中，新增 `更新用户基本信息` 的路由：
 
-```
+```js
 // 更新用户的基本信息
 router.post('/userinfo', userinfo_handler.updateUserInfo);
 ```
@@ -6543,7 +6553,7 @@ router.post('/userinfo', userinfo_handler.updateUserInfo);
 
 1. 在 `/router_handler/userinfo.js` 模块中，定义并向外共享 `更新用户基本信息` 的路由处理函数：
 
-```
+```js
 // 更新用户基本信息的处理函数
 exports.updateUserInfo = (req, res) => {
   res.send('ok');
@@ -6556,7 +6566,7 @@ exports.updateUserInfo = (req, res) => {
 
 1. 在 `/schema/user.js` 验证规则模块中，定义 `id`，`nickname`，`email` 的验证规则如下：
 
-```
+```js
 // 定义 id, nickname, email 的验证规则
 const id = joi.number().integer().min(1).required();
 const nickname = joi.string().required();
@@ -6567,7 +6577,7 @@ const email = joi.string().email();
 
 1. 并使用 `exports` 向外共享如下的 `验证规则对象`：
 
-```
+```js
 // 验证规则对象 - 更新用户基本信息
 exports.update_userinfo_schema = {
   body: {
@@ -6582,7 +6592,7 @@ exports.update_userinfo_schema = {
 
 1. 在 `/router/userinfo.js` 模块中，导入验证数据合法性的中间件：
 
-```
+```js
 // 导入验证数据合法性的中间件
 const expressJoi = require('@escook/express-joi');
 ```
@@ -6591,7 +6601,7 @@ const expressJoi = require('@escook/express-joi');
 
 1. 在 `/router/userinfo.js` 模块中，导入需要的验证规则对象：
 
-```
+```js
 // 导入需要的验证规则对象
 const { update_userinfo_schema } = require('../schema/user');
 ```
@@ -6600,7 +6610,7 @@ const { update_userinfo_schema } = require('../schema/user');
 
 1. 在 `/router/userinfo.js` 模块中，修改 `更新用户的基本信息` 的路由如下：
 
-```
+```js
 // 更新用户的基本信息
 router.post('/userinfo', expressJoi(update_userinfo_schema), userinfo_handler.updateUserInfo);
 ```
@@ -6611,7 +6621,7 @@ router.post('/userinfo', expressJoi(update_userinfo_schema), userinfo_handler.up
 
 1. 定义待执行的 SQL 语句：
 
-```
+```js
 const sql = 'UPDATE ev_users SET ? WHERE id=?';
 ```
 
@@ -6619,7 +6629,7 @@ const sql = 'UPDATE ev_users SET ? WHERE id=?';
 
 1. 调用 `db.query()` 执行 SQL 语句并传参：
 
-```
+```js
 db.query(sql, [req.body, req.body.id], (err, results) => {
   // 执行 SQL 语句失败
   if (err) {
@@ -6636,6 +6646,10 @@ db.query(sql, [req.body, req.body.id], (err, results) => {
 });
 ```
 
+> <font color='gree'>**疑点？：**</font>
+>
+> 我觉得`req.body.id` 应该改成`req.auth.id`来验证登陆状态或者改成用`req.auth.id`，不能让用户传值id来修改数据库
+
 
 
 ## 3.3 重置密码
@@ -6650,7 +6664,7 @@ db.query(sql, [req.body, req.body.id], (err, results) => {
 
 1. 在 `/router/userinfo.js` 模块中，新增 `重置密码` 的路由：
 
-```
+```js
 // 重置密码的路由
 router.post('/updatepwd', userinfo_handler.updatePassword);
 ```
@@ -6659,7 +6673,7 @@ router.post('/updatepwd', userinfo_handler.updatePassword);
 
 1. 在 `/router_handler/userinfo.js` 模块中，定义并向外共享 `重置密码` 的路由处理函数：
 
-```
+```js
 // 重置密码的处理函数
 exports.updatePassword = (req, res) => {
   res.send('ok');
@@ -6674,7 +6688,7 @@ exports.updatePassword = (req, res) => {
 
 1. 在 `/schema/user.js` 模块中，使用 `exports` 向外共享如下的 `验证规则对象`：
 
-```
+```js
 // 验证规则对象 - 重置密码
 exports.update_password_schema = {
   body: {
@@ -6694,7 +6708,7 @@ exports.update_password_schema = {
 
 1. 在 `/router/userinfo.js` 模块中，导入需要的验证规则对象：
 
-```
+```js
 // 导入需要的验证规则对象
 const { update_password_schema } = require('../schema/user');
 ```
@@ -6703,7 +6717,7 @@ const { update_password_schema } = require('../schema/user');
 
 1. 并在 `重置密码的路由` 中，使用 `update_password_schema` 规则验证表单的数据，示例代码如下：
 
-```
+```js
 router.post('/updatepwd', expressJoi(update_password_schema), userinfo_handler.updatePassword);
 ```
 
@@ -6713,7 +6727,7 @@ router.post('/updatepwd', expressJoi(update_password_schema), userinfo_handler.u
 
 1. 根据 `id` 查询用户是否存在：
 
-```
+```js
 // 定义根据 id 查询用户数据的 SQL 语句
 const sql = 'SELECT * FROM ev_users WHERE id=?';;
 
@@ -6737,7 +6751,7 @@ db.query(sql, req.user.id, (err, results) => {
 
 1. 判断提交的旧密码是否正确：
 
-```
+```js
 // 在头部区域导入 bcryptjs 后，
 // 即可使用 bcrypt.compareSync(提交的密码，数据库中的密码) 方法验证密码是否正确
 // compareSync() 函数的返回值为布尔值，true 表示密码正确，false 表示密码错误
@@ -6752,7 +6766,7 @@ if (!compareResult) return res.fastSend('原密码错误！');
 
 1. 对新密码进行 `bcrypt` 加密之后，更新到数据库中：
 
-```
+```js
 // 定义更新用户密码的 SQL 语句
 const sql2 = 'UPDATE ev_users SET password=? WHERE id=?';
 
@@ -6790,7 +6804,7 @@ db.query(sql2, [newPwd, req.user.id], (err, results) => {
 
 1. 在 `/router/userinfo.js` 模块中，新增 `更新用户头像` 的路由：
 
-```
+```js
 // 更新用户头像的路由
 router.post('/update/avatar', userinfo_handler.updateAvatar);
 ```
@@ -6799,7 +6813,7 @@ router.post('/update/avatar', userinfo_handler.updateAvatar);
 
 1. 在 `/router_handler/userinfo.js` 模块中，定义并向外共享 `更新用户头像` 的路由处理函数：
 
-```
+```js
 // 更新用户头像的处理函数
 exports.updateAvatar = (req, res) => {
   res.send('ok');
@@ -6812,7 +6826,7 @@ exports.updateAvatar = (req, res) => {
 
 1. 在 `/schema/user.js` 验证规则模块中，定义 `avatar` 的验证规则如下：
 
-```
+```js
 // dataUri() 指的是如下格式的字符串数据：
 // data:image/png;base64,VE9PTUFOWVNFQ1JFVFM=
 const avatar = joi.string().dataUri().required();
@@ -6822,7 +6836,7 @@ const avatar = joi.string().dataUri().required();
 
 1. 并使用 `exports` 向外共享如下的 `验证规则对象`：
 
-```
+```js
 // 验证规则对象 - 更新头像
 exports.update_avatar_schema = {
   body: {
@@ -6835,7 +6849,7 @@ exports.update_avatar_schema = {
 
 1. 在 `/router/userinfo.js` 模块中，导入需要的验证规则对象：
 
-```
+```js
 const { update_avatar_schema } = require('../schema/user');
 ```
 
@@ -6843,7 +6857,7 @@ const { update_avatar_schema } = require('../schema/user');
 
 1. 在 `/router/userinfo.js` 模块中，修改 `更新用户头像` 的路由如下：
 
-```
+```js
 router.post('/update/avatar', expressJoi(update_avatar_schema), userinfo_handler.updateAvatar);
 ```
 
@@ -6853,7 +6867,7 @@ router.post('/update/avatar', expressJoi(update_avatar_schema), userinfo_handler
 
 1. 定义更新用户头像的 SQL 语句：
 
-```
+```js
 const sql = 'UPDATE ev_users SET user_pic=? WHERE id=?';
 ```
 
@@ -6861,7 +6875,7 @@ const sql = 'UPDATE ev_users SET user_pic=? WHERE id=?';
 
 1. 调用 `db.query()` 执行 SQL 语句，更新对应用户的头像：
 
-```
+```js
 db.query(sql, [req.body.avatar, req.user.id], (err, results) => {
   // 执行 SQL 语句失败
   if (err) {
@@ -6904,7 +6918,7 @@ db.query(sql, [req.body.avatar, req.user.id], (err, results) => {
 
 1. 创建 `/router/artcate.js` 路由模块，并初始化如下的代码结构：
 
-```
+```js
 // 导入 express
 const express = require('express');
 // 创建路由对象
@@ -6923,7 +6937,7 @@ module.exports = router;
 
 1. 在 `app.js` 中导入并使用文章分类的路由模块：
 
-```
+```js
 // 导入并使用文章分类路由模块
 const artCateRouter = require('./router/artcate');
 // 为文章分类的路由挂载统一的访问前缀 /my/artcate
@@ -6936,7 +6950,7 @@ app.use('/my/artcate', artCateRouter);
 
 1. 创建 `/router_handler/artcate.js` 路由处理函数模块，并初始化如下的代码结构：
 
-```
+```js
 // 获取文章分类列表数据的处理函数
 exports.getArticleCates = (req, res) => {
   res.send('ok');
@@ -6947,7 +6961,7 @@ exports.getArticleCates = (req, res) => {
 
 1. 修改 `/router/artcate.js` 中的代码如下：
 
-```
+```js
 const express = require('express');
 const router = express.Router();
 
@@ -6966,7 +6980,7 @@ module.exports = router;
 
 1. 在 `/router_handler/artcate.js` 头部导入数据库操作模块：
 
-```
+```js
 // 导入数据库操作模块
 const db = require('../db/connect');
 ```
@@ -6975,7 +6989,7 @@ const db = require('../db/connect');
 
 1. 定义 SQL 语句：
 
-```
+```js
 // 根据分类的状态，获取所有未被删除的分类列表数据
 // is_delete 为 0 表示没有被标记为删除的数据
 const sql = 'SELECT * FROM ev_article_cate WHERE is_delete=0 ORDER BY id ASC';
@@ -6985,7 +6999,7 @@ const sql = 'SELECT * FROM ev_article_cate WHERE is_delete=0 ORDER BY id ASC';
 
 1. 调用 `db.query()` 执行 SQL 语句：
 
-```
+```js
 db.query(sql, (err, results) => {
   // 执行 SQL 语句失败
   if (err) {
@@ -7016,7 +7030,7 @@ db.query(sql, (err, results) => {
 
 1. 在 `/router/artcate.js` 模块中，添加 `新增文章分类` 的路由：
 
-```
+```js
 // 新增文章分类的路由
 router.post('/addcates', artcate_handler.addArticleCates);
 ```
@@ -7025,7 +7039,7 @@ router.post('/addcates', artcate_handler.addArticleCates);
 
 1. 在 `/router_handler/artcate.js` 模块中，定义并向外共享 `新增文章分类` 的路由处理函数：
 
-```
+```js
 // 新增文章分类的处理函数
 exports.addArticleCates = (req, res) => {
   res.send('ok');
@@ -7038,7 +7052,7 @@ exports.addArticleCates = (req, res) => {
 
 1. 创建 `/schema/artcate.js` 文章分类数据验证模块，并定义如下的验证规则：
 
-```
+```js
 // 导入定义验证规则的模块
 const joi = require('joi');
 
@@ -7059,7 +7073,7 @@ exports.add_cate_schema = {
 
 1. 在 `/router/artcate.js` 模块中，使用 `add_cate_schema` 对数据进行验证：
 
-```
+```js
 // 导入验证数据的中间件
 const expressJoi = require('@escook/express-joi');
 // 导入文章分类的验证模块
@@ -7075,7 +7089,7 @@ router.post('/addcates', expressJoi(add_cate_schema), artcate_handler.addArticle
 
 1. 定义查重的 SQL 语句：
 
-```
+```js
 // 定义查询 分类名称 与 分类别名 是否被占用的 SQL 语句
 const sql = 'SELECT * FROM ev_article_cate WHERE name=? OR alias=?';
 ```
@@ -7084,7 +7098,7 @@ const sql = 'SELECT * FROM ev_article_cate WHERE name=? OR alias=?';
 
 1. 调用 `db.query()` 执行查重的操作：
 
-```
+```js
 // 执行查重操作
 db.query(sql, [req.body.name, req.body.alias], (err, results) => {
   // 执行 SQL 语句失败
@@ -7114,7 +7128,7 @@ db.query(sql, [req.body.name, req.body.alias], (err, results) => {
 
 1. 定义新增文章分类的 SQL 语句：
 
-```
+```js
 const sql = 'INSERT INTO ev_article_cate SET ?';
 ```
 
@@ -7122,7 +7136,7 @@ const sql = 'INSERT INTO ev_article_cate SET ?';
 
 1. 调用 `db.query()` 执行新增文章分类的 SQL 语句：
 
-```
+```js
 db.query(sql, req.body, (err, results) => {
   // SQL 语句执行失败
   if (err) {
@@ -7153,7 +7167,7 @@ db.query(sql, req.body, (err, results) => {
 
 1. 在 `/router/artcate.js` 模块中，添加 `删除文章分类` 的路由：
 
-```
+```js
 // 删除文章分类的路由
 router.get('/deletecate/:id', artcate_handler.deleteCateById);
 ```
@@ -7162,7 +7176,7 @@ router.get('/deletecate/:id', artcate_handler.deleteCateById);
 
 1. 在 `/router_handler/artcate.js` 模块中，定义并向外共享 `删除文章分类` 的路由处理函数：
 
-```
+```js
 // 删除文章分类的处理函数
 exports.deleteCateById = (req, res) => {
   res.send('ok');
@@ -7175,7 +7189,7 @@ exports.deleteCateById = (req, res) => {
 
 1. 在 `/schema/artcate.js` 验证规则模块中，定义 id 的验证规则如下：
 
-```
+```js
 // 定义 分类Id 的校验规则
 const id = joi.number().integer().min(1).required();
 ```
@@ -7184,7 +7198,7 @@ const id = joi.number().integer().min(1).required();
 
 1. 并使用 `exports` 向外共享如下的 `验证规则对象`：
 
-```
+```js
 // 校验规则对象 - 删除分类
 exports.delete_cate_schema = {
   params: {
@@ -7197,7 +7211,7 @@ exports.delete_cate_schema = {
 
 1. 在 `/router/artcate.js` 模块中，导入需要的验证规则对象，并在路由中使用：
 
-```
+```js
 // 导入删除分类的验证规则对象
 const { delete_cate_schema } = require('../schema/artcate');
 
@@ -7211,7 +7225,7 @@ router.get('/deletecate/:id', expressJoi(delete_cate_schema), artcate_handler.de
 
 1. 定义删除文章分类的 SQL 语句：
 
-```
+```js
 const sql = 'UPDATE ev_article_cate SET is_delete=1 WHERE id=?';;
 ```
 
@@ -7219,7 +7233,7 @@ const sql = 'UPDATE ev_article_cate SET is_delete=1 WHERE id=?';;
 
 1. 调用 `db.query()` 执行删除文章分类的 SQL 语句：
 
-```
+```js
 db.query(sql, req.params.id, (err, results) => {
   // 执行 SQL 语句失败
   if (err) {
@@ -7252,7 +7266,7 @@ db.query(sql, req.params.id, (err, results) => {
 
 1. 在 `/router/artcate.js` 模块中，添加 `根据 Id 获取文章分类` 的路由：
 
-```
+```js
 router.get('/cates/:id', artcate_handler.getArticleById);
 ```
 
@@ -7260,7 +7274,7 @@ router.get('/cates/:id', artcate_handler.getArticleById);
 
 1. 在 `/router_handler/artcate.js` 模块中，定义并向外共享 `根据 Id 获取文章分类` 的路由处理函数：
 
-```
+```js
 // 根据 Id 获取文章分类的处理函数
 exports.getArticleById = (req, res) => {
   res.send('ok');
@@ -7273,7 +7287,7 @@ exports.getArticleById = (req, res) => {
 
 1. 在 `/schema/artcate.js` 验证规则模块中，使用 `exports` 向外共享如下的 `验证规则对象`：
 
-```
+```js
 // 校验规则对象 - 根据 Id 获取分类
 exports.get_cate_schema = {
   params: {
@@ -7286,7 +7300,7 @@ exports.get_cate_schema = {
 
 1. 在 `/router/artcate.js` 模块中，导入需要的验证规则对象，并在路由中使用：
 
-```
+```js
 // 导入根据 Id 获取分类的验证规则对象
 const { get_cate_schema } = require('../schema/artcate');
 
@@ -7300,7 +7314,7 @@ router.get('/cates/:id', expressJoi(get_cate_schema), artcate_handler.getArticle
 
 1. 定义根据 Id 获取文章分类的 SQL 语句：
 
-```
+```js
 const sql = `select * from ev_article_cate where id=?`;
 ```
 
@@ -7308,7 +7322,7 @@ const sql = `select * from ev_article_cate where id=?`;
 
 1. 调用 `db.query()` 执行 SQL 语句：
 
-```
+```js
 db.query(sql, req.params.id, (err, results) => {
   // 执行 SQL 语句失败
   if (err) {
@@ -7346,7 +7360,7 @@ db.query(sql, req.params.id, (err, results) => {
 
 1. 在 `/router/artcate.js` 模块中，添加 `更新文章分类` 的路由：
 
-```
+```js
 // 更新文章分类的路由
 router.post('/updatecate', artcate_handler.updateCateById);
 ```
@@ -7355,7 +7369,7 @@ router.post('/updatecate', artcate_handler.updateCateById);
 
 1. 在 `/router_handler/artcate.js` 模块中，定义并向外共享 `更新文章分类` 的路由处理函数：
 
-```
+```js
 // 更新文章分类的处理函数
 exports.updateCateById = (req, res) => {
   res.send('ok');
@@ -7368,7 +7382,7 @@ exports.updateCateById = (req, res) => {
 
 1. 在 `/schema/artcate.js` 验证规则模块中，使用 `exports` 向外共享如下的 `验证规则对象`：
 
-```
+```js
 // 校验规则对象 - 更新分类
 exports.update_cate_schema = {
   body: {
@@ -7383,7 +7397,7 @@ exports.update_cate_schema = {
 
 1. 在 `/router/artcate.js` 模块中，导入需要的验证规则对象，并在路由中使用：
 
-```
+```js
 // 导入更新文章分类的验证规则对象
 const { update_cate_schema } = require('../schema/artcate');
 
@@ -7397,7 +7411,7 @@ router.post('/updatecate', expressJoi(update_cate_schema), artcate_handler.updat
 
 1. 定义查重的 SQL 语句：
 
-```
+```js
 // 定义查询 分类名称 与 分类别名 是否被占用的 SQL 语句
 const sql = `select * from ev_article_cate where id<>? and (name=? or alias=?)`;
 ```
@@ -7406,7 +7420,7 @@ const sql = `select * from ev_article_cate where id<>? and (name=? or alias=?)`;
 
 1. 调用 `db.query()` 执行查重的操作：
 
-```
+```js
 // 执行查重操作
 db.query(sql, [req.body.id, req.body.name, req.body.alias], (err, results) => {
   // 执行 SQL 语句失败
@@ -7433,7 +7447,7 @@ db.query(sql, [req.body.id, req.body.name, req.body.alias], (err, results) => {
 
 1. 定义更新文章分类的 SQL 语句：
 
-```
+```js
 const sql = `update ev_article_cate set ? where id=?`;
 ```
 
@@ -7441,7 +7455,7 @@ const sql = `update ev_article_cate set ? where id=?`;
 
 1. 调用 `db.query()` 执行 SQL 语句：
 
-```
+```js
 db.query(sql, [req.body, req.body.id], (err, results) => {
   // 执行 SQL 语句失败
   if (err) return res.fastSend(err);
@@ -7478,7 +7492,7 @@ db.query(sql, [req.body, req.body.id], (err, results) => {
 
 1. 创建 `/router/article.js` 路由模块，并初始化如下的代码结构：
 
-```
+```js
 // 导入 express
 const express = require('express');
 // 创建路由对象
@@ -7497,7 +7511,7 @@ module.exports = router;
 
 1. 在 `app.js` 中导入并使用文章的路由模块：
 
-```
+```js
 // 导入并使用文章路由模块
 const articleRouter = require('./router/article');
 // 为文章的路由挂载统一的访问前缀 /my/article
@@ -7510,7 +7524,7 @@ app.use('/my/article', articleRouter);
 
 1. 创建 `/router_handler/article.js` 路由处理函数模块，并初始化如下的代码结构：
 
-```
+```js
 // 发布新文章的处理函数
 exports.addArticle = (req, res) => {
   res.send('ok');
@@ -7521,7 +7535,7 @@ exports.addArticle = (req, res) => {
 
 1. 修改 `/router/article.js` 中的代码如下：
 
-```
+```js
 const express = require('express');
 const router = express.Router();
 
@@ -7558,7 +7572,7 @@ npm i multer@1.4.2
 
 1. 在 `/router/article.js` 模块中导入并配置 `multer`：
 
-```
+```js
 // 导入解析 formdata 格式表单数据的包
 const multer = require('multer');
 // 导入处理路径的核心模块
@@ -8240,7 +8254,7 @@ exports.deleteArticle = (req, res) => {
 
 我们之前在响应状态时是直接以字符串 `ok` 和 `no` 的形式来返回，实际上我们应该构建一个 “状态结构体” 来约束一系列的状态，例如：
 
-```
+```js
 // status.js
 exports.resStatus = {
     success: 'ok',	// 成功处理
@@ -8251,7 +8265,7 @@ exports.resStatus = {
 
 
 
-```
+```js
 const resStatus = require('../status');
 //...
 res.fastSend('数据', resStatus.success);

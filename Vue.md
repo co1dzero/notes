@@ -4612,6 +4612,404 @@ router.beforeEach((to, from, next) => {
 
 
 
+# Vuex
+
+## 1、概念
+
+在 Vue 中实现集中式状态（数据）管理的一个 Vue 插件，对 Vue 应用中多个组件的共享状态进行集中式的管理（读/写），也是一种组件间通信的方式，**且适用于任意组件间通信**。
+
+全局事件总线实现**读**（A 传递数据给大家）：
+
+[![image-20220809103635607](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Vue/Vue2/mark-img/image-20220809103635607.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Vue/Vue2/mark-img/image-20220809103635607.png)
+
+全局事件总线实现**读和写**（A 传递数据给大家，大家也传递数据给 A）：
+
+[![image-20220809103800569](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Vue/Vue2/mark-img/image-20220809103800569.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Vue/Vue2/mark-img/image-20220809103800569.png)
+
+可见，利用全局事件总线实现又读又写且通信方比较多的情况下，实现起来比较复杂。
+
+所以 Vuex 出现了，就是为了解决多组件之间的共享数据问题。
+
+[![image-20220809104332081](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Vue/Vue2/mark-img/image-20220809104332081.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Vue/Vue2/mark-img/image-20220809104332081.png)
+
+> <font color='gree'>可见，vuex 把需要共享的数据放在了自身上，并且 vuex 不属于任何一个组件，vuex 与每个组件都有一个双向通信的通道（即可读又可写）</font>
+
+【Vuex 工作原理】
+
+State：状态（数据）、Vue Components：组件、Actions：动作集、Mutations：加工集、Dispatch：发送、Commit：提交、Mutate：改变、Render：渲染（解析组件）、Backend API：后端接口、Devtools：开发者工具
+
+[![vuex](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/raw/master/%E6%88%91%E7%88%B1%E4%BD%A0%EF%BC%8C%E4%B8%8D%E6%AD%A2%E4%B8%89%E5%8D%83%E9%81%8D/Vue/Vue2/mark-img/vuex.png)](https://github.com/JERRY-Z-J-R/I-love-you-3-thousand/blob/master/我爱你，不止三千遍/Vue/Vue2/mark-img/vuex.png)
+
+> 【原理图剖析】
+>
+> 1. 我们把需要让 Vuex 管理的数据放在 State（状态/数据） 对象中，这个<font color='gree'> State 本质上是一个 Object 对象 `{}`</font>
+> 2. 我们在组件（Vue Components）中调用 `dispatch('动作类型'[, 原始动作数据])` API 发送（Dispatch）动作到动作集（Actions）
+> 3. 动作集（Actions）本质上也是一个 Object 对象 `{}`，里面的 key 对应各种各样的 “动作类型”（函数），当 Actions 接收到 dispatch 指定的 “动作类型” 后就会对 “原始动作数据” 进行处理（也可以不做任何处理），比如：对原始数据再加工、请求后端API获取原始数据、<font color='gree'>延时处理</font>……，之后便会生成 “最终动作数据”，最后 Actions 调用 `commit('动作类型', 最终动作数据)` API 提交动作到加工集（Mutations）中进行加工
+> 4. 加工集（Mutations）本质上还是一个 Object 对象 `{}`，里面的 key 也对应各种各样的 “动作类型”（函数），当 Mutations 接收到 commit 指定的 “动作类型” 后就会利用 “最终动作数据” 根据事先设定好的处理逻辑对 State 中的数据进行处理（Mutate）
+> 5. 一但 State 中的数据发生改变，那么就会自动 Render 重新解析组件
+>
+> > 提示：
+> >
+> > - 当 “原始动作数据” 不需要做任何处理时（“原始动作数据” === “最终动作数据”），那么其实可以直接跳过 Dispatch 阶段，直接 Commit 到 Mutations 中。
+> > - Vuex 包括 State、Actions、Mutations，但是协作过程中几个的 API 不是 Vuex 直接提供的，而是 Store 提供的，而 Store 也是统一协调管理 State、Actions、Mutations 的大哥，不过要注意：Store 是 Vuex 提供的一个对象，需要 `Vuex.Store({})` 来创建。
+
+## 2、何时使用？
+
+多个组件需要共享数据时。
+
+## 3、搭建 vuex 环境
+
+1. 安装：npm i vuex@3（注意：目前 Vue 的默认版本已经是 Vue3，Vuex 的默认版本是 Vuex4，而 Vuex4 只支持 Vue3，所以我们安装指定的 Vuex3 版本，才能支持 Vue2）
+
+2. 创建文件：`src/store/index.js`
+
+   ```js
+   // 引入 Vue 核心库
+   import Vue from 'vue'
+   // 引入 Vuex
+   import Vuex from 'vuex'
+   // 应用 Vuex 插件
+   Vue.use(Vuex);
+   
+   // 准备 Actions 对象 ———— 响应组件中用户的动作
+   const actions = {};
+   // 准备 Mutations 对象 ———— 修改 State 中的数据
+   const mutations = {};
+   // 准备 State 对象 ———— 保存具体的数据
+   const state = {};
+   
+   // 创建并暴露 Store
+   export default new Vuex.Store({
+   	actions,
+   	mutations,
+   	state
+   });
+   ```
+
+   ```js
+   // 例如：
+   export default new Vuex.Store({
+     modules: {
+       config,
+       user,
+     },
+     state: {
+       imformation: null,
+       changeKey: null,
+     },
+     mutations: {
+       getInformation: function (state, value) {
+         state.imformation = value;
+       },
+       getChangeKey: function (state, value) {
+         state.changeKey = value;
+       },
+     },
+     actions: {},
+     getters: {
+       location: state => state.config.RESOURCE_URL,
+       feedback: state =>
+         state.config.IS_PRODUCTION ? FEEDBACK_CONFIG.PRODUCTION : FEEDBACK_CONFIG.TEST,
+     },
+   });
+   ```
+
+   
+
+3. 在 `main.js` 中创建 vm 时传入 `store` 配置项
+
+> 将创建的共享数据对象，挂载到vue实例中
+>
+> 所有的组件就可以从 store 中获取全局数据了
+
+```js
+......
+// 引入 store
+import store from './store'
+......
+
+// 创建 vm
+new Vue({
+	el:'#app',
+	render: h => h(App),
+	store
+})
+```
+
+
+
+## 4、基本使用
+
+1. 配置文件 store.js 文件：初始化数据、配置 `actions`、配置 `mutations`，
+
+   ```js
+   // 引入 Vue 核心库
+   import Vue from 'vue'
+   // 引入 Vuex
+   import Vuex from 'vuex'
+   // 引用 Vuex
+   Vue.use(Vuex);
+   
+   const actions = {
+       // 响应组件中加的动作
+   	jia(context, value){
+   		// console.log('Actions中的jia被调用了', context, value);
+   		context.commit('JIA', value);
+   	},
+   };
+   
+   const mutations = {
+       // 执行加
+   	JIA(state,value){
+   		// console.log('Mutations中的JIA被调用了', state, value);
+   		state.sum += value;
+   	}
+   };
+   
+   // 初始化数据
+   const state = {
+      sum:0
+   };
+   
+   // 创建并暴露 store
+   export default new Vuex.Store({
+   	actions,
+   	mutations,
+   	state,
+   });
+   ```
+
+   
+
+2. 组件中读取 vuex 中的数据：<font color='red'>`$store.state.sum`</font><font color='gree'>或者使用下面的map方法</font>
+
+3. 组件中修改 vuex 中的数据：<font color='red'>`$store.dispatch('jia', 数据)`、 `$store.commit('JIA', 数据)`</font><font color='gree'>或者使用下面的map方法</font>
+
+> 备注：若没有网络请求或其他业务逻辑（“原始动作数据” === “最终动作数据”），组件中也可以越过 Actions，即不走 `dispatch`，直接走 `commit`
+>
+> <font color='gree'>$store的数据可以再组件内被修改！但是这是不合法的，不应提倡的。应该使用mutations</font>
+
+## <font color='red'>mutations</font>
+
+> mutations用于变更Store中的数据
+
+1. 只能通过 mutations 变更 Store 数据，不可以直接操作 Store中的数据。
+2. <font color='gree'>在 mutations 内，不能执行异步操作</font>。eg：延时器setTimeout()
+
+
+
+## <font color='red'>action</font>
+
+> <font color='gree'>Action 用于处理异步任务</font>
+>
+> <font color='gree'>如果通过异步操作变更数据，必须通过 Action，而不能使用 Mutation，但是在 Action 中还是要通过触发 Mutaiton 的方式间接变更数据</font>
+>
+> <font color='gree'>只有 `mutations` 中定义的函数，才有权力修改 `state` 中的数据</font>
+
+ 
+
+```js
+// 定义 Action
+const store = new Vuex.Store({
+    //...省略其他代码
+    mutations: {
+        add(state) {
+            state.count++
+        }
+    },
+    actions: {
+        addAsync(context) {
+            setTimeout( () => {
+                context.commit('add')
+            }, 1000)
+        }
+    }
+})
+```
+
+
+
+## 5、getters 的使用
+
+1. 概念：<font color='gree'>当 state 中的数据需要经过加工后再使用时，可以使用 getters 加工。类似vue的计算属性</font>
+
+   > <font color='gree'>store 中数据发生变化，getter的数据也会跟着发生变化</font>
+   >
+   > getters实际上没有影响state的数据，适合筛选数据显示之类的场景
+   >
+   > 也就是说他也是动态的
+
+2. 在 `store.js` 中追加 `getters` 配置
+
+   ```js
+   ......
+   
+   const getters = {
+   	bigSum(state) {
+   		return state.sum * 10;
+   	}
+   };
+   
+   // 创建并暴露 store
+   export default new Vuex.Store({
+   	......
+   	getters
+   });
+   ```
+
+   
+
+3. 组件中读取数据：`$store.getters.bigSum`
+
+## 6、四个 map 方法的使用
+
+> <font color='gree'>需要先引用；eg：import { mapState } from 'vuex'</font>
+
+1. **mapState方法：**用于帮助我们映射 `state` 中的数据为计算属性
+
+   ```js
+   computed: {
+       // 借助 mapState 生成计算属性：sum、school、subject（对象写法）
+        ...mapState({sum:'sum', school:'school', subject:'subject'}),
+            
+       // 借助 mapState 生成计算属性：sum、school、subject（数组写法）
+       ...mapState(['sum', 'school', 'subject']),
+   },
+   ```
+
+   
+
+2. **mapGetters 方法：**用于帮助我们映射 `getters` 中的数据为计算属性
+
+   ```js
+   computed: {
+       // 借助 mapGetters 生成计算属性：bigSum（对象写法）
+       ...mapGetters({bigSum:'bigSum'}),
+   
+       // 借助 mapGetters 生成计算属性：bigSum（数组写法）
+       ...mapGetters(['bigSum'])
+   },
+   ```
+
+   
+
+3. **mapActions方法：**用于帮助我们生成与 `actions` 对话的方法，即：包含 `$store.dispatch(xxx)` 的函数
+
+   ```js
+   methods: {
+       // 靠 mapActions 生成：incrementOdd、incrementWait（对象形式）
+       ...mapActions({incrementOdd:'jiaOdd', incrementWait:'jiaWait'})
+   
+       // 靠 mapActions 生成：incrementOdd、incrementWait（数组形式）
+       ...mapActions(['jiaOdd', 'jiaWait'])
+   }
+   ```
+
+   
+
+4. **mapMutations方法：**用于帮助我们生成与 `mutations` 对话的方法，即：包含 `$store.commit(xxx)` 的函数
+
+   ```js
+   methods: {
+       // 靠 mapActions 生成：increment、decrement（对象形式）
+       ...mapMutations({increment:'JIA', decrement:'JIAN'}),
+       
+       // 靠 mapMutations 生成：JIA、JIAN（对象形式）
+       ...mapMutations(['JIA', 'JIAN']),
+   }
+   ```
+
+   > <font color='gree'>映射完的变量和方法我们就可以直接使用了</font>
+
+> <font color='gree'>备注：mapActions 与 mapMutations 使用时，若需要传递参数需要：在模板中绑定事件时传递好参数，否则参数是事件对象 event。</font>
+
+## 7、模块化+命名空间
+
+1. 目的：让代码更好维护，让多种数据分类更加明确。
+
+2. 拆分和修改
+
+   ```js
+   // count.js
+   const countAbout = {
+     namespaced:true, // 开启命名空间
+     state:{x:1},
+     mutations: { ... },
+     actions: { ... },
+     getters: {
+       bigSum(state){
+          return state.sum * 10
+       }
+     }
+   }
+             
+   // ----------------------------------------------------------------
+   // person.js
+   const personAbout = {
+     namespaced:true, // 开启命名空间
+     state:{ ... },
+     mutations: { ... },
+     actions: { ... }
+   }
+                 
+   // ----------------------------------------------------------------
+   // index.js
+   const store = new Vuex.Store({
+     modules: {
+       countAbout,
+       personAbout
+     }
+   })
+   ```
+
+   
+
+3. 开启命名空间后，组件中读取 state 数据：
+
+   ```js
+   // 方式一：自己直接读取
+   this.$store.state.personAbout.list
+   // 方式二：借助 mapState 读取：
+   ...mapState('countAbout',['sum','school','subject']),
+   ```
+
+   
+
+4. 开启命名空间后，组件中读取 getters 数据：
+
+   ```js
+   // 方式一：自己直接读取
+   this.$store.getters['personAbout/firstPersonName']
+   // 方式二：借助 mapGetters 读取：
+   ...mapGetters('countAbout',['bigSum'])
+   ```
+
+   
+
+5. 开启命名空间后，组件中调用 dispatch
+
+   ```js
+   // 方式一：自己直接 dispatch
+   this.$store.dispatch('personAbout/addPersonWang',person)
+   // 方式二：借助 mapActions：
+   ...mapActions('countAbout',{incrementOdd:'jiaOdd',incrementWait:'jiaWait'})
+   ```
+
+   
+
+6. 开启命名空间后，组件中调用 commit
+
+   ```js
+   // 方式一：自己直接 commit
+   this.$store.commit('personAbout/ADD_PERSON',person)
+   // 方式二：借助 mapMutations：
+   ...mapMutations('countAbout',{increment:'JIA',decrement:'JIAN'}),
+   ```
+
+   
+
+## 
+
 
 
 ------
